@@ -1,0 +1,26 @@
+  UIT0TRAN: MSGUTBL                                                             
+  '000000001'                                                                   
+  '000000001'                                                                   
+  '000000001'                                                                   
+  '000000001'                                                                   
+  '000000001'                                                                   
+  '000000001'                                                                   
+  '000000001'                                                                   
+  '000000001'                                                                   
+  '000000001'                                                                   
+  '000000001'                                                                   
+  ENDUTBL                                                                       
+UIT0R: MSGTXT                                                                   
+UIFIRST='000000001'                                                             
+UILAST='000000001'                                                              
+DO FOREVER                                                                      
+   UIRAND=RANDOM('RN',1)                                                        
+   UIWH=CHAR(UIRAND,9)                                                          
+   UIRAND=RANDOM('RN',2)                                                        
+   UIDI=CHAR(UIRAND,9)                                                          
+   UIRAND=RANDOM('RN',3)                                                        
+   UIOL=CHAR(UIRAND,9)                                                          
+   TYPE 'UIT0'||UIWH||UIDI||UIOL||'000000050'                                   
+   TRANSMIT USING ENTER                                                         
+END                                                                             
+ENDTXT                                                                          

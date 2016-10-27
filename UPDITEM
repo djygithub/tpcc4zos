@@ -1,0 +1,3 @@
+UPDATE DJY00.ITEM SET I_DATA = CURRENT_TIMESTAMP WHERE                          
+ I_ID BETWEEN 1   AND 5000;                                                     
+ SELECT * FROM DJY00.ITEM WHERE I_ID BETWEEN 1 AND 5000;                        

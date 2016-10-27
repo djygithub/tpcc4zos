@@ -1,0 +1,42 @@
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  WAREHOUSE                                                  --        
+--  TABLESPACE WHTS                                                   --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE WHTS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 1000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS YES;                                                              
+ CREATE TABLE DAVID.WAREHOUSE                                                   
+     (W_ID              INTEGER  NOT NULL,                                      
+      W_NAME            CHAR(10) NOT NULL,                                      
+      W_STREET_1        CHAR(20) NOT NULL,                                      
+      W_STREET_2        CHAR(20) NOT NULL,                                      
+      W_CITY            CHAR(20) NOT NULL,                                      
+      W_STATE           CHAR(2)  NOT NULL,                                      
+      W_ZIP             CHAR(9)  NOT NULL,                                      
+      W_TAX             FLOAT    NOT NULL,                                      
+      W_YTD             FLOAT    NOT NULL,                                      
+      PRIMARY KEY (W_ID))                                                       
+      IN  TPCCDB.WHTS;                                                          
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE UNIQUE INDEX DAVID.WHIN01                                               
+        ON DAVID.WAREHOUSE(W_ID)                                                
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 8                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              

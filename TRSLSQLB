@@ -1,0 +1,9 @@
+      SELECT COUNT(DISTINCT (S_I_ID))                                           
+           FROM DJY00.ORDERLINE, DJY00.STOCK                                    
+           WHERE OL_W_ID = 000000001                                            
+             AND OL_D_ID = 000000001                                            
+             AND OL_O_ID < 3001                                                 
+             AND OL_O_ID >= (3001 - 21)                                         
+             AND S_W_ID = 000000001                                             
+             AND S_I_ID = OL_I_ID                                               
+             AND S_QUANTITY < 20;                                               

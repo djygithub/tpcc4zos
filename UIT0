@@ -1,0 +1,28 @@
+  Q101TRAN: MSGUTBL                                                             
+  'Q10100001'                                                                   
+  'Q10200001'                                                                   
+  'Q10300001'                                                                   
+  'Q10400001'                                                                   
+  'Q10500001'                                                                   
+  'Q10600001'                                                                   
+  'Q10700001'                                                                   
+  'Q10800001'                                                                   
+  'Q10900001'                                                                   
+  'Q11000001'                                                                   
+  ENDUTBL                                                                       
+Q101R: MSGTXT                                                                   
+Q1FIRST='000000001'                                                             
+Q1LAST='000000001'                                                              
+DO FOREVER                                                                      
+    Q1BT=UTBL(Q101TRAN,'R')                                                     
+    Q1TRAN=SUBSTR(Q1BT,1,4)                                                     
+    Q1ROES=SUBSTR(Q1BT,5,5)                                                     
+    Q1ROWS=E2D (Q1ROES,5)                                                       
+    Q1RAND=RANDOM('RN',1)                                                       
+    Q1FIRST=CHAR(Q1RAND,5)                                                      
+    Q1RAND=Q1RAND+Q1ROWS                                                        
+    Q1LAST=CHAR(Q1RAND,5)                                                       
+   TYPE Q1TRAN||Q1FIRST||'0000'||Q1LAST||'0000'                                 
+   TRANSMIT USING ENTER                                                         
+END                                                                             
+ENDTXT                                                                          
