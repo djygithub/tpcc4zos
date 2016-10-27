@@ -1,0 +1,11 @@
+LOGON1: MSGTXT                                                                  
+MESSAGE_COUNT = 0                                                               
+MESSAGE_LIMIT = 100                                                             
+    DO WHILE INDEX(SCREEN,'DFHZC2312') = 0                                      
+       SUSPEND(2)                                                               
+    END                                                                         
+    TRANSMIT USING CLEAR                                                        
+    TYPE 'CFMT'                                                                 
+    TRANSMIT USING ENTER                                                        
+   QUIESCE                                                                      
+ENDTXT                                                                          

@@ -1,0 +1,131 @@
+//GENHI    JOB (330DJY00),'D J YOUNG ',MSGCLASS=Y,NOTIFY=DJY00          00001008
+//COB2UCL PROC                                                          00010000
+//*   PROC FOR COBOL II - COMPILE AND LINK                              00020000
+//COB2 EXEC PGM=IGYCRCTL,PARM='OBJECT,LIB,APOST,LIST',REGION=1024K      00030002
+//*TEPLIB  DD  DSNAME=DB2IMS.COB2COMP,DISP=SHR                          00040005
+//STEPLIB  DD  DSNAME=SYS1.COB2COMP,DISP=SHR                            00040005
+//SYSPRINT DD  SYSOUT=*                                                 00050000
+//SYSLIN   DD  DSNAME=&&LOADSET,UNIT=3390,DISP=(MOD,PASS),              00060000
+//             SPACE=(TRK,(3,3))                                        00070000
+//SYSUT1   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00080000
+//SYSUT2   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00090000
+//SYSUT3   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00100000
+//SYSUT4   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00110000
+//SYSUT5   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00120000
+//SYSUT6   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00121000
+//SYSUT7   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00122000
+//LKED   EXEC  PGM=IEWL,PARM='LIST,XREF,',COND=(5,LT,COB2),             00130003
+//             REGION=512K                                              00140003
+//SYSLIN   DD  DSNAME=&&LOADSET,DISP=(OLD,DELETE)                       00150003
+//SYSLMOD  DD  DSNAME=DJY00.RAND.PGMLIB(GENHI),                         00170005
+//             DISP=SHR                                                 00180003
+//SYSLIB   DD  DSNAME=SYS1.COB2LIB,DISP=SHR                             00190005
+//         DD  DSNAME=CEE.V1R5M0.SCEELKED,DISP=SHR                      00190005
+//         DD  DSNAME=DJY00.RAND.SRCLIB,DISP=SHR                        00190005
+//SYSUT1   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00200003
+//SYSPRINT DD  SYSOUT=*                                                 00210003
+// PEND                                                                 00220000
+//DOIT EXEC COB2UCL                                                     00230000
+//SYSIN DD *                                                            00240010
+       ID DIVISION.                                                             
+       PROGRAM-ID. GENHI.                                                       
+       AUTHOR. D J YOUNG.                                                       
+       ENVIRONMENT DIVISION.                                                    
+       INPUT-OUTPUT SECTION.                                                    
+       FILE-CONTROL.                                                            
+           SELECT OUTPUT-FILE ASSIGN TO UT-S-OUTPUT.                            
+       DATA DIVISION.                                                           
+       FILE SECTION.                                                            
+       FD  OUTPUT-FILE                                                          
+           BLOCK CONTAINS 0 RECORDS                                             
+           RECORD CONTAINS 69 CHARACTERS                                        
+           RECORDING MODE F                                                     
+           LABEL RECORDS ARE STANDARD.                                          
+       01  OUTPUT-RECORD.                                                       
+           05 FILLER            PIC X(69).                                      
+       WORKING-STORAGE SECTION.                                                 
+       77  YES-FLAG             PIC X VALUE 'Y'.                                
+       77  NO-FLAG              PIC X VALUE 'N'.                                
+       01  OUTPUT-BUFFER.                                                       
+           05  H-C-ID            PIC 9(8).                                      
+           05  H-C-D-ID          PIC 9(8).                                      
+           05  H-C-W-ID          PIC 9(8).                                      
+           05  H-D-ID            PIC 9(8).                                      
+           05  H-W-ID            PIC 9(8).                                      
+           05  H-AMOUNT          PIC 999 VALUE 10.                              
+           05  H-AMOUNT-F        PIC X(2) VALUE 'E0'.                           
+           05  H-DATA            PIC X(24).                                     
+       01  RANDASM-PARMS.                                                       
+           05  LOWER-BOUND      PIC S9(9) COMP VALUE 1.                         
+           05  UPPER-BOUND      PIC S9(9) COMP VALUE 200.                       
+           05  RANGE2           PIC S9(9) COMP VALUE 404.                       
+           05  SEED             PIC S9(9) COMP.                                 
+           05  H-DATA-WORK      PIC S9(9) COMP.                                 
+       01  RANDOM-TABLE-24.                                                     
+           03 RANDOM-STRINGS-24.                                                
+            05  FILLER PIC X(24) VALUE '1234567890-=QWERTYUI1234'.              
+            05  FILLER PIC X(24) VALUE 'QWERTYUIOP›\ASDFGHJK2345'.              
+            05  FILLER PIC X(24) VALUE 'ASDFGHJKL; {ZXCVBNM,3456'.              
+            05  FILLER PIC X(24) VALUE '<ZXCVBNM,./|LKJHGTFR5678'.              
+            05  FILLER PIC X(24) VALUE '@#$%^&*()_+!UJNHTGFR6789'.              
+            05  FILLER PIC X(24) VALUE 'º:"}>,.?1234FRDESWAQASDF'.              
+            05  FILLER PIC X(24) VALUE '567890-=QWERSXDCFVGB1233'.              
+            05  FILLER PIC X(24) VALUE 'TYUIOP›\ASDFFRGTHYJUSEDR'.              
+            05  FILLER PIC X(24) VALUE 'GHJKL; {<ZXCNHMJ,K.L1234'.              
+            05  FILLER PIC X(24) VALUE 'VBNM,./|@#$%CDXSZASW8765'.              
+            05  FILLER PIC X(24) VALUE '^&*()_+!º:"}CDVFBGNH2345'.              
+           03 RANDOM-THINGS-24 REDEFINES RANDOM-STRINGS-24                      
+                                 OCCURS 11 TIMES                                
+                                 PIC X(24).                                     
+       LINKAGE SECTION.                                                         
+       01  INPUT-PARMS.                                                         
+           05  PARM-LENGTH      PIC S9(3) COMP.                                 
+           05  WAREHOUSE-NUM-B  PIC 9(9).                                       
+           05  FILLER           PIC X.                                          
+           05  WAREHOUSE-NUM-E  PIC 9(9).                                       
+           05  FILLER           PIC X.                                          
+           05  TOTAL-ROWS       PIC 9(9).                                       
+       PROCEDURE DIVISION USING INPUT-PARMS.                                    
+       MAIN-ROUTINE.                                                            
+      *(1)                                                                      
+           OPEN OUTPUT OUTPUT-FILE.                                             
+      *(2)                                                                      
+           MOVE 1 TO SEED.                                                      
+      *(3)                                                                      
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 11 TO UPPER-BOUND.                                              
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS01' USING YES-FLAG,                                      
+                                 H-DATA-WORK,                                   
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+      *(4)                                                                      
+           PERFORM COMPUTE-AND-WRITE-WH UNTIL WAREHOUSE-NUM-B                   
+               GREATER THAN WAREHOUSE-NUM-E.                                    
+      *(5)                                                                      
+           CLOSE OUTPUT-FILE.                                                   
+           GOBACK.                                                              
+      ******************************************************************        
+      *                                                                         
+      *                                                                         
+      ******************************************************************        
+       COMPUTE-AND-WRITE-WH.                                                    
+           MOVE WAREHOUSE-NUM-B TO H-C-W-ID.                                    
+           MOVE WAREHOUSE-NUM-B TO H-W-ID.                                      
+           MOVE 1 TO H-C-D-ID.                                                  
+           MOVE 1 TO H-D-ID.                                                    
+           PERFORM COMPUTE-AND-WRITE-DI UNTIL H-D-ID > 10.                      
+           ADD 1 TO WAREHOUSE-NUM-B.                                            
+       COMPUTE-AND-WRITE-DI.                                                    
+           MOVE 1 TO H-C-ID.                                                    
+           PERFORM COMPUTE-AND-WRITE-CU UNTIL H-C-ID > 3000.                    
+           ADD 1 TO H-C-D-ID.                                                   
+           ADD 1 TO H-D-ID.                                                     
+       COMPUTE-AND-WRITE-CU.                                                    
+           CALL 'RANDAS01' USING NO-FLAG,                                       
+                                H-DATA-WORK.                                    
+           MOVE RANDOM-THINGS-24(H-DATA-WORK) TO H-DATA.                        
+           WRITE OUTPUT-RECORD FROM OUTPUT-BUFFER.                              
+           ADD 1 TO H-C-ID.                                                     

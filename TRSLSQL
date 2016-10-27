@@ -1,0 +1,12 @@
+      select d_next_o_id from djy00.district                                    
+           where d_w_id = 000000001                                             
+           and   d_id   = 000000001;                                            
+      SELECT COUNT(DISTINCT (S_I_ID))                                           
+           FROM DAVID.ORDERLINE, DAVID.STOCK                                    
+           WHERE OL_W_ID = 000000001                                            
+             AND OL_D_ID = 000000001                                            
+             AND OL_O_ID < :o_id                                                
+             AND OL_O_ID >= :o_id - 21                                          
+             AND S_W_ID = 000000001                                             
+             AND S_I_ID = OL_I_ID                                               
+             AND S_QUANTITY < :threshold;                                       

@@ -1,0 +1,15 @@
+SELECT T0.DBNAME, T0.TSNAME, T0.CARD, T0.NPAGES, T0.PCTPAGES,                   
+        T1.HIGH2KEY, T1.LOW2KEY, T1.COLCARD,                                    
+     T2.CLUSTERED, T2.FIRSTKEYCARD,                                             
+ T2.FULLKEYCARD, T2.NLEAF, T2.NLEVELS,                                          
+ T2.CLUSTERRATIO,                                                               
+ T4.NACTIVE,                                                                    
+ T6.CARD, T6.NEARINDREF, T6.FARINDREF, T6.PERCACTIVE, T6.PERCDROP,              
+ T7.CARD, T7.NEAROFFPOS, T7.FAROFFPOS, T7.LEAFDIST                              
+ FROM SYSIBM.SYSTABLES T0, SYSIBM.SYSCOLUMNS T1, SYSIBM.SYSINDEXES T2,          
+   SYSIBM.SYSTABLESPACE T4, SYSIBM.SYSFIELDS T5,                                
+   SYSIBM.SYSTABLEPART T6, SYSIBM.SYSINDEXPART T7                               
+  WHERE T0.TBNAME = 'DAVID.CUSTOMER' OR T1.TBNAME = 'DAVID.CUSTOMER' OR         
+   T2.TBNAME = 'DAVID.CUSTOMER' OR T4.NAME = 'CUTS' OR                          
+   T5.TBNAME = 'DAVID.CUSTOMER' OR T6.DBNAME = 'TPCCDB' OR                      
+   T7.IXNAME IN ('DAVID.CUSTOMER');                                             

@@ -1,0 +1,10 @@
+//CICS410 JOB    0,YOUNG,MSGLEVEL=(1,1),                                        
+//         MSGCLASS=R                                                           
+//IEBPTPCH EXEC  PGM=IEBPTPCH                                                   
+//SYSPRINT DD    SYSOUT=*                                                       
+//SYSUT1   DD    DSN=DICK.CPSM111.XEYUINST,DISP=SHR                             
+//SYSUT2   DD    SYSOUT=*,DCB=LRECL=133                                         
+//SYSIN    DD    *                                                              
+   PRINT   TYPORG=PO,MAXFLDS=1                                                  
+   RECORD  FIELD=(80)                                                           
+//    *                                                                         

@@ -1,0 +1,8 @@
+//ICETOOL  JOB (DJY),'D J YOUNG',MSGCLASS=Y,USER=DJY00,NOTIFY=DJY00,    00010000
+//         REGION=8M                                                    00020000
+//SORTSTEP EXEC PGM=ICETOOL,REGION=5M                                   00030000
+//TOOLMSG DD SYSOUT=*                                                   00050000
+//DFSMSG  DD SYSOUT=*                                                   00051000
+//LIST1   DD SYSOUT=*                                                   00052000
+//TOOLIN  DD *                                                          00060000
+  DEFAULTS LIST(LIST1)                                                  00070000

@@ -1,0 +1,88 @@
+//JAN21971 JOB (),'D J YOUNG',MSGCLASS=Y,NOTIFY=DJY00                           
+//*                                                                             
+//*        RMF POSTPROCESSING                                                   
+//*                                                                             
+//U100     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE4.JAN21971.ECA0.SORTED,DISP=SHR,                       
+// UNIT=3390,VOL=SER=SPARE4                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(0640,0650)                                                               
+  RTOD(0640,0650)                                                               
+  REPORTS(ALL)                                                                  
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  SYSOUT(Y)                                                                     
+//U200     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE4.JAN21971.ECA0.SORTED,DISP=SHR,                       
+// UNIT=3390,VOL=SER=SPARE4                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(0650,0700)                                                               
+  RTOD(0650,0700)                                                               
+  REPORTS(ALL)                                                                  
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  SYSOUT(Y)                                                                     
+//U300     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE4.JAN21971.ECA0.SORTED,DISP=SHR,                       
+// UNIT=3390,VOL=SER=SPARE4                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(0700,0710)                                                               
+  RTOD(0700,0710)                                                               
+  REPORTS(ALL)                                                                  
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  SYSOUT(Y)                                                                     
+//U400     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE4.JAN21971.ECA0.SORTED,DISP=SHR,                       
+// UNIT=3390,VOL=SER=SPARE4                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(0710,0720)                                                               
+  RTOD(0710,0720)                                                               
+  REPORTS(ALL)                                                                  
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  SYSOUT(Y)                                                                     
+//U500     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE4.JAN21971.ECA0.SORTED,DISP=SHR,                       
+// UNIT=3390,VOL=SER=SPARE4                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(0720,0730)                                                               
+  RTOD(0720,0730)                                                               
+  REPORTS(ALL)                                                                  
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  SYSOUT(Y)                                                                     
+//U600     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE4.JAN21971.ECA0.SORTED,DISP=SHR,                       
+// UNIT=3390,VOL=SER=SPARE4                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(0730,0740)                                                               
+  RTOD(0730,0740)                                                               
+  REPORTS(ALL)                                                                  
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  SYSOUT(Y)                                                                     
+/*                                                                              
+//UALL     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE4.JAN21971.ECA0.SORTED,DISP=SHR,                       
+// UNIT=3390,VOL=SER=SPARE4                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(0640,0740)                                                               
+  RTOD(0640,0740)                                                               
+  SYSRPTS(CF)                                                                   
+  SYSOUT(Y)                                                                     
+/*                                                                              

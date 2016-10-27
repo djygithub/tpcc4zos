@@ -1,0 +1,140 @@
+//DFHIVPOI JOB   (0,75),                                                        
+//         'DJ YOUNG',REGION=0M,                              /*OPER*/          
+//         CLASS=A,                                           /*JCLAS*/         
+//         MSGLEVEL=(1,1),                                                      
+//         MSGCLASS=X,                                                          
+//         TIME=1440,                                                           
+//         USER=DAVID                                         /*RACF*/          
+//*                                                           /*JCTRL*/         
+//*                                                                             
+//*                                                                             
+//* LIB: CICSVS.IPO1.SAMPLIB(DFHIVPOL)                                          
+//*                                                                             
+//* GDE: CICS INSTALLATION AND OPERATIONS GUIDE                                 
+//*                                                                             
+//* DOC: THIS JOB WILL EXECUTE THE ONLINE IVP.                                  
+//*                                                                             
+//*********************************************************************         
+//*                                                                             
+//*                                                                             
+//* THIS JOB CAN BE USED TO VERIFY CICS ONLINE OPERATION.                       
+//* THE SYSTEM AND USER JOURNALS MUST BE CREATED, USING JOB DFHJNLCR            
+//* BEFORE THIS JOB IS RUN                                                      
+//*                                                                             
+//* THE JOB IS DESIGNED TO BE RERUNNABLE. NORMALLY ONE WOULD KEEP               
+//* SOME OF THE DATASETS RATHER THAN DELETE THEM AND RECREATE THEM.             
+//*                                                                             
+//* THE STEPS ARE:                                                              
+//*  DEFDS                                                                      
+//*    DELETE AND REDEFINE THE CLUSTERS FOR                                     
+//*                                                                             
+//*    SAMPLE PROGRAM FILE           - CICSVS.IVP.FILEA                         
+//*    XRF CONTROL DATASET           - CICSVS.IVP.DFHXRCTL                      
+//*    XRF MESSAGE DATASET           - CICSVS.IVP.DFHXRMSG                      
+//*                                                                             
+//*     CIC311 IS THE VOLUME FOR VSAM DATASETS.                                 
+//*          CIC311 IS NOT MENTIONED IN PROCEDURES                              
+//*          OR DATA FILES USED BY THIS JOB.                                    
+//*          THERE MUST BE ENOUGH SPACE ON CIC311                               
+//*          FOR THE UNIQUE VSAM CLUSTERS TO BE CREATED.                        
+//*                                                                             
+//*  LOADFILE                                                                   
+//*     LOAD SAMPLE DATA INTO CICSVS.IVP.FILEA                                  
+//*                                                                             
+//*  CICSU                                                                      
+//*     RUN THE CICS BRING-UP PROCEDURE.  CICS IS BROUGHT UP USING              
+//*     THE IBM-SUPPLIED GROUP LIST FROM THE CSD, AS SPECIFIED IN               
+//*     THE SAMPLE SIT.  SAMPLE TRANSACTIONS AND PROGRAMS ARE THEN              
+//*     DYNAMICALLY INSTALLED USING 'CEDA'.                                     
+//*                                                                             
+//*********************************************************************         
+//*                                                                             
+//*********************************************************************         
+//* BRING UP CICS USING THE IBM-SUPPLIED LIST 'DFHLIST', THEN                   
+//* USE CEDA COMMANDS LIKE THE EXAMPLE BELOW TO ADD THE SAMPLE                  
+//* TRANSACTIONS AND PROGRAMS TO THE RUNNING CICS SYSTEM.                       
+//*                                                                             
+//*  CEDA INSTALL GROUP(DFH$AFLA)                                               
+//*       (END KEY)                                                             
+//*                                                                             
+//* THE 'CEDA' TRANSACTION SHOWN ABOVE WILL MAKE THE ASSEMBLER                  
+//* 'FILEA' SAMPLE APPLICATION AVAILABLE ONLINE.  TYPE THE                      
+//* TRANSACTION CODE 'AMNU' TO DISPLAY OPERATOR INSTRUCTION MENU.               
+//*                                                                             
+//*      THE 'RESOURCE DEFINITION (ONLINE)' MANUAL DESCRIBES                    
+//*      THE ONLINE RESOURCE DEFINITION TRANSACTION 'CEDA'.                     
+//*                                                                             
+//*********************************************************************         
+//CICSU   EXEC DFHCART,                                                         
+//             INDEX1='IICS330',      INDEX FOR LIBRARIES                       
+//             INDEX2='CICS330',      INDEX FOR LIBRARIES                       
+//             DSINDEX='IICS330',     INDEX FOR LIBRARIES                       
+//             REG=0M,                 SIZE OF REGION                           
+//             CICSDISP='(15,12)',     SIZE OF REGION                           
+//             OUTC='*'                    SYSOUT CLASS                         
+//*            WORK='3390'                UNIT - TEMPORARY DATA SETS            
+//*            COND=((8,LT,DEFDS),(4,LT,LOADFILE))                              
+//CICS.FILEA DD DSN=CICS330.CICS.FILEA,DISP=SHR                                 
+//CICS.DFHJ01A  DD  DISP=SHR,DSN=IICS330.CICS.DFHJ01A                           
+//CICS.DFHJ01B  DD  DISP=SHR,DSN=IICS330.CICS.DFHJ01B                           
+//CICS.DFHJ01X  DD  DISP=SHR,DSN=IICS330.CICS.DFHJ01X                           
+//*ICS.FILEA001 DD  DSN=IICS330.CICS.FILEA001,DISP=SHR                          
+//*ICS.FILEA002 DD  DSN=IICS330.CICS.FILEA002,DISP=SHR                          
+//*ICS.FILEA003 DD  DSN=IICS330.CICS.FILEA003,DISP=SHR                          
+//*ICS.FILEA004 DD  DSN=IICS330.CICS.FILEA004,DISP=SHR                          
+//*ICS.FILEA005 DD  DSN=IICS330.CICS.FILEA005,DISP=SHR                          
+//*ICS.FILEA006 DD  DSN=IICS330.CICS.FILEA006,DISP=SHR                          
+//*ICS.FILEA007 DD  DSN=IICS330.CICS.FILEA007,DISP=SHR                          
+//*ICS.FILEA008 DD  DSN=IICS330.CICS.FILEA008,DISP=SHR                          
+//*ICS.FILEA009 DD  DSN=IICS330.CICS.FILEA009,DISP=SHR                          
+//*ICS.FILEA010 DD  DSN=IICS330.CICS.FILEA010,DISP=SHR                          
+//*ICS.FILEA011 DD  DSN=IICS330.CICS.FILEA011,DISP=SHR                          
+//*ICS.FILEA012 DD  DSN=IICS330.CICS.FILEA012,DISP=SHR                          
+//*ICS.FILEA013 DD  DSN=IICS330.CICS.FILEA013,DISP=SHR                          
+//*ICS.FILEA014 DD  DSN=IICS330.CICS.FILEA014,DISP=SHR                          
+//*ICS.FILEA015 DD  DSN=IICS330.CICS.FILEA015,DISP=SHR                          
+//*ICS.FILEA016 DD  DSN=IICS330.CICS.FILEA016,DISP=SHR                          
+//*ICS.FILEA017 DD  DSN=IICS330.CICS.FILEA017,DISP=SHR                          
+//*ICS.FILEA018 DD  DSN=IICS330.CICS.FILEA018,DISP=SHR                          
+//*ICS.FILEA019 DD  DSN=IICS330.CICS.FILEA019,DISP=SHR                          
+//*ICS.FILEA020 DD  DSN=IICS330.CICS.FILEA020,DISP=SHR                          
+//*ICS.DFHRPL   DD DSN=IICS330.PGMLIB,DISP=SHR                                  
+//*        DD  DSN=CICS330.SDFHLOAD,DISP=SHR                                    
+//*        DD  DSN=SYS1.DSN310.SDSNLOAD,DISP=SHR                                
+//*        DD  DSN=DSN310.RUNLIB.LOAD,DISP=SHR                                  
+//*        DD  DSN=SYS1.COB2CICS,DISP=SHR                                       
+//*        DD  DSN=SYS1.COB2LIB,DISP=SHR                                        
+//*FHXRMSG DD  DSN=CICSVS.IVP.DFHXRMSG,DISP=SHR                                 
+//DFHCXRF  DD  SYSOUT=*                                                         
+//DFHJACD  DD  DSN=IICS330.CICS.DFHJACD,DISP=SHR                                
+//DFHJPDS  DD  DSN=IICS330.DFHJPDS,DISP=SHR                                     
+//DFHJOUT  DD  SYSOUT=(X,INTRDR)                                                
+//*   CHANGE 'R' TO MATCH YOUR JES INTERNAL READER                              
+//TRACEOUT DD  SYSOUT=*                                                         
+//CICS.SYSIN DD *                                                               
+AKPFREQ=65535,                                                                  
+AMXT=200,                                                                       
+APPLID=(IICS),                                                                  
+AUXTR=OFF,                                                                      
+AUXTRSW=NEXT,                                                                   
+CDSASZE=1250000,                                                                
+CICSSVC=216,                                                                    
+DFLTUSER=DAVID,                                                                 
+ECDSASZE=14000000,                                                              
+ERDSASZE=4500000,                                                               
+GRPLIST=TLIST,                                                                  
+IRCSTRT=YES,                                                                    
+ISC=YES,                                                                        
+MXT=200,                                                                        
+SEC=NO,                                                                         
+SIT=6$,                                                                         
+SRT=1$,                                                                         
+STGPROT=YES,                                                                    
+SUBTSKS=1,                                                                      
+SYSIDNT=CICS,                                                                   
+TS=(COLD,0),                                                                    
+UDSASZE=4000000,                                                                
+XRF=NO                                                                          
+.END                                                                            
+/*                                                                              
+TS=(,200,20),                                                                   

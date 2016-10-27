@@ -1,0 +1,147 @@
+//GENIT    JOB (330DJY00),'D J YOUNG ',MSGCLASS=Y,NOTIFY=DJY00          00001008
+//COB2UCL PROC                                                          00010000
+//*   PROC FOR COBOL II - COMPILE AND LINK                              00020000
+//COB2 EXEC PGM=IGYCRCTL,PARM='OBJECT,LIB,APOST,LIST',REGION=1024K      00030002
+//*TEPLIB  DD  DSNAME=DB2IMS.COB2COMP,DISP=SHR                          00040005
+//STEPLIB  DD  DSNAME=SYS1.COB2COMP,DISP=SHR                            00040005
+//SYSPRINT DD  SYSOUT=*                                                 00050000
+//SYSLIN   DD  DSNAME=&&LOADSET,UNIT=3390,DISP=(MOD,PASS),              00060000
+//             SPACE=(TRK,(3,3))                                        00070000
+//SYSUT1   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00080000
+//SYSUT2   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00090000
+//SYSUT3   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00100000
+//SYSUT4   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00110000
+//SYSUT5   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00120000
+//SYSUT6   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00121000
+//SYSUT7   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00122000
+//LKED   EXEC  PGM=IEWL,PARM='LIST,XREF,',COND=(5,LT,COB2),             00130003
+//             REGION=512K                                              00140003
+//SYSLIN   DD  DSNAME=&&LOADSET,DISP=(OLD,DELETE)                       00150003
+//SYSLMOD  DD  DSNAME=DJY00.RAND.PGMLIB(GENIT),                         00170005
+//             DISP=SHR                                                 00180003
+//SYSLIB   DD  DSNAME=SYS1.COB2LIB,DISP=SHR                             00190005
+//         DD  DSNAME=CEE.V1R5M0.SCEELKED,DISP=SHR                      00190005
+//         DD  DSNAME=DJY00.RAND.SRCLIB,DISP=SHR                        00190005
+//SYSUT1   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00200003
+//SYSPRINT DD  SYSOUT=*                                                 00210003
+// PEND                                                                 00220000
+//DOIT EXEC COB2UCL                                                     00230000
+//SYSIN DD *                                                            00240010
+       ID DIVISION.                                                             
+       PROGRAM-ID. GENIT.                                                       
+       AUTHOR. D J YOUNG.                                                       
+       ENVIRONMENT DIVISION.                                                    
+       INPUT-OUTPUT SECTION.                                                    
+       FILE-CONTROL.                                                            
+           SELECT OUTPUT-FILE ASSIGN TO UT-S-OUTPUT.                            
+       DATA DIVISION.                                                           
+       FILE SECTION.                                                            
+       FD  OUTPUT-FILE                                                          
+           BLOCK CONTAINS 0 RECORDS                                             
+           RECORD CONTAINS 96 CHARACTERS                                        
+           RECORDING MODE F                                                     
+           LABEL RECORDS ARE STANDARD.                                          
+       01  OUTPUT-RECORD.                                                       
+           05 FILLER            PIC X(46).                                      
+           05  I-DATA-SPOT      OCCURS 5 TIMES.                                 
+               07 I-DATA        PIC X(10).                                      
+       WORKING-STORAGE SECTION.                                                 
+       77  YES-FLAG             PIC X VALUE 'Y'.                                
+       77  NO-FLAG              PIC X VALUE 'N'.                                
+       01  OUTPUT-BUFFER.                                                       
+           05  I-ID             PIC 9(8).                                       
+           05  I-IM-ID          PIC 9(8).                                       
+           05  I-NAME           PIC X(24).                                      
+           05  I-PRICE          PIC 9.99.                                       
+           05  I-PRICE-FLOAT    PIC XX VALUE 'E2'.                              
+           05  FILLER           OCCURS 5 TIMES.                                 
+               07 FILLER        PIC X(10) VALUE 'BLAHBLAH'.                     
+       01  RANDASM-PARMS.                                                       
+           05  LOWER-BOUND      PIC S9(9) COMP VALUE 1.                         
+           05  UPPER-BOUND      PIC S9(9) COMP VALUE 200.                       
+           05  RANGE2           PIC S9(9) COMP VALUE 404.                       
+           05  SEED             PIC S9(9) COMP.                                 
+           05  I-IM-ID-WORK     PIC S9(9) COMP.                                 
+           05  I-PRICE-WORK     PIC S9(7)V99 COMP.                              
+           05  I-DATA1-WORK     PIC S9(9) COMP.                                 
+           05  I-DATA2-WORK     PIC S9(9) COMP.                                 
+           05  RAND-WORK        PIC S9(9) COMP.                                 
+       LINKAGE SECTION.                                                         
+       01  INPUT-PARMS.                                                         
+           05  PARM-LENGTH      PIC S9(3) COMP.                                 
+           05  STARTING-KSEQ    PIC 9(9).                                       
+           05  FILLER           PIC X.                                          
+           05  ENDING-KSEQ      PIC 9(9).                                       
+           05  FILLER           PIC X.                                          
+           05  TOTAL-ROWS       PIC 9(9).                                       
+       PROCEDURE DIVISION USING INPUT-PARMS.                                    
+       MAIN-ROUTINE.                                                            
+      *(1)                                                                      
+           OPEN OUTPUT OUTPUT-FILE.                                             
+      *(2)                                                                      
+           MOVE 0 TO I-ID.                                                      
+           MOVE 1 TO SEED.                                                      
+      *(3)                                                                      
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 10000 TO UPPER-BOUND.                                           
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS01' USING YES-FLAG,                                      
+                                 I-IM-ID-WORK,                                  
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 100 TO UPPER-BOUND.                                             
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS02' USING YES-FLAG,                                      
+                                 I-PRICE-WORK,                                  
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 10 TO UPPER-BOUND.                                              
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS03' USING YES-FLAG,                                      
+                                 I-DATA1-WORK,                                  
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+           MOVE 10 TO SEED.                                                     
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 5  TO UPPER-BOUND.                                              
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS04' USING YES-FLAG,                                      
+                                 I-DATA2-WORK,                                  
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+      *(4)                                                                      
+           PERFORM COMPUTE-AND-WRITE UNTIL I-ID > 100000.                       
+      *(5)                                                                      
+           CLOSE OUTPUT-FILE.                                                   
+           GOBACK.                                                              
+      ******************************************************************        
+      *                                                                         
+      *                                                                         
+      ******************************************************************        
+       COMPUTE-AND-WRITE.                                                       
+           CALL 'RANDAS01' USING NO-FLAG,                                       
+                                I-IM-ID-WORK.                                   
+           CALL 'RANDAS02' USING NO-FLAG,                                       
+                                I-PRICE-WORK.                                   
+           CALL 'RANDAS03' USING NO-FLAG,                                       
+                                I-DATA1-WORK.                                   
+           CALL 'RANDAS04' USING NO-FLAG,                                       
+                                I-DATA2-WORK.                                   
+           MOVE I-IM-ID-WORK TO I-IM-ID.                                        
+           MOVE I-PRICE-WORK TO I-PRICE.                                        
+           MOVE OUTPUT-BUFFER TO OUTPUT-RECORD.                                 
+           IF I-DATA1-WORK = 7                                                  
+               DISPLAY I-DATA1-WORK                                             
+               MOVE 'ORIGINAL' TO I-DATA(I-DATA2-WORK).                         
+           WRITE OUTPUT-RECORD.                                                 
+           ADD 1 TO I-ID.                                                       

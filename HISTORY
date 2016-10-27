@@ -1,0 +1,36 @@
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  HISTORY                                                    --        
+--  TABLESPACE HITS                                                   --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE HITS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 1000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS YES;                                                              
+ CREATE TABLE DAVID.HISTORY                                                     
+     (H_C_ID            INTEGER  NOT NULL,                                      
+      H_C_D_ID          INTEGER NOT NULL,                                       
+      H_C_W_ID          INTEGER NOT NULL,                                       
+      H_D_ID            INTEGER NOT NULL,                                       
+      H_W_ID            INTEGER NOT NULL,                                       
+      H_DATE            TIMESTAMP NOT NULL WITH DEFAULT,                        
+      H_AMOUNT          FLOAT   NOT NULL,                                       
+      H_DATA            CHAR(24) NOT NULL,                                      
+      FOREIGN KEY HIFK1 (H_C_W_ID,H_C_D_ID,H_C_ID)                              
+          REFERENCES DAVID.CUSTOMER ON DELETE RESTRICT,                         
+      FOREIGN KEY HIFK2 (H_W_ID,H_D_ID)                                         
+          REFERENCES DAVID.DISTRICT ON DELETE RESTRICT)                         
+      IN  TPCCDB.HITS;                                                          
+-- **************************************************************** --   --     
+--    NO INDEX REQUIRED                                             --   --     
+--                                                                  --          
+-- **************************************************************** --          

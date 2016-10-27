@@ -1,0 +1,508 @@
+//LDALL    JOB (AAA),'D J YOUNG',MSGCLASS=X,TIME=1440,USER=DAVID,               
+//         REGION=0K                                                            
+//DSNUPROC PROC LIB='SYS1.DSN310.SDSNLOAD',                                     
+//         SYSTEM=DB3,                                                          
+//         SIZE=1024K,UID='',UTPROC=''                                          
+//*        SIZE=1024K,UID='',UTPROC='RESTART'                                   
+//*        COMPRESS = YES                                                       
+//DSNUPROC EXEC PGM=DSNUTILB,REGION=&SIZE,                                      
+//         PARM=(&SYSTEM,'&UID','&UTPROC')                                      
+//STEPLIB  DD DSN=&LIB,DISP=SHR                                                 
+//SYSPRINT DD SYSOUT=*                                                          
+//UTPRINT  DD SYSOUT=*                                                          
+//SYSUDUMP DD SYSOUT=*                                                          
+//    PEND                                                                      
+//LDWH EXEC DSNUPROC,SYSTEM=DB3,UID='LDWH',UTPROC=''                            
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SORTWK01 DD DSN=&&SORT1,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK02 DD DSN=&&SORT2,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK03 DD DSN=&&SORT3,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43RS                                                 
+//DSNUPROC.SORTWK04 DD DSN=&&SORT4,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SYSUT1 DD DSN=&&SYSUT1,                                              
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SORTOUT DD DSN=&&SORTOT,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(250,90),,,ROUND),                                            
+//     UNIT=3390,VOL=SER=CICS41                                                 
+//DSNUPROC.MYDD1 DD DSN=DAVID.WAREHOUS.INPUT,                                   
+//        UNIT=3390,VOL=SER=SMS9EA,DISP=SHR                                     
+//DSNUPROC.SYSMAP DD  DSN=&&SYSMAP,UNIT=3390,DISP=(NEW,DELETE,DELETE),          
+// SPACE=(CYL,(5,5)),DCB=BLKSIZE=15400,VOL=SER=MV43RS                           
+//DSNUPROC.SYSIN    DD  *                                                       
+ LOAD DATA INDDN(MYDD1) LOG NO RESUME NO                                00010000
+      INTO TABLE DAVID.WAREHOUSE                                        00020000
+     (W_ID            POSITION(1:8)      DECIMAL EXTERNAL,                      
+      W_NAME          POSITION(9:18)     CHAR(10),                              
+      W_STREET_1      POSITION(19:38)    CHAR(20),                              
+      W_STREET_2      POSITION(39:58)    CHAR(20),                              
+      W_CITY          POSITION(59:78)    CHAR(20),                              
+      W_STATE         POSITION(79:80)    CHAR(2),                               
+      W_ZIP           POSITION(81:89)    CHAR(9),                               
+      W_TAX           POSITION(90:95)    FLOAT EXTERNAL,                        
+      W_YTD           POSITION(96:99)    FLOAT EXTERNAL)                        
+/*                                                                              
+//LDIT EXEC DSNUPROC,SYSTEM=DB3,UID='LDIT',UTPROC=''                            
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SORTWK01 DD DSN=&&SORT1,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK02 DD DSN=&&SORT2,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK03 DD DSN=&&SORT3,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43RS                                                 
+//DSNUPROC.SORTWK04 DD DSN=&&SORT4,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SYSUT1 DD DSN=&&SYSUT1,                                              
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SORTOUT DD DSN=&&SORTOT,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(250,90),,,ROUND),                                            
+//     UNIT=3390,VOL=SER=CICS41                                                 
+//DSNUPROC.MYDD1 DD DSN=DAVID.ITEM.INPUT,                                       
+//        UNIT=3390,VOL=SER=SMS9EA,DISP=SHR                                     
+//DSNUPROC.SYSMAP DD  DSN=&&SYSMAP,UNIT=3390,DISP=(NEW,DELETE,DELETE),          
+// SPACE=(CYL,(5,5)),DCB=BLKSIZE=15400,VOL=SER=MV43RS                           
+//DSNUPROC.SYSIN    DD  *                                                       
+ LOAD DATA INDDN(MYDD1) LOG NO RESUME NO                                00010000
+      INTO TABLE DAVID.ITEM                                             00020000
+     (I_ID            POSITION(1:8)      DECIMAL EXTERNAL,                      
+      I_IM_ID         POSITION(9:16)     DECIMAL EXTERNAL,                      
+      I_NAME          POSITION(17:40)    CHAR(24),                              
+      I_PRICE         POSITION(41:46)    FLOAT EXTERNAL,                        
+      I_DATA          POSITION(47:96)    CHAR(50))                              
+/*                                                                              
+//LDST EXEC DSNUPROC,SYSTEM=DB3,UID='LDST',UTPROC=''                            
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SORTWK01 DD DSN=&&SORT1,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK02 DD DSN=&&SORT2,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK03 DD DSN=&&SORT3,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43RS                                                 
+//DSNUPROC.SORTWK04 DD DSN=&&SORT4,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SYSUT1 DD DSN=&&SYSUT1,                                              
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SORTOUT DD DSN=&&SORTOT,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(250,90),,,ROUND),                                            
+//     UNIT=3390,VOL=SER=CICS41                                                 
+//DSNUPROC.MYDD1 DD DSN=DAVID.STOCK.INPUT,                                      
+//        UNIT=3390,VOL=SER=SMS9EA,DISP=SHR                                     
+//DSNUPROC.SYSMAP DD  DSN=&&SYSMAP,UNIT=3390,DISP=(NEW,DELETE,DELETE),          
+// SPACE=(CYL,(5,5)),DCB=BLKSIZE=15400,VOL=SER=MV43RS                           
+//DSNUPROC.SYSIN    DD  *                                                       
+ LOAD DATA INDDN(MYDD1) LOG NO RESUME NO                                00010000
+      INTO TABLE DAVID.STOCK                                            00020000
+     (S_I_ID          POSITION(1:8)      DECIMAL EXTERNAL,                      
+      S_W_ID          POSITION(9:16)     DECIMAL EXTERNAL,                      
+      S_QUANTITY      POSITION(17:24)    DECIMAL EXTERNAL,                      
+      S_DIST_01       POSITION(25:48)    CHAR(24),                              
+      S_DIST_02       POSITION(26:49)    CHAR(24),                              
+      S_DIST_03       POSITION(27:50)    CHAR(24),                              
+      S_DIST_04       POSITION(28:51)    CHAR(24),                              
+      S_DIST_05       POSITION(29:52)    CHAR(24),                              
+      S_DIST_06       POSITION(30:53)    CHAR(24),                              
+      S_DIST_07       POSITION(31:54)    CHAR(24),                              
+      S_DIST_08       POSITION(32:55)    CHAR(24),                              
+      S_DIST_09       POSITION(33:56)    CHAR(24),                              
+      S_DIST_10       POSITION(34:57)    CHAR(24),                              
+      S_YTD           POSITION(75:80)    FLOAT EXTERNAL,                        
+      S_ORDER_CNT     POSITION(81:88)    DECIMAL EXTERNAL,                      
+      S_REMOTE_CNT    POSITION(89:94)    DECIMAL EXTERNAL,                      
+      S_DATA          POSITION(25:74)    CHAR(50))                              
+/*                                                                              
+//LDDI EXEC DSNUPROC,SYSTEM=DB3,UID='LDDI',UTPROC=''                            
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SORTWK01 DD DSN=&&SORT1,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK02 DD DSN=&&SORT2,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK03 DD DSN=&&SORT3,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43RS                                                 
+//DSNUPROC.SORTWK04 DD DSN=&&SORT4,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SYSUT1 DD DSN=&&SYSUT1,                                              
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SORTOUT DD DSN=&&SORTOT,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(250,90),,,ROUND),                                            
+//     UNIT=3390,VOL=SER=CICS41                                                 
+//DSNUPROC.MYDD1 DD DSN=DAVID.DISTRICT.INPUT,                                   
+//        UNIT=3390,VOL=SER=SMS9EA,DISP=SHR                                     
+//DSNUPROC.SYSMAP DD  DSN=&&SYSMAP,UNIT=3390,DISP=(NEW,DELETE,DELETE),          
+// SPACE=(CYL,(5,5)),DCB=BLKSIZE=15400,VOL=SER=MV43RS                           
+//DSNUPROC.SYSIN    DD  *                                                       
+ LOAD DATA INDDN(MYDD1) LOG NO RESUME NO                                00010000
+      INTO TABLE DAVID.DISTRICT                                         00020000
+     (D_ID            POSITION(1:8)      DECIMAL EXTERNAL,                      
+      D_W_ID          POSITION(9:16)     DECIMAL EXTERNAL,                      
+      D_NAME          POSITION(17:26)    CHAR(10),                              
+      D_STREET_1      POSITION(27:46)    CHAR(20),                              
+      D_STREET_2      POSITION(47:66)    CHAR(20),                              
+      D_CITY          POSITION(67:86)    CHAR(20),                              
+      D_STATE         POSITION(87:88)    CHAR(2),                               
+      D_ZIP           POSITION(89:97)    CHAR(9),                               
+      D_TAX           POSITION(98:103)   FLOAT EXTERNAL,                        
+      D_YTD           POSITION(104:109)  FLOAT EXTERNAL,                        
+      D_NEXT_O_ID     POSITION(110:115)  DECIMAL EXTERNAL)                      
+/*                                                                              
+//LDCU EXEC DSNUPROC,SYSTEM=DB3,UID='LDCU',UTPROC=''                            
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SORTWK01 DD DSN=&&SORT1,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK02 DD DSN=&&SORT2,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK03 DD DSN=&&SORT3,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43RS                                                 
+//DSNUPROC.SORTWK04 DD DSN=&&SORT4,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SYSUT1 DD DSN=&&SYSUT1,                                              
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SORTOUT DD DSN=&&SORTOT,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(250,90),,,ROUND),                                            
+//     UNIT=3390,VOL=SER=CICS41                                                 
+//DSNUPROC.MYDD1 DD DSN=DAVID.CUSTOMER.INPUT,                                   
+//        UNIT=3390,VOL=SER=SMS9EA,DISP=SHR                                     
+//DSNUPROC.SYSMAP DD  DSN=&&SYSMAP,UNIT=3390,DISP=(NEW,DELETE,DELETE),          
+// SPACE=(CYL,(5,5)),DCB=BLKSIZE=15400,VOL=SER=MV43RS                           
+//DSNUPROC.SYSIN    DD  *                                                       
+ LOAD DATA INDDN(MYDD1) LOG NO RESUME NO                                00010000
+      INTO TABLE DAVID.CUSTOMER                                         00020000
+     (C_ID            POSITION(1:8)      DECIMAL EXTERNAL,                      
+      C_D_ID          POSITION(9:16)     DECIMAL EXTERNAL,                      
+      C_W_ID          POSITION(17:24)    DECIMAL EXTERNAL,                      
+      C_FIRST         POSITION(25:40)    CHAR(16),                              
+      C_MIDDLE        POSITION(41:42)    CHAR(2),                               
+      C_LAST          POSITION(43:58)    CHAR(16),                              
+      C_STREET_1      POSITION(59:78)    CHAR(20),                              
+      C_STREET_2      POSITION(79:98)    CHAR(20),                              
+      C_CITY          POSITION(99:118)   CHAR(20),                              
+      C_STATE         POSITION(119:120)  CHAR(2),                               
+      C_ZIP           POSITION(121:129)  CHAR(9),                               
+      C_PHONE         POSITION(130:145)  CHAR(16),                              
+      C_CREDIT        POSITION(146:147)  CHAR(2),                               
+      C_CREDIT_LIM    POSITION(148:153)  FLOAT EXTERNAL,                        
+      C_DISCOUNT      POSITION(154:159)  FLOAT EXTERNAL,                        
+      C_BALANCE       POSITION(160:165)  FLOAT EXTERNAL,                        
+      C_YTD_PAYMENT   POSITION(166:171)  FLOAT EXTERNAL,                        
+      C_PAYMENT_CNT   POSITION(172:177)  FLOAT EXTERNAL,                        
+      C_DELIVERY_CNT  POSITION(178:183)  FLOAT EXTERNAL)                        
+/*                                                                              
+//LDHI EXEC DSNUPROC,SYSTEM=DB3,UID='LDHI',UTPROC=''                            
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SORTWK01 DD DSN=&&SORT1,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK02 DD DSN=&&SORT2,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK03 DD DSN=&&SORT3,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43RS                                                 
+//DSNUPROC.SORTWK04 DD DSN=&&SORT4,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SYSUT1 DD DSN=&&SYSUT1,                                              
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SORTOUT DD DSN=&&SORTOT,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(250,90),,,ROUND),                                            
+//     UNIT=3390,VOL=SER=CICS41                                                 
+//DSNUPROC.MYDD1 DD DSN=DAVID.HISTORY.INPUT,                                    
+//        UNIT=3390,VOL=SER=SMS9EA,DISP=SHR                                     
+//DSNUPROC.SYSMAP DD  DSN=&&SYSMAP,UNIT=3390,DISP=(NEW,DELETE,DELETE),          
+// SPACE=(CYL,(5,5)),DCB=BLKSIZE=15400,VOL=SER=MV43RS                           
+//DSNUPROC.SYSIN    DD  *                                                       
+ LOAD DATA INDDN(MYDD1) LOG NO RESUME NO                                00010000
+      INTO TABLE DAVID.HISTORY                                          00020000
+     (H_C_ID          POSITION(1:8)      DECIMAL EXTERNAL,                      
+      H_C_D_ID        POSITION(9:16)     DECIMAL EXTERNAL,                      
+      H_C_W_ID        POSITION(17:24)    DECIMAL EXTERNAL,                      
+      H_D_ID          POSITION(25:32)    DECIMAL EXTERNAL,                      
+      H_W_ID          POSITION(33:40)    DECIMAL EXTERNAL,                      
+      H_AMOUNT        POSITION(41:48)    DECIMAL EXTERNAL,                      
+      H_DATA          POSITION(49:72)    CHAR(24))                              
+/*                                                                              
+//LDOR EXEC DSNUPROC,SYSTEM=DB3,UID='LDOR',UTPROC=''                            
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SORTWK01 DD DSN=&&SORT1,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK02 DD DSN=&&SORT2,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK03 DD DSN=&&SORT3,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43RS                                                 
+//DSNUPROC.SORTWK04 DD DSN=&&SORT4,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SYSUT1 DD DSN=&&SYSUT1,                                              
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SORTOUT DD DSN=&&SORTOT,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(250,90),,,ROUND),                                            
+//     UNIT=3390,VOL=SER=CICS41                                                 
+//DSNUPROC.MYDD1 DD DSN=DAVID.ORDER.INPUT,                                      
+//        UNIT=3390,VOL=SER=SMS9EA,DISP=SHR                                     
+//DSNUPROC.SYSMAP DD  DSN=&&SYSMAP,UNIT=3390,DISP=(NEW,DELETE,DELETE),          
+// SPACE=(CYL,(5,5)),DCB=BLKSIZE=15400,VOL=SER=MV43RS                           
+//DSNUPROC.SYSIN    DD  *                                                       
+ LOAD DATA INDDN(MYDD1) LOG NO RESUME NO                                00010000
+      INTO TABLE DAVID.ORDER                                            00020000
+     (O_ID            POSITION(1:8)      DECIMAL EXTERNAL,                      
+      O_D_ID          POSITION(9:16)     DECIMAL EXTERNAL,                      
+      O_W_ID          POSITION(17:24)    DECIMAL EXTERNAL,                      
+      O_C_ID          POSITION(25:32)    DECIMAL EXTERNAL,                      
+      O_CARRIER_ID    POSITION(33:40)    DECIMAL EXTERNAL,                      
+      O_OL_CNT        POSITION(41:48)    DECIMAL EXTERNAL,                      
+      O_ALL_LOCAL     POSITION(49:56)    DECIMAL EXTERNAL)                      
+/*                                                                              
+//LDNO EXEC DSNUPROC,SYSTEM=DB3,UID='LDNO',UTPROC=''                            
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SORTWK01 DD DSN=&&SORT1,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK02 DD DSN=&&SORT2,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK03 DD DSN=&&SORT3,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43RS                                                 
+//DSNUPROC.SORTWK04 DD DSN=&&SORT4,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SYSUT1 DD DSN=&&SYSUT1,                                              
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SORTOUT DD DSN=&&SORTOT,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(250,90),,,ROUND),                                            
+//     UNIT=3390,VOL=SER=CICS41                                                 
+//DSNUPROC.MYDD1 DD DSN=DAVID.NEWORDER.INPUT,                                   
+//        UNIT=3390,VOL=SER=SMS9EA,DISP=SHR                                     
+//DSNUPROC.SYSMAP DD  DSN=&&SYSMAP,UNIT=3390,DISP=(NEW,DELETE,DELETE),          
+// SPACE=(CYL,(5,5)),DCB=BLKSIZE=15400,VOL=SER=MV43RS                           
+//DSNUPROC.SYSIN    DD  *                                                       
+ LOAD DATA INDDN(MYDD1) LOG NO RESUME NO                                00010000
+      INTO TABLE DAVID.NEWORDER                                         00020000
+     (NO_O_ID         POSITION(1:8)      DECIMAL EXTERNAL,                      
+      NO_D_ID         POSITION(9:16)     DECIMAL EXTERNAL,                      
+      NO_W_ID         POSITION(17:24)    DECIMAL EXTERNAL)                      
+/*                                                                              
+//LDOL EXEC DSNUPROC,SYSTEM=DB3,UID='LDOL',UTPROC=''                            
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SORTWK01 DD DSN=&&SORT1,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK02 DD DSN=&&SORT2,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43CA                                                 
+//DSNUPROC.SORTWK03 DD DSN=&&SORT3,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43RS                                                 
+//DSNUPROC.SORTWK04 DD DSN=&&SORT4,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SYSUT1 DD DSN=&&SYSUT1,                                              
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(90,50),,,ROUND),                                             
+//     UNIT=3390,VOL=SER=MV43DL                                                 
+//DSNUPROC.SORTOUT DD DSN=&&SORTOT,                                             
+//     DISP=(,DELETE),DCB=BLKSIZE=15400,                                        
+//     SPACE=(CYL,(250,90),,,ROUND),                                            
+//     UNIT=3390,VOL=SER=CICS41                                                 
+//DSNUPROC.MYDD1 DD DSN=DAVID.ORDERLIN.INPUT,                                   
+//        UNIT=3390,VOL=SER=SMS9EA,DISP=SHR                                     
+//DSNUPROC.SYSMAP DD  DSN=&&SYSMAP,UNIT=3390,DISP=(NEW,DELETE,DELETE),          
+// SPACE=(CYL,(5,5)),DCB=BLKSIZE=15400,VOL=SER=MV43RS                           
+//DSNUPROC.SYSIN    DD  *                                                       
+ LOAD DATA INDDN(MYDD1) LOG NO RESUME NO                                00010000
+      INTO TABLE DAVID.ORDERLINE                                        00020000
+     (OL_O_ID         POSITION(1:8)      DECIMAL EXTERNAL,                      
+      OL_D_ID         POSITION(9:16)     DECIMAL EXTERNAL,                      
+      OL_W_ID         POSITION(17:24)    DECIMAL EXTERNAL,                      
+      OL_NUMBER       POSITION(25:32)    DECIMAL EXTERNAL,                      
+      OL_I_ID         POSITION(33:40)    DECIMAL EXTERNAL,                      
+      OL_SUPPLY_W_ID  POSITION(41:48)    DECIMAL EXTERNAL,                      
+      OL_QUANTITY     POSITION(49:56)    DECIMAL EXTERNAL,                      
+      OL_AMOUNT       POSITION(57:64)    DECIMAL EXTERNAL,                      
+      OL_DIST_INFO    POSITION(65:88)    CHAR(24))                              
+/*                                                                              
+//RNST EXEC DSNUPROC,SYSTEM=DB3,UID='RUNSTALL'                                  
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SYSIN    DD  *                                                       
+ RUNSTATS TABLESPACE TPCCDB.WHTS TABLE (ALL) INDEX (ALL)                00010000
+ RUNSTATS TABLESPACE TPCCDB.ITEMTS TABLE (ALL) INDEX (ALL)              00010000
+ RUNSTATS TABLESPACE TPCCDB.STOCKTS TABLE (ALL) INDEX (ALL)             00010000
+ RUNSTATS TABLESPACE TPCCDB.DITS TABLE (ALL) INDEX (ALL)                00010000
+ RUNSTATS TABLESPACE TPCCDB.CUTS TABLE (ALL) INDEX (ALL)                00010000
+ RUNSTATS TABLESPACE TPCCDB.HITS TABLE (ALL) INDEX (ALL)                00010000
+ RUNSTATS TABLESPACE TPCCDB.ORDERTS TABLE (ALL) INDEX (ALL)             00010000
+ RUNSTATS TABLESPACE TPCCDB.NOTS TABLE (ALL) INDEX (ALL)                00010000
+ RUNSTATS TABLESPACE TPCCDB.OLTS TABLE (ALL) INDEX (ALL)                00010000
+//REPR EXEC DSNUPROC,SYSTEM=DB3,UID='REPAIR',UTPROC=''                          
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE REPAIR UTILITY                                      
+//*  DATE:  02/10/88          TIME:  02:45:26                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SYSIN    DD  *                                                       
+ REPAIR LOG NO SET  TABLESPACE TPCCDB.WHTS       NOCOPYPEND             00010000
+ REPAIR LOG NO SET  TABLESPACE TPCCDB.ITEMTS     NOCOPYPEND             00010000
+ REPAIR LOG NO SET  TABLESPACE TPCCDB.STOCKTS    NOCOPYPEND             00010000
+ REPAIR LOG NO SET  TABLESPACE TPCCDB.DITS       NOCOPYPEND             00010000
+ REPAIR LOG NO SET  TABLESPACE TPCCDB.CUTS       NOCOPYPEND             00010000
+ REPAIR LOG NO SET  TABLESPACE TPCCDB.HITS       NOCOPYPEND             00010000
+ REPAIR LOG NO SET  TABLESPACE TPCCDB.ORDERTS    NOCOPYPEND             00010000
+ REPAIR LOG NO SET  TABLESPACE TPCCDB.NOTS       NOCOPYPEND             00010000
+ REPAIR LOG NO SET  TABLESPACE TPCCDB.OLTS       NOCOPYPEND             00010000

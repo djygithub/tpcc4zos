@@ -1,0 +1,15 @@
+ /********************************************************************/         
+ /*                                                                  */         
+ /* Module Name = FRMTSL                                             */         
+ /*                                                                  */         
+ /* Descriptive Name = Format 3270 for Stock Level transaction       */         
+ /*                                                                  */         
+ /********************************************************************/         
+#include "bmsmsl.h"                                                             
+                                                                                
+main()                                                                          
+{                                                                               
+ memset(&bmsmsl.bmsmslo,'\0',sizeof(bmsmsl.bmsmslo));                           
+ EXEC CICS SEND MAP("bmsmsl ") MAPSET("BMSMSL") ERASE;                          
+   EXEC CICS RETURN;                                                            
+}                                                                               

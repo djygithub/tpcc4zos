@@ -1,0 +1,2 @@
+SELECT * FROM DAVID.CUSTOMER;                                                   
+SELECT C_DATA1, C_DATA2 FROM DAVID.CUSTOMER;                                    

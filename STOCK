@@ -1,0 +1,54 @@
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  STOCK                                                      --        
+--  TABLESPACE STOCKTS                                                --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE STOCKTS                                                      
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 1000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS YES;                                                              
+ CREATE TABLE DAVID.STOCK                                                       
+     (S_I_ID            INTEGER  NOT NULL,                                      
+      S_W_ID            INTEGER  NOT NULL,                                      
+      S_QUANTITY        INTEGER,                                                
+      S_DIST_01         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_02         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_03         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_04         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_05         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_06         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_07         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_08         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_09         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_10         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_YTD             FLOAT,                                                  
+      S_ORDER_CNT       INTEGER  NOT NULL,                                      
+      S_REMOTE_CNT      INTEGER  NOT NULL,                                      
+      S_DATA            CHAR(50) NOT NULL WITH DEFAULT,                         
+      PRIMARY KEY (S_W_ID,S_I_ID),                                              
+      FOREIGN KEY STFK1 (S_W_ID)                                                
+          REFERENCES DAVID.WAREHOUSE ON DELETE RESTRICT,                        
+      FOREIGN KEY STFK2 (S_I_ID)                                                
+          REFERENCES DAVID.ITEM ON DELETE RESTRICT)                             
+      IN  TPCCDB.STOCKTS;                                                       
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE UNIQUE INDEX DAVID.STIN01                                               
+        ON DAVID.STOCK(S_W_ID,S_I_ID)                                           
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 8                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              

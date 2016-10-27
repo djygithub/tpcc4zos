@@ -1,0 +1,63 @@
+//FEB13973 JOB (),'D J YOUNG',MSGCLASS=Y,NOTIFY=DJY00                           
+//*                                                                             
+//*        RMF POSTPROCESSING                                                   
+//*                                                                             
+//U200     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE2.FEB13973.SMFDATA.ECA1,DISP=SHR,                      
+// UNIT=3390,VOL=SER=SPARE2                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(1100,1110)                                                               
+  RTOD(1100,1110)                                                               
+  REPORTS(ALL)                                                                  
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  SYSOUT(Y)                                                                     
+//U400     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE2.FEB13973.SMFDATA.ECA1,DISP=SHR,                      
+// UNIT=3390,VOL=SER=SPARE2                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(1110,1120)                                                               
+  RTOD(1110,1120)                                                               
+  REPORTS(ALL)                                                                  
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  SYSOUT(Y)                                                                     
+//U600     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE2.FEB13973.SMFDATA.ECA1,DISP=SHR,                      
+// UNIT=3390,VOL=SER=SPARE2                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(1120,1130)                                                               
+  RTOD(1120,1130)                                                               
+  REPORTS(ALL)                                                                  
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  SYSOUT(Y)                                                                     
+//U800     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE2.FEB13973.SMFDATA.ECA1,DISP=SHR,                      
+// UNIT=3390,VOL=SER=SPARE2                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(1130,1140)                                                               
+  RTOD(1130,1140)                                                               
+  REPORTS(ALL)                                                                  
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  SYSOUT(Y)                                                                     
+//UALL     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE2.FEB13973.SMFDATA.ECA1,DISP=SHR,                      
+// UNIT=3390,VOL=SER=SPARE2                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(1100,1140)                                                               
+  RTOD(1100,1140)                                                               
+  SYSRPTS(CF)                                                                   
+  SYSOUT(Y)                                                                     
+/*                                                                              

@@ -1,0 +1,47 @@
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  ORDERLINE                                                  --        
+--  TABLESPACE OLTS                                                   --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE OLTS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 1000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS YES;                                                              
+ CREATE TABLE DAVID.ORDERLINE                                                   
+     (OL_O_ID           INTEGER  NOT NULL,                                      
+      OL_D_ID           INTEGER  NOT NULL,                                      
+      OL_W_ID           INTEGER  NOT NULL,                                      
+      OL_NUMBER         INTEGER  NOT NULL,                                      
+      OL_I_ID           INTEGER  NOT NULL,                                      
+      OL_SUPPLY_W_ID    INTEGER  NOT NULL,                                      
+      OL_DELIVERY_D     TIMESTAMP NOT NULL WITH DEFAULT,                        
+      OL_QUANTITY       INTEGER  NOT NULL,                                      
+      OL_AMOUNT         FLOAT    NOT NULL,                                      
+      OL_DIST_INFO      CHAR(24) NOT NULL,                                      
+      PRIMARY KEY (OL_W_ID,OL_D_ID,OL_O_ID,OL_NUMBER),                          
+      FOREIGN KEY OLFK1 (OL_W_ID,OL_D_ID,OL_O_ID)                               
+          REFERENCES DAVID.ORDER ON DELETE RESTRICT,                            
+      FOREIGN KEY OLFK2 (OL_SUPPLY_W_ID,OL_I_ID)                                
+          REFERENCES DAVID.STOCK ON DELETE RESTRICT)                            
+      IN  TPCCDB.OLTS;                                                          
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE UNIQUE INDEX DAVID.OLIN01                                               
+        ON DAVID.ORDERLINE(OL_W_ID,OL_D_ID,OL_O_ID,OL_NUMBER)                   
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 8                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              

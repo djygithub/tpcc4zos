@@ -1,0 +1,31 @@
+//RUNSTALL JOB (AAA),'D J YOUNG',MSGCLASS=X,TIME=1440,USER=DAVID                
+//DSNUPROC PROC LIB='SYS1.DSN310.SDSNLOAD',                                     
+//         SYSTEM=DB3,                                                          
+//         SIZE=1024K,UID='',UTPROC=''                                          
+//*        SIZE=1024K,UID='',UTPROC='RESTART'                                   
+//DSNUPROC EXEC PGM=DSNUTILB,REGION=&SIZE,                                      
+//         PARM=(&SYSTEM,'&UID','&UTPROC')                                      
+//STEPLIB  DD DSN=&LIB,DISP=SHR                                                 
+//SYSPRINT DD SYSOUT=*                                                          
+//UTPRINT  DD SYSOUT=*                                                          
+//SYSUDUMP DD SYSOUT=*                                                          
+//    PEND                                                                      
+//UTIL EXEC DSNUPROC,SYSTEM=DB3,UID='RUNSTALL'                                  
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SYSIN    DD  *                                                       
+ RUNSTATS TABLESPACE TPCCDB.WHTS TABLE (ALL) INDEX (ALL)                00010000
+ RUNSTATS TABLESPACE TPCCDB.ITEMTS TABLE (ALL) INDEX (ALL)              00010000
+ RUNSTATS TABLESPACE TPCCDB.STOCKTS TABLE (ALL) INDEX (ALL)             00010000
+ RUNSTATS TABLESPACE TPCCDB.DITS TABLE (ALL) INDEX (ALL)                00010000
+ RUNSTATS TABLESPACE TPCCDB.CUTS TABLE (ALL) INDEX (ALL)                00010000
+ RUNSTATS TABLESPACE TPCCDB.HITS TABLE (ALL) INDEX (ALL)                00010000
+ RUNSTATS TABLESPACE TPCCDB.ORDERTS TABLE (ALL) INDEX (ALL)             00010000
+ RUNSTATS TABLESPACE TPCCDB.NOTS TABLE (ALL) INDEX (ALL)                00010000
+ RUNSTATS TABLESPACE TPCCDB.OLTS TABLE (ALL) INDEX (ALL)                00010000

@@ -1,0 +1,32 @@
+//PNURAND  JOB (D3330RWM,ROOM),'D J YOUNG',MSGCLASS=R,USER= DAVID       00010000
+//C       EXEC PGM=EDCDC120,PARM=',SOURCE,RENT,LIST',REGION=4M          00040801
+//*  '&CPARM','&CPARM2','&CPARM3'),REGION=&CREGSIZ                      00040901
+//STEPLIB  DD  DSNAME=CEE.V1R3M0.SCEERUN,DISP=SHR                       00041001
+//         DD  DSNAME=EDC.V1R2M0.SEDCDCMP,DISP=SHR                      00041101
+//SYSMSGS  DD  DSNAME=EDC.V1R2M0.SEDCDMSG(EDCMSGE),DISP=SHR             00041201
+//SYSLIB   DD  DSNAME=EDC.V1R2M0.SEDCDHDR,DISP=SHR                      00041401
+//         DD  DSNAME=CICS330.SDFHC370,DISP=SHR                         00041501
+//         DD  DSNAME=CICS330.SDFHMAC,DISP=SHR                          00041601
+//         DD  DSNAME=CICS330.SDFHSAMP,DISP=SHR                         00041701
+//         DD  DSNAME=DSN310.SRCLIB.DATA,DISP=SHR                       00041801
+//SYSLIN   DD  DSNAME=&&LOADSET,UNIT=3390,                              00041901
+//             DISP=(NEW,PASS),SPACE=(TRK,(3,3)),                       00042001
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=3200)                     00042101
+//SYSPRINT DD  SYSOUT=*                                                 00042201
+//SYSCPRT  DD  SYSOUT=*                                                 00042301
+//SYSUT1   DD  UNIT=3390,SPACE=(32000,(30,30)),                         00042401
+//         DCB=(RECFM=FB,LRECL=80,BLKSIZE=3200)                         00042501
+//SYSUT4   DD  UNIT=3390,SPACE=(32000,(30,30)),                         00042601
+//         DCB=(RECFM=FB,LRECL=80,BLKSIZE=3200)                         00042701
+//SYSUT5   DD  UNIT=3390,SPACE=(32000,(30,30)),                         00042801
+//         DCB=(RECFM=FB,LRECL=3200,BLKSIZE=12800)                      00042901
+//SYSUT6   DD  UNIT=3390,SPACE=(32000,(30,30)),                         00043001
+//         DCB=(RECFM=FB,LRECL=3200,BLKSIZE=12800)                      00043101
+//SYSUT7   DD  UNIT=3390,SPACE=(32000,(30,30)),                         00043201
+//         DCB=(RECFM=FB,LRECL=3200,BLKSIZE=12800)                      00043301
+//SYSUT8   DD  UNIT=3390,SPACE=(32000,(30,30)),                         00043401
+//         DCB=(RECFM=FB,LRECL=3200,BLKSIZE=12800)                      00043501
+//SYSUT9   DD  UNIT=3390,SPACE=(32000,(30,30)),                         00043601
+//             DCB=(RECFM=VB,LRECL=137,BLKSIZE=882)                     00043701
+//SYSUT10  DD  SYSOUT=*                                                 00043801
+//SYSIN DD DSN=DAVID.TPCC.WORKLOAD(NURAND),DISP=SHR                     00047501

@@ -1,0 +1,14 @@
+//TPNSDB2  JOB (330DJY00),'D J YOUNG ',MSGCLASS=Y,NOTIFY=DJY00,                 
+//  REGION=0K                                                                   
+//*     TRANSLATE STL PROGRAM                                                   
+//*                                                                             
+//*TEP1   EXEC PGM=ITPENTER,PARM='DMAPPL=DMAPPL,NTWRK=MRO0100'                  
+//STEP1   EXEC PGM=ITPENTER,PARM='DMAPPL=DMAPPL'                                
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSUT2 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//SYSUT3 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//LOGDD  DD UNIT=3390,VOL=SER=SPARE2,DISP=SHR,                                  
+//  DSN=DJY00.TPNS.CICAMT01,DCB=(BUFNO=25,NCP=10)                               
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//INITDD    DD DISP=SHR,DSN=DJY00.TPNS.INITDD                                   

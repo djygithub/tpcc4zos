@@ -1,0 +1,89 @@
+//NOV06961 JOB (),'D J YOUNG',MSGCLASS=Y,NOTIFY=DJY00                           
+//*                                                                             
+//*        RMF POSTPROCESSING                                                   
+//*                                                                             
+//U100     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE2.NOV06961.SMFDATA2,DISP=SHR,                          
+// UNIT=3390,VOL=SER=SPARE2                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  SUMMARY(INT)                                                                  
+  REPORTS(ALL)                                                                  
+  SYSRPTS(CF,WLMGL,SDEVICE(DASD))                                               
+  SYSOUT(Y)                                                                     
+  STOD(1200,1300)                                                               
+  RTOD(1200,1300)                                                               
+  DATE(96310,96310)                                                             
+//                                                                              
+  DINTV(2359)                                                                   
+//U200     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=MV51RS.AUG03955.SMFDATA,DISP=SHR,                           
+// UNIT=3390,VOL=SER=MV51RS                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  DATE(95215,95215)                                                             
+  RTOD(2220,2230)                                                               
+  STOD(2220,2230)                                                               
+  REPORTS(ALL)                                                                  
+  SYSRPTS(CF,WLMGL,SDEVICE(DASD))                                               
+  SYSOUT(R)                                                                     
+//U300     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=MV51RS.AUG03955.SMFDATA,DISP=SHR,                           
+// UNIT=3390,VOL=SER=MV51RS                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  DATE(95215,95215)                                                             
+  RTOD(2230,2240)                                                               
+  STOD(2230,2240)                                                               
+  REPORTS(ALL)                                                                  
+  SYSRPTS(CF,WLMGL,SDEVICE(DASD))                                               
+  SYSOUT(R)                                                                     
+//U400     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=MV51RS.AUG03955.SMFDATA,DISP=SHR,                           
+// UNIT=3390,VOL=SER=MV51RS                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  DATE(95215,95215)                                                             
+  RTOD(2240,2250)                                                               
+  STOD(2240,2250)                                                               
+  REPORTS(ALL)                                                                  
+  SYSRPTS(CF,WLMGL,SDEVICE(DASD))                                               
+  SYSOUT(R)                                                                     
+//U500     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=MV51RS.AUG03955.SMFDATA,DISP=SHR,                           
+// UNIT=3390,VOL=SER=MV51RS                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  DATE(95215,95215)                                                             
+  RTOD(2250,2300)                                                               
+  STOD(2250,2300)                                                               
+  REPORTS(ALL)                                                                  
+  SYSRPTS(CF,WLMGL,SDEVICE(DASD))                                               
+  SYSOUT(R)                                                                     
+//U600     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=MV51RS.AUG03955.SMFDATA,DISP=SHR,                           
+// UNIT=3390,VOL=SER=MV51RS                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  DATE(95215,95215)                                                             
+  RTOD(2300,2310)                                                               
+  STOD(2300,2310)                                                               
+  REPORTS(ALL)                                                                  
+  SYSRPTS(CF,WLMGL,SDEVICE(DASD))                                               
+  SYSOUT(R)                                                                     

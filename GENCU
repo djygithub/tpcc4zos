@@ -1,0 +1,391 @@
+//GENCU    JOB (330DJY00),'D J YOUNG ',MSGCLASS=Y,NOTIFY=DJY00          00001008
+//COB2UCL PROC                                                          00010000
+//*   PROC FOR COBOL II - COMPILE AND LINK                              00020000
+//COB2 EXEC PGM=IGYCRCTL,PARM='OBJECT,LIB,APOST,LIST',REGION=1024K      00030002
+//*TEPLIB  DD  DSNAME=DB2IMS.COB2COMP,DISP=SHR                          00040005
+//STEPLIB  DD  DSNAME=SYS1.COB2COMP,DISP=SHR                            00040005
+//SYSPRINT DD  SYSOUT=*                                                 00050000
+//SYSLIN   DD  DSNAME=&&LOADSET,UNIT=3390,DISP=(MOD,PASS),              00060000
+//             SPACE=(TRK,(3,3))                                        00070000
+//SYSUT1   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00080000
+//SYSUT2   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00090000
+//SYSUT3   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00100000
+//SYSUT4   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00110000
+//SYSUT5   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00120000
+//SYSUT6   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00121000
+//SYSUT7   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00122000
+//LKED   EXEC  PGM=IEWL,PARM='LIST,XREF,',COND=(5,LT,COB2),             00130003
+//             REGION=512K                                              00140003
+//SYSLIN   DD  DSNAME=&&LOADSET,DISP=(OLD,DELETE)                       00150003
+//SYSLMOD  DD  DSNAME=DJY00.RAND.PGMLIB(GENCU),                         00170005
+//             DISP=SHR                                                 00180003
+//SYSLIB   DD  DSNAME=SYS1.COB2LIB,DISP=SHR                             00190005
+//         DD  DSNAME=CEE.V1R5M0.SCEELKED,DISP=SHR                      00190005
+//         DD  DSNAME=DJY00.RAND.SRCLIB,DISP=SHR                        00190005
+//SYSUT1   DD  UNIT=3390,SPACE=(CYL,(1,1))                              00200003
+//SYSPRINT DD  SYSOUT=*                                                 00210003
+// PEND                                                                 00220000
+//DOIT EXEC COB2UCL                                                     00230000
+//SYSIN DD *                                                            00240010
+       ID DIVISION.                                                             
+       PROGRAM-ID. GENCU.                                                       
+       AUTHOR. D J YOUNG.                                                       
+       ENVIRONMENT DIVISION.                                                    
+       INPUT-OUTPUT SECTION.                                                    
+       FILE-CONTROL.                                                            
+           SELECT OUTPUT-FILE ASSIGN TO UT-S-OUTPUT.                            
+       DATA DIVISION.                                                           
+       FILE SECTION.                                                            
+       FD  OUTPUT-FILE                                                          
+           BLOCK CONTAINS 0 RECORDS                                             
+           RECORD CONTAINS 683 CHARACTERS                                       
+           RECORDING MODE F                                                     
+           LABEL RECORDS ARE STANDARD.                                          
+       01  OUTPUT-RECORD.                                                       
+           05 FILLER            PIC X(683).                                     
+       WORKING-STORAGE SECTION.                                                 
+       77  YES-FLAG             PIC X VALUE 'Y'.                                
+       77  NO-FLAG              PIC X VALUE 'N'.                                
+       01  OUTPUT-BUFFER.                                                       
+           05  C-ID              PIC 9(8).                                      
+           05  C-D-ID            PIC 9(8).                                      
+           05  C-W-ID            PIC 9(8).                                      
+           05  C-FIRST           PIC X(16).                                     
+           05  C-MIDDLE          PIC X(2).                                      
+           05  C-LAST.                                                          
+               07  C-LAST-1      PIC X(5).                                      
+               07  C-LAST-2      PIC X(5).                                      
+               07  C-LAST-3      PIC X(6).                                      
+           05  C-STREET-1        PIC X(20).                                     
+           05  C-STREET-2        PIC X(20).                                     
+           05  C-CITY            PIC X(20).                                     
+           05  C-STATE.                                                         
+               07  C-STATE-1     PIC X.                                         
+               07  C-STATE-2     PIC X.                                         
+           05  C-ZIP.                                                           
+               07  C-ZIP-F       PIC 9(4).                                      
+               07  C-ZIP-L       PIC 9(5) VALUE 11111.                          
+           05  C-PHONE.                                                         
+               07  C-PHONE-1     PIC 9(4).                                      
+               07  C-PHONE-2     PIC 9(4).                                      
+               07  C-PHONE-3     PIC 9(4).                                      
+               07  C-PHONE-4     PIC 9(4).                                      
+           05  C-CREDIT          PIC X(2).                                      
+           05  C-CREDIT-LIM      PIC 999 VALUE 50.                              
+           05  C-CREDIT-LIM-F    PIC X(2) VALUE 'E3'.                           
+           05  C-DISCOUNT        PIC 9999.                                      
+           05  C-DISCOUNT-F      PIC X(3) VALUE 'E-4'.                          
+           05  C-BALANCE         PIC XXXX VALUE '-1.0'.                         
+           05  C-BALANCE-F       PIC X(2) VALUE 'E1'.                           
+           05  C-YTD-PAYMENT     PIC XXXX VALUE '+1.0'.                         
+           05  C-YTD-PAYMENT-F   PIC X(2) VALUE 'E1'.                           
+           05  C-PAYMENT-CNT     PIC XXXX VALUE '+1.0'.                         
+           05  C-PAYMENT-CNT-F   PIC X(2) VALUE 'E0'.                           
+           05  C-DELIVERY-CNT    PIC XXXX VALUE '+0.0'.                         
+           05  C-DELIVERY-CNT-F  PIC X(2) VALUE 'E2'.                           
+           05  C-DATA1 OCCURS 5 TIMES.                                          
+               07  C-DATA1-DATA  PIC X(50).                                     
+           05  C-DATA2 OCCURS 5 TIMES.                                          
+               07  C-DATA2-DATA  PIC X(50).                                     
+       01  RANDASM-PARMS.                                                       
+           05  LOWER-BOUND      PIC S9(9) COMP VALUE 1.                         
+           05  UPPER-BOUND      PIC S9(9) COMP VALUE 200.                       
+           05  RANGE2           PIC S9(9) COMP VALUE 404.                       
+           05  SEED             PIC S9(9) COMP.                                 
+           05  C-LAST-WORK      PIC S9(9) COMP.                                 
+           05  C-FIRST-WORK     PIC S9(9) COMP.                                 
+           05  C-STREET1-WORK   PIC S9(9) COMP.                                 
+           05  C-STATE-WORK     PIC S9(9) COMP.                                 
+           05  C-ZIP-WORK       PIC S9(9) COMP.                                 
+           05  C-PHONE-WORK     PIC S9(9) COMP.                                 
+           05  C-CREDIT-WORK    PIC S9(9) COMP.                                 
+           05  C-DISCOUNT-WORK  PIC S9(9) COMP.                                 
+           05  C-DATA-WORK      PIC S9(9) COMP.                                 
+       01  C-LAST-TABLE.                                                        
+           03 C-LAST-STRINGS.                                                   
+            05  FILLER           PIC X(5) VALUE 'BAR  '.                        
+            05  FILLER           PIC X(5) VALUE 'OUGHT'.                        
+            05  FILLER           PIC X(5) VALUE 'ABLE '.                        
+            05  FILLER           PIC X(5) VALUE 'PRI  '.                        
+            05  FILLER           PIC X(5) VALUE 'PRES '.                        
+            05  FILLER           PIC X(5) VALUE 'ESE  '.                        
+            05  FILLER           PIC X(5) VALUE 'ANTI '.                        
+            05  FILLER           PIC X(5) VALUE 'CALLY'.                        
+            05  FILLER           PIC X(5) VALUE 'ATION'.                        
+            05  FILLER           PIC X(5) VALUE 'EING '.                        
+           03 C-LAST-THINGS REDEFINES C-LAST-STRINGS OCCURS 10 TIMES            
+                                 PIC X(5).                                      
+       01  RANDOM-TABLE-50.                                                     
+           03 RANDOM-STRINGS-50.                                                
+            05  FILLER PIC X(50) VALUE                                          
+            '1234567890-=QWERTYUINVHFJURFGDTDFSCSFDTDGEYEIEONVG'.               
+            05  FILLER PIC X(50) VALUE                                          
+            'QWERTYUIOP›\ASDFGHJK/.,MNBVCXZASDFREWQTYHUIOPLKJMN'.               
+            05  FILLER PIC X(50) VALUE                                          
+            'ASDFGHJKL; {ZXCVBNM,MJKNHUYTGRFDESWXZSAWQWERTYHUBG'.               
+            05  FILLER PIC X(50) VALUE                                          
+            '<ZXCVBNM,./|LKJHGTFR12345567890-098765432123456789'.               
+            05  FILLER PIC X(50) VALUE                                          
+            '@#$%^&*()_+!UJNHTGFR/.,MNBVCXZASDFGHYTREWQURITYOFP'.               
+            05  FILLER PIC X(50) VALUE                                          
+            'º:"}>,.?1234FRDESWAQQAZXSWEDCVFRTGBNHYUJM,KIOL./;P'.               
+            05  FILLER PIC X(50) VALUE                                          
+            '567890-=QWERSXDCFVGB0987654321QWERTYUIOP› ;;LKGJHH'.               
+            05  FILLER PIC X(50) VALUE                                          
+            'TYUIOP›\ASDFFRGTHYJUBVGFHRYTUYIYO7968574635241324M'.               
+            05  FILLER PIC X(50) VALUE                                          
+            'GHJKL; {<ZXCNHMJ,K.LBVGFHRYTUYIHJGUGNFBDHTYRGENBDM'.               
+            05  FILLER PIC X(50) VALUE                                          
+            'VBNM,./|@#$%CDXSZASW0987654321POIUYTREWQ.,MNVCHDUF'.               
+            05  FILLER PIC X(50) VALUE                                          
+            '^&*()_+!º:"}CDVFBGNH978606978UYIHKHKHFGRTRURRBFHKK'.               
+           03 RANDOM-THINGS-50 REDEFINES RANDOM-STRINGS-50                      
+                                 OCCURS 11 TIMES                                
+                                 PIC X(50).                                     
+       01  RANDOM-TABLE-20.                                                     
+           03 RANDOM-STRINGS-20.                                                
+            05  FILLER PIC X(20) VALUE '1234567890-=QWERTYUI'.                  
+            05  FILLER PIC X(20) VALUE 'QWERTYUIOP›\ASDFGHJK'.                  
+            05  FILLER PIC X(20) VALUE 'ASDFGHJKL; {ZXCVBNM,'.                  
+            05  FILLER PIC X(20) VALUE '<ZXCVBNM,./|LKJHGTFR'.                  
+            05  FILLER PIC X(20) VALUE '@#$%^&*()_+!UJNHTGFR'.                  
+            05  FILLER PIC X(20) VALUE 'º:"}>,.?1234FRDESWAQ'.                  
+            05  FILLER PIC X(20) VALUE '567890-=QWERSXDCFVGB'.                  
+            05  FILLER PIC X(20) VALUE 'TYUIOP›\ASDFFRGTHYJU'.                  
+            05  FILLER PIC X(20) VALUE 'GHJKL; {<ZXCNHMJ,K.L'.                  
+            05  FILLER PIC X(20) VALUE 'VBNM,./|@#$%CDXSZASW'.                  
+            05  FILLER PIC X(20) VALUE '^&*()_+!º:"}CDVFBGNH'.                  
+           03 RANDOM-THINGS-20 REDEFINES RANDOM-STRINGS-20                      
+                                 OCCURS 11 TIMES                                
+                                 PIC X(20).                                     
+       01  RANDOM-TABLE-16.                                                     
+           03 RANDOM-STRINGS-16.                                                
+            05  FILLER PIC X(16) VALUE '123490-=QWERTYUI'.                      
+            05  FILLER PIC X(16) VALUE 'QWEROP›\ASDFGHJK'.                      
+            05  FILLER PIC X(16) VALUE 'ASDFL; {ZXCVBNM,'.                      
+            05  FILLER PIC X(16) VALUE '<ZXC,./|LKJHGTFR'.                      
+            05  FILLER PIC X(16) VALUE '@#$%)_+!UJNHTGFR'.                      
+            05  FILLER PIC X(16) VALUE 'º:"}1234FRDESWAQ'.                      
+            05  FILLER PIC X(16) VALUE '5678QWERSXDCFVGB'.                      
+            05  FILLER PIC X(16) VALUE 'TYUIASDFFRGTHYJU'.                      
+            05  FILLER PIC X(16) VALUE 'GHJK<ZXCNHMJ,K.L'.                      
+            05  FILLER PIC X(16) VALUE 'VBNM@#$%CDXSZASW'.                      
+            05  FILLER PIC X(16) VALUE '^&*(º:"}CDVFBGNH'.                      
+           03 RANDOM-THINGS-16 REDEFINES RANDOM-STRINGS-16                      
+                                 OCCURS 11 TIMES                                
+                                 PIC X(16).                                     
+       01  C-ALPHABET-TABLE.                                                    
+           03 C-ALPHABET-STRINGS.                                               
+            05  FILLER           PIC X(26) VALUE                                
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.                                       
+           03 C-ALPHABET-THINGS REDEFINES C-ALPHABET-STRINGS                    
+              OCCURS 26 TIMES    PIC X.                                         
+       LINKAGE SECTION.                                                         
+       01  INPUT-PARMS.                                                         
+           05  PARM-LENGTH      PIC S9(3) COMP.                                 
+           05  WAREHOUSE-NUM-B  PIC 9(9).                                       
+           05  FILLER           PIC X.                                          
+           05  WAREHOUSE-NUM-E  PIC 9(9).                                       
+           05  FILLER           PIC X.                                          
+           05  TOTAL-ROWS       PIC 9(9).                                       
+       PROCEDURE DIVISION USING INPUT-PARMS.                                    
+       MAIN-ROUTINE.                                                            
+      *(1)                                                                      
+           OPEN OUTPUT OUTPUT-FILE.                                             
+      *(2)                                                                      
+           MOVE 1 TO SEED.                                                      
+      *(3)                                                                      
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 10 TO UPPER-BOUND.                                              
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS01' USING YES-FLAG,                                      
+                                 C-LAST-WORK,                                   
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 11 TO UPPER-BOUND.                                              
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS02' USING YES-FLAG,                                      
+                                 C-FIRST-WORK,                                  
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 11 TO UPPER-BOUND.                                              
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS03' USING YES-FLAG,                                      
+                                 C-STREET1-WORK,                                
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 26 TO UPPER-BOUND.                                              
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS04' USING YES-FLAG,                                      
+                                 C-STATE-WORK,                                  
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 9999 TO UPPER-BOUND.                                            
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS05' USING YES-FLAG,                                      
+                                 C-ZIP-WORK,                                    
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 9999 TO UPPER-BOUND.                                            
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS06' USING YES-FLAG,                                      
+                                 C-PHONE-WORK,                                  
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 10 TO UPPER-BOUND.                                              
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS07' USING YES-FLAG,                                      
+                                 C-CREDIT-WORK,                                 
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 5000 TO UPPER-BOUND.                                            
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS08' USING YES-FLAG,                                      
+                                 C-DISCOUNT-WORK,                               
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+           MOVE 1 TO LOWER-BOUND.                                               
+           MOVE 5 TO UPPER-BOUND.                                               
+           COMPUTE RANGE2 = 2 * (UPPER-BOUND - LOWER-BOUND + 1).                
+           CALL 'RANDAS09' USING YES-FLAG,                                      
+                                 C-DATA-WORK,                                   
+                                 SEED,                                          
+                                 LOWER-BOUND,                                   
+                                 UPPER-BOUND,                                   
+                                 RANGE2.                                        
+      *(4)                                                                      
+           PERFORM COMPUTE-AND-WRITE-WH UNTIL WAREHOUSE-NUM-B                   
+               GREATER THAN WAREHOUSE-NUM-E.                                    
+      *(5)                                                                      
+           CLOSE OUTPUT-FILE.                                                   
+           GOBACK.                                                              
+      ******************************************************************        
+      *                                                                         
+      *                                                                         
+      ******************************************************************        
+       COMPUTE-AND-WRITE-WH.                                                    
+           MOVE WAREHOUSE-NUM-B TO C-W-ID.                                      
+           MOVE 1 TO C-D-ID.                                                    
+           PERFORM COMPUTE-AND-WRITE-DI UNTIL C-D-ID > 10.                      
+           ADD 1 TO WAREHOUSE-NUM-B.                                            
+       COMPUTE-AND-WRITE-DI.                                                    
+           MOVE 1 TO C-ID.                                                      
+           PERFORM COMPUTE-AND-WRITE-CU UNTIL C-ID > 3000    .                  
+           ADD 1 TO C-D-ID.                                                     
+       COMPUTE-AND-WRITE-CU.                                                    
+           CALL 'RANDAS01' USING NO-FLAG,                                       
+                                C-LAST-WORK.                                    
+           MOVE C-LAST-THINGS(C-LAST-WORK) TO C-LAST-1.                         
+           CALL 'RANDAS01' USING NO-FLAG,                                       
+                                C-LAST-WORK.                                    
+           MOVE C-LAST-THINGS(C-LAST-WORK) TO C-LAST-2.                         
+           CALL 'RANDAS01' USING NO-FLAG,                                       
+                                C-LAST-WORK.                                    
+           MOVE C-LAST-THINGS(C-LAST-WORK) TO C-LAST-3.                         
+           CALL 'RANDAS02' USING NO-FLAG,                                       
+                                C-FIRST-WORK.                                   
+           MOVE RANDOM-THINGS-16(C-FIRST-WORK) TO C-FIRST.                      
+           CALL 'RANDAS03' USING NO-FLAG,                                       
+                                C-STREET1-WORK.                                 
+           MOVE RANDOM-THINGS-20(C-STREET1-WORK) TO C-STREET-1.                 
+           CALL 'RANDAS03' USING NO-FLAG,                                       
+                                C-STREET1-WORK.                                 
+           MOVE RANDOM-THINGS-20(C-STREET1-WORK) TO C-STREET-2.                 
+           CALL 'RANDAS03' USING NO-FLAG,                                       
+                                C-STREET1-WORK.                                 
+           MOVE RANDOM-THINGS-20(C-STREET1-WORK) TO C-CITY.                     
+           CALL 'RANDAS04' USING NO-FLAG,                                       
+                                C-STATE-WORK.                                   
+           MOVE C-ALPHABET-THINGS(C-STATE-WORK) TO C-STATE-1.                   
+           CALL 'RANDAS04' USING NO-FLAG,                                       
+                                C-STATE-WORK.                                   
+           MOVE C-ALPHABET-THINGS(C-STATE-WORK) TO C-STATE-2.                   
+           CALL 'RANDAS05' USING NO-FLAG,                                       
+                                C-ZIP-WORK.                                     
+           MOVE C-ZIP-WORK TO C-ZIP-L.                                          
+           CALL 'RANDAS06' USING NO-FLAG,                                       
+                                C-PHONE-WORK.                                   
+           MOVE C-PHONE-WORK TO C-PHONE-1.                                      
+           CALL 'RANDAS06' USING NO-FLAG,                                       
+                                C-PHONE-WORK.                                   
+           MOVE C-PHONE-WORK TO C-PHONE-2.                                      
+           CALL 'RANDAS06' USING NO-FLAG,                                       
+                                C-PHONE-WORK.                                   
+           MOVE C-PHONE-WORK TO C-PHONE-3.                                      
+           CALL 'RANDAS06' USING NO-FLAG,                                       
+                                C-PHONE-WORK.                                   
+           MOVE C-PHONE-WORK TO C-PHONE-4.                                      
+           CALL 'RANDAS07' USING NO-FLAG,                                       
+                                C-CREDIT-WORK.                                  
+           IF  C-CREDIT-WORK = 7                                                
+               MOVE 'BC' TO C-CREDIT                                            
+           ELSE                                                                 
+               MOVE 'GC' TO C-CREDIT.                                           
+           CALL 'RANDAS08' USING NO-FLAG,                                       
+                                C-DISCOUNT-WORK.                                
+           MOVE C-DISCOUNT-WORK TO C-DISCOUNT.                                  
+           CALL 'RANDAS09' USING NO-FLAG,                                       
+                                C-DATA-WORK.                                    
+           MOVE RANDOM-THINGS-50(C-DATA-WORK)                                   
+                TO C-DATA1-DATA(1).                                             
+           CALL 'RANDAS09' USING NO-FLAG,                                       
+                                C-DATA-WORK.                                    
+           MOVE RANDOM-THINGS-50(C-DATA-WORK)                                   
+                TO C-DATA1-DATA(2).                                             
+           CALL 'RANDAS09' USING NO-FLAG,                                       
+                                C-DATA-WORK.                                    
+           MOVE RANDOM-THINGS-50(C-DATA-WORK)                                   
+                TO C-DATA1-DATA(3).                                             
+           CALL 'RANDAS09' USING NO-FLAG,                                       
+                                C-DATA-WORK.                                    
+           MOVE RANDOM-THINGS-50(C-DATA-WORK)                                   
+                TO C-DATA1-DATA(4).                                             
+           CALL 'RANDAS09' USING NO-FLAG,                                       
+                                C-DATA-WORK.                                    
+           MOVE RANDOM-THINGS-50(C-DATA-WORK)                                   
+                TO C-DATA1-DATA(5).                                             
+           CALL 'RANDAS09' USING NO-FLAG,                                       
+                                C-DATA-WORK.                                    
+           MOVE RANDOM-THINGS-50(C-DATA-WORK)                                   
+                TO C-DATA2-DATA(1).                                             
+           CALL 'RANDAS09' USING NO-FLAG,                                       
+                                C-DATA-WORK.                                    
+           MOVE RANDOM-THINGS-50(C-DATA-WORK)                                   
+                TO C-DATA2-DATA(2).                                             
+           CALL 'RANDAS09' USING NO-FLAG,                                       
+                                C-DATA-WORK.                                    
+           MOVE RANDOM-THINGS-50(C-DATA-WORK)                                   
+                TO C-DATA2-DATA(3).                                             
+           CALL 'RANDAS09' USING NO-FLAG,                                       
+                                C-DATA-WORK.                                    
+           MOVE RANDOM-THINGS-50(C-DATA-WORK)                                   
+                TO C-DATA2-DATA(4).                                             
+           CALL 'RANDAS09' USING NO-FLAG,                                       
+                                C-DATA-WORK.                                    
+           MOVE RANDOM-THINGS-50(C-DATA-WORK)                                   
+                TO C-DATA2-DATA(5).                                             
+           WRITE OUTPUT-RECORD FROM OUTPUT-BUFFER.                              
+           ADD 1 TO C-ID.                                                       

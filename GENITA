@@ -1,0 +1,9 @@
+//GENITA   JOB (330DJY00),'D J YOUNG ',MSGCLASS=Y,NOTIFY=DJY00          00001008
+//DOIT EXEC PGM=GENIT                                                   00170005
+//STEPLIB  DD  DSNAME=DJY00.RAND.PGMLIB,                                00170005
+//             DISP=SHR                                                 00180003
+//OUTPUT   DD  DSN=DJY00.BIG.ITEM.INPUT,DISP=(,CATLG),UNIT=3390,        00190005
+//    DCB=(BLKSIZE=6144,RECFM=FB),VOL=SER=SPARE2,SPACE=(CYL,(20,20))    00190005
+//SYSUDUMP DD  SYSOUT=*                                                 00190005
+//SYSABOUT DD  SYSOUT=*                                                 00190005
+//SYSOUT   DD  SYSOUT=*                                                 00190005

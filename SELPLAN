@@ -1,0 +1,2 @@
+SELECT * FROM PLAN_TABLE; HERE APPLNAME = 'CI2UI10';                            
+SELECT * FROM SYSIBM.SYSPLAN;                                                   

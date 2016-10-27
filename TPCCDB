@@ -1,0 +1,9 @@
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                             
+--                                                                    --        
+--                                                                    --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE STOGROUP TPCCSG01 VOLUMES (SMS9EA) VCAT DSN310;                         
+ CREATE DATABASE TPCCDB STOGROUP TPCCSG01;                                      

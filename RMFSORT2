@@ -1,0 +1,39 @@
+//RMFPP JOB (ACCOUNT),'DJ YOUNG',CLASS=A,REGION=32M,MSGCLASS=Y,                 
+//      NOTIFY=DJY00                                                            
+//*                                                                             
+//*                                                                             
+//*                                                                             
+//******************************************************************            
+//*                                                                             
+//*        CREATED VIA ISPF INTERFACE                                           
+//*        RMF VERSION 5, RELEASE 2.0                                           
+//*                                                                             
+//******************************************************************            
+//*                                                                             
+//******************************************************************            
+//*                                                                             
+//*        RMF SORT PROCESSING                                                  
+//*                                                                             
+//******************************************************************            
+//RMFSORT  EXEC PGM=SORT,REGION=0M                                              
+//SORTIN   DD   DISP=SHR,DSN=DB100001.DB100001.SMFDATAJ,                        
+//   UNIT=3390,VOL=SER=SPARN6                                                   
+//         DD   DISP=SHR,DSN=DB100001.DB100001.SMFDATAK,                        
+//   UNIT=3390,VOL=SER=SPARN6                                                   
+//         DD   DISP=SHR,DSN=DB100001.DB100001.SMFDATAL,                        
+//   UNIT=3390,VOL=SER=SPARN6                                                   
+//         DD   DISP=SHR,DSN=DB100001.DB100001.SMFDATAM,                        
+//   UNIT=3390,VOL=SER=SPARN6                                                   
+//         DD   DISP=SHR,DSN=DB100001.DB100001.SMFDATAN,                        
+//   UNIT=3390,VOL=SER=SPARN6                                                   
+//SORTOUT  DD   DISP=(NEW,KEEP),UNIT=3390,SPACE=(CYL,(200,200)),                
+// DSN=SPARE4.JAN21972.ECA1.SORTED,VOL=SER=SPARE4                               
+//SORTWK01 DD   DISP=(NEW,DELETE),UNIT=SYSDA,SPACE=(CYL,(100,100))              
+//SORTWK02 DD   DISP=(NEW,DELETE),UNIT=SYSDA,SPACE=(CYL,(100,100))              
+//SORTWK03 DD   DISP=(NEW,DELETE),UNIT=SYSDA,SPACE=(CYL,(100,100))              
+//SYSPRINT DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+   SORT FIELDS=(11,4,CH,A,7,4,CH,A),EQUALS                                      
+   MODS E15=(ERBPPSRT,500),E35=(ERBPPSRT,500)                                   
+/*                                                                              

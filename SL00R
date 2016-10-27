@@ -1,0 +1,14 @@
+SL00R: MSGTXT                                                                   
+SLFIRST='000000001'                                                             
+SLLAST='000000001'                                                              
+DO FOREVER                                                                      
+   SLRAND=RANDOM('RN',1)                                                        
+   SLWH=CHAR(SLRAND,9)                                                          
+   SLRAND=RANDOM('RN',2)                                                        
+   SLDI=CHAR(SLRAND,9)                                                          
+   SLRAND=RANDOM('RN',4)                                                        
+   SLTHRESH=CHAR(SLRAND,9)                                                      
+   TYPE 'SL00'||SLWH||SLDI||SLTHRESH                                            
+   TRANSMIT USING ENTER                                                         
+END                                                                             
+ENDTXT                                                                          

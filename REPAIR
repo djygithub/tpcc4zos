@@ -1,0 +1,16 @@
+//REPAIR JOB YOUNG,CLASS=A,MSGCLASS=Y,REGION=0K,NOTIFY=DJY00                    
+//UTIL EXEC DSNUPROC,SYSTEM=DB1G,UID='REPAIR',UTPROC=''                         
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE REPAIR UTILITY                                      
+//*  DATE:  02/10/88          TIME:  02:45:26                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SYSIN    DD  *                                                       
+ REPAIR LOG NO SET  TABLESPACE TPCCDB.OLTS NORCVRPEND                   00010000
+//                                                                              
+ REPAIR LOG NO SET  TABLESPACE DSNDB01.DSNLLX01 NORCVRPEND              00010000
+ REPAIR LOG NO SET  TABLESPACE DSNDB01.DSNLLX02 NORCVRPEND              00010000
+                                                                        00010000

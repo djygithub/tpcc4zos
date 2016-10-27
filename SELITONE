@@ -1,0 +1,1 @@
+SELECT * FROM DJY00.ITEM WHERE I_ID = 1;                                        

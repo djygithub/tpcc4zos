@@ -1,0 +1,64 @@
+int ostat()                                                                     
+{                                                                               
+    EXEC SQL WHENEVER NOT FOUND GOTO sqlerr;                                    
+    EXEC SQL WHENEVER SQLERROR GOTO sqlerr;                                     
+                                                                                
+    if (byname)                                                                 
+    {                                                                           
+       EXEC SQL SELECT count(c_id) INTO :namecnt                                
+       FROM customer                                                            
+       WHERE c_last = :c_last AND c_d_id = :d_id AND c_w_id = :w_id;            
+                                                                                
+       EXEC SQL DECLARE c_name CURSOR FOR                                       
+            SELECT c_balance, c_first, c_middle, c_id                           
+            FROM customer                                                       
+            WHERE c_last = :c_last AND c_d_id = :d_id                           
+                AND c_w_id = :w_id                                              
+            ORDER BY c_first;                                                   
+       EXEC SQL OPEN c_name;                                                    
+                                                                                
+       if (namecnt%2) namecnt++; //Locate midpoint customer                     
+       for (n=0; n<namecnt/2; n++)                                              
+       {                                                                        
+          EXEC SQL FETCH c_name                                                 
+               INTO :c_balance, :c_first, :c_middle, :c_id;                     
+       }                                                                        
+                                                                                
+       EXEC SQL CLOSE c_name;                                                   
+    }                                                                           
+    else {                                                                      
+       EXEC SQL SELECT c_balance, c_first, c_middle, c_last                     
+            INTO :c_balance, :c_first, :c_middle, :c_last                       
+            FROM customer                                                       
+            WHERE c_id = :c_id AND c_d_id = :d_id AND c_w_id = :w_id;           
+    }                                                                           
+    EXEC SQL SELECT o_id, o_carrier_id, o_entry_d                               
+             INTO :o_id, :o_carrier_id, :entdate                                
+             FROM orders                                                        
+             ORDER BY o_id DESCENDING;                                          
+                                                                                
+    EXEC SQL DECLARE c_line CURSOR FOR                                          
+         SELECT ol_i_id, ol_supply_w_id, ol_quantity, ol_amount,                
+             ol_delivery_d                                                      
+         FROM order_line                                                        
+         WHERE ol_o_id = :o_id AND ol_d_id = :d_id AND ol_w_id = :w_id;         
+                                                                                
+    EXEC SQL OPEN c_line;                                                       
+    EXEC SQL WHENEVER NOT FOUND CONTINUE;                                       
+                                                                                
+    i=0;                                                                        
+    while (sql_notfound(FALSE))                                                 
+    {                                                                           
+     i++;                                                                       
+     EXEC SQL FETCH c_line                                                      
+          INTO :ol_i_id(i), :ol_supply_w_id(i), :ol_quantity(i),                
+               :ol_amount(i), :ol_delivery_d(i);                                
+    }                                                                           
+                                                                                
+    EXEC SQL CLOSE c_line;                                                      
+    EXEC SQL COMMIT WORK;                                                       
+    return(0);                                                                  
+                                                                                
+sqlerr:                                                                         
+   error();                                                                     
+}                                                                               

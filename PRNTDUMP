@@ -1,0 +1,24 @@
+//PRNTDUMP JOB   (0,75),                                                        
+//         'YOUNG   ',                                        /*OPER*/          
+//         CLASS=A,                                           /*JCLAS*/         
+//         MSGLEVEL=(1,1),                                                      
+//         MSGCLASS=X,                                                          
+//         NOTIFY=DAVID,                                                        
+//         TIME=30,                                                             
+//         USER=DAVID                                         /*RACF*/          
+//*                                                           /*JCTRL*/         
+//PRNTDUMP EXEC PGM=DFHDUP,REGION=0M                                            
+//STEPLIB  DD DSN=CICS330.SDFHLOAD,DISP=SHR                                     
+//*        DD DSN=CICSVS.LOADLIB1,DISP=SHR                                      
+//*                                                                             
+//DFHDMPDS DD DSN=IICS330.CICS.DFHDMPA,DISP=SHR                                 
+//DFHPRINT DD SYSOUT=*                                                          
+//DFHTINDX DD SYSOUT=*                                                          
+//SYSUDUMP DD SYSOUT=*                                                          
+//SYSOUT   DD SYSOUT=*                                                          
+//                                                                              
+//SYSIN DD *                                                                    
+ SELECT TYPE=OR                                                                 
+ END                                                                            
+/*                                                                              
+//*                                                                             

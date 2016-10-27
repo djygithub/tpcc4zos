@@ -1,0 +1,22 @@
+int slev()                                                                      
+{                                                                               
+    EXEC SQL WHENEVER NOT FOUND GOTO sqlerr;                                    
+    EXEC SQL WHENEVER SQLERROR GOTO sqlerr;                                     
+                                                                                
+    EXEC SQL SELECT d_next_o_id INTO :o_id                                      
+         FROM district                                                          
+         WHERE d_w_id = :w_id AND d_id = :d_id;                                 
+                                                                                
+    EXEC SQL SELECT COUNT(DISTINCT (s_i_id)) INTO :stock_count                  
+         FROM order_line, stock                                                 
+         WHERE ol_w_id = :w_id                                                  
+             AND ol_d_id = :d_id AND ol_o_id < :o_id                            
+             AND ol_o_id >= :o_id - 21 AND s_w_id = :w_id                       
+             AND s_i_id = ol_i_id AND s_quantity < :threshold;                  
+                                                                                
+    EXEC SQL COMMIT WORK;                                                       
+    return(0);                                                                  
+                                                                                
+sqlerr:                                                                         
+   error();                                                                     
+}                                                                               

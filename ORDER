@@ -1,0 +1,43 @@
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  ORDER                                                      --        
+--  TABLESPACE ORDERTS                                                --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE ORDERTS                                                      
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 1000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS YES;                                                              
+ CREATE TABLE DAVID.ORDER                                                       
+     (O_ID              INTEGER  NOT NULL,                                      
+      O_D_ID            INTEGER  NOT NULL,                                      
+      O_W_ID            INTEGER  NOT NULL,                                      
+      O_C_ID            INTEGER  NOT NULL,                                      
+      O_ENTRY_D         TIMESTAMP NOT NULL WITH DEFAULT,                        
+      O_CARRIER_ID      INTEGER  NOT NULL,                                      
+      O_OL_CNT          INTEGER  NOT NULL,                                      
+      O_ALL_LOCAL       INTEGER  NOT NULL,                                      
+      PRIMARY KEY (O_W_ID,O_D_ID,O_ID),                                         
+      FOREIGN KEY ORFK1 (O_W_ID,O_D_ID,O_C_ID)                                  
+          REFERENCES DAVID.CUSTOMER ON DELETE RESTRICT)                         
+      IN  TPCCDB.ORDERTS;                                                       
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE UNIQUE INDEX DAVID.ORIN01                                               
+        ON DAVID.ORDER(O_W_ID,O_D_ID,O_ID)                                      
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 8                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              

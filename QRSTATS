@@ -1,0 +1,16 @@
+SELECT DBNAME, TSNAME, CARD, NPAGES, PCTPAGES                                   
+ FROM SYSIBM.SYSTABLES WHERE NAME = 'CUSTOMER';                                 
+SELECT  TBNAME, LENGTH,                                                         
+        HIGH2KEY, LOW2KEY, COLCARD, NAME FROM SYSIBM.SYSCOLUMNS                 
+ WHERE TBNAME = 'CUSTOMER';                                                     
+SELECT TBNAME, CLUSTERED, FIRSTKEYCARD,                                         
+ FULLKEYCARD, NLEAF, NLEVELS,                                                   
+ CLUSTERRATIO FROM SYSIBM.SYSINDEXES WHERE TBNAME = 'CUSTOMER';                 
+ SELECT DBNAME,                                                                 
+        NACTIVE FROM SYSIBM.SYSTABLESPACE WHERE DBNAME = 'TPCCDB';              
+ SELECT DBNAME,                                                                 
+ CARD, NEARINDREF, FARINDREF, PERCACTIVE, PERCDROP                              
+ FROM SYSIBM.SYSTABLEPART WHERE DBNAME = 'TPCCDB';                              
+ SELECT IXNAME, CARD, NEAROFFPOS, FAROFFPOS, LEAFDIST                           
+ FROM SYSIBM.SYSINDEXPART                                                       
+ WHERE IXNAME IN ('CUIN01');                                                    

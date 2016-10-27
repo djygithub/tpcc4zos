@@ -1,0 +1,31 @@
+//RMFPP JOB (ACCOUNT),'DJ YOUNG',CLASS=A,REGION=32M,MSGCLASS=Y,                 
+//      NOTIFY=DJY00                                                            
+//*                                                                             
+//*                                                                             
+//*                                                                             
+//******************************************************************            
+//*                                                                             
+//*        CREATED VIA ISPF INTERFACE                                           
+//*        RMF VERSION 5, RELEASE 2.0                                           
+//*                                                                             
+//******************************************************************            
+//*                                                                             
+//******************************************************************            
+//*                                                                             
+//*        RMF SORT PROCESSING                                                  
+//*                                                                             
+//******************************************************************            
+//RMFSORT  EXEC PGM=SORT,REGION=0M                                              
+//SORTIN   DD   DISP=SHR,DSN=SPARE4.JAN25971.SMFDATA.ECA0,                      
+//   UNIT=3390,VOL=SER=SPARE4                                                   
+//SORTOUT  DD   DISP=(NEW,KEEP),UNIT=3390,SPACE=(CYL,(200,200)),                
+// DSN=DB22W1.JAN25971.ECA0.SORTED,VOL=SER=DB22W1                               
+//SORTWK01 DD   DISP=(NEW,DELETE),UNIT=SYSDA,SPACE=(CYL,(100,100))              
+//SORTWK02 DD   DISP=(NEW,DELETE),UNIT=SYSDA,SPACE=(CYL,(100,100))              
+//SORTWK03 DD   DISP=(NEW,DELETE),UNIT=SYSDA,SPACE=(CYL,(100,100))              
+//SYSPRINT DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+   SORT FIELDS=(11,4,CH,A,7,4,CH,A),EQUALS                                      
+   MODS E15=(ERBPPSRT,500),E35=(ERBPPSRT,500)                                   
+/*                                                                              

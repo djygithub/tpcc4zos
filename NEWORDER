@@ -1,0 +1,38 @@
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  NEWORDER                                                   --        
+--  TABLESPACE NOTS                                                   --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE NOTS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 1000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS YES;                                                              
+ CREATE TABLE DAVID.NEWORDER                                                    
+     (NO_O_ID           INTEGER  NOT NULL,                                      
+      NO_D_ID           INTEGER  NOT NULL,                                      
+      NO_W_ID           INTEGER  NOT NULL,                                      
+      PRIMARY KEY (NO_W_ID,NO_D_ID,NO_O_ID),                                    
+      FOREIGN KEY NOFK1 (NO_W_ID,NO_D_ID,NO_O_ID)                               
+          REFERENCES DAVID.ORDER ON DELETE RESTRICT)                            
+      IN  TPCCDB.NOTS;                                                          
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE UNIQUE INDEX DAVID.NOIN01                                               
+        ON DAVID.NEWORDER(NO_W_ID,NO_D_ID,NO_O_ID)                              
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 8                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              

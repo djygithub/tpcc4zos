@@ -1,0 +1,38 @@
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  ITEM                                                       --        
+--  TABLESPACE ITEMTS                                                 --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE ITEMTS                                                       
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 1000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS YES;                                                              
+ CREATE TABLE DAVID.ITEM                                                        
+     (I_ID              INTEGER  NOT NULL,                                      
+      I_IM_ID           INTEGER  NOT NULL,                                      
+      I_NAME            CHAR(24) NOT NULL,                                      
+      I_PRICE           FLOAT    NOT NULL,                                      
+      I_DATA            CHAR(50) NOT NULL,                                      
+      PRIMARY KEY (I_ID))                                                       
+      IN  TPCCDB.ITEMTS;                                                        
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE UNIQUE INDEX DAVID.ITIN01                                               
+        ON DAVID.ITEM(I_ID)                                                     
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 8                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              

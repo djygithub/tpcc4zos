@@ -1,0 +1,28 @@
+//JAN17972 JOB (),'D J YOUNG',MSGCLASS=Y,NOTIFY=DJY00                           
+//*                                                                             
+//*        RMF POSTPROCESSING                                                   
+//*                                                                             
+//U005     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE2.JAN17972.SMFDATA.EC20,DISP=SHR,                      
+// UNIT=3390,VOL=SER=SPARE2                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(0734,0751)                                                               
+  RTOD(0734,0751)                                                               
+  REPORTS(ALL)                                                                  
+  SUMMARY(INT,TOT)                                                              
+  DINTV(2359)                                                                   
+  SYSOUT(Y)                                                                     
+/*                                                                              
+//UALL     EXEC PGM=ERBRMFPP                                                    
+//MFPINPUT DD   DSN=SPARE2.JAN17972.SMFDATA.EC20,DISP=SHR,                      
+// UNIT=3390,VOL=SER=SPARE2                                                     
+//MFPMSGDS DD   SYSOUT=*                                                        
+//SYSOUT   DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+  STOD(0734,0751)                                                               
+  RTOD(0734,0751)                                                               
+  SYSRPTS(CF)                                                                   
+  SYSOUT(Y)                                                                     
+/*                                                                              

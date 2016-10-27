@@ -1,0 +1,4 @@
+SELECT * FROM SYSIBM.SYSTABLES;                                                 
+SELECT * FROM SYSIBM.SYSINDEXES;                                                
+SELECT * FROM SYSIBM.SYSTABLESPACE;                                             
+SELECT * FROM SYSIBM.SYSSYNONYMS;                                               

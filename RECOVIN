@@ -1,0 +1,13 @@
+//RECOVTS JOB YOUNG,CLASS=A,MSGCLASS=Y,REGION=0K,NOTIFY=DJY00                   
+//UTIL EXEC PGM=DSNUTILB,REGION=1024K,PARM='DB1G,DSNTEX'                        
+//STEPLIB DD DSN=DSN410.SDSNLOAD,DISP=SHR                                       
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE REPAIR UTILITY                                      
+//*  DATE:  02/10/88          TIME:  02:45:26                                   
+//*                                                                             
+//**********************************************                                
+//SYSPRINT DD SYSOUT=*                                                          
+//SYSIN    DD  *                                                                
+ RECOVER INDEX (DSNDB01.DSNLLX01)                                       00010000
+/*                                                                      00010000

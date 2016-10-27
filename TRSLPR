@@ -1,0 +1,200 @@
+ /********************************************************************/         
+ /*                                                                  */         
+ /* Module Name = TRSLPR                                             */         
+ /*                                                                  */         
+ /* Descriptive Name = Stock Level Transaction                       */         
+ /*                                                                  */         
+ /********************************************************************/         
+#include "bmsmsl.h"                                                             
+                                                                                
+/**********************************************************************/        
+/* Include C library definitions                                      */        
+/**********************************************************************/        
+#include <stdio.h>                                                              
+#include <stdlib.h>                                                             
+#include <string.h>                                                             
+#include <ctest.h>                                                              
+                                                                                
+/**********************************************************************/        
+/* General declarations                                               */        
+/**********************************************************************/        
+#define NOTFOUND 100                                                            
+                                                                                
+/**********************************************************************/        
+/* SQL communication area                                             */        
+/**********************************************************************/        
+EXEC SQL INCLUDE SQLCA;                                                         
+                                                                                
+/**********************************************************************/        
+/* SQL declaration for table david.orderline                          */        
+/**********************************************************************/        
+EXEC SQL DECLARE DAVID.ORDERLINE  TABLE                                         
+       (OL_O_ID        INTEGER   NOT NULL,                                      
+        OL_D_ID        INTEGER   NOT NULL,                                      
+        OL_W_ID        INTEGER   NOT NULL,                                      
+        OL_NUMBER      INTEGER   NOT NULL,                                      
+        OL_I_ID        INTEGER   NOT NULL,                                      
+        OL_SUPPLY_W_ID INTEGER   NOT NULL,                                      
+        OL_DELIVERY_D  TIMESTAMP NOT NULL,                                      
+        OL_QUANTITY    INTEGER   NOT NULL,                                      
+        OL_AMOUNT      INTEGER   NOT NULL,                                      
+        OL_DIST_INFO   CHAR(24)  NOT NULL);                                     
+                                                                                
+/**********************************************************************/        
+/* SQL declaration for table david.district                           */        
+/**********************************************************************/        
+EXEC SQL DECLARE DAVID.DISTRICT  TABLE                                          
+       (D_ID           INTEGER   NOT NULL,                                      
+        D_W_ID         INTEGER   NOT NULL,                                      
+        D_NAME         CHAR(10)  NOT NULL,                                      
+        D_STREET_1     CHAR(20)  NOT NULL,                                      
+        D_STREET_2     CHAR(20)  NOT NULL,                                      
+        D_CITY         CHAR(20)  NOT NULL,                                      
+        D_STATE        CHAR(2)   NOT NULL,                                      
+        D_ZIP          CHAR(9)   NOT NULL,                                      
+        D_TAX          FLOAT     NOT NULL,                                      
+        D_YTD          FLOAT     NOT NULL,                                      
+        D_NEXT_O_ID    INTEGER   NOT NULL);                                     
+                                                                                
+/**********************************************************************/        
+/* SQL declaration for table david.stock                              */        
+/**********************************************************************/        
+EXEC SQL DECLARE DAVID.STOCK     TABLE                                          
+     (S_I_ID            INTEGER  NOT NULL,                                      
+      S_W_ID            INTEGER  NOT NULL,                                      
+      S_QUANTITY        INTEGER,                                                
+      S_DIST_01         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_02         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_03         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_04         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_05         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_06         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_07         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_08         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_09         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_10         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_YTD             FLOAT,                                                  
+      S_ORDER_CNT       INTEGER  NOT NULL,                                      
+      S_REMOTE_CNT      INTEGER  NOT NULL,                                      
+      S_DATA            CHAR(50) NOT NULL WITH DEFAULT);                        
+                                                                                
+/**********************************************************************/        
+/* Variables used in SQL                                              */        
+/**********************************************************************/        
+                                                                                
+                                                                                
+EXEC SQL BEGIN DECLARE SECTION;                                                 
+  long int o_id;                                                                
+  long int w_id;                                                                
+  long int d_id;                                                                
+  long int stock_count;                                                         
+  long int threshold;                                                           
+EXEC SQL END   DECLARE SECTION;                                                 
+                                                                                
+/**********************************************************************/        
+/* Other Variables                                                    */        
+/**********************************************************************/        
+  long int hundthous;                                                           
+  long int tenthous;                                                            
+  long int thous;                                                               
+  long int hunds;                                                               
+  long int tens;                                                                
+  long int ones;                                                                
+                                                                                
+                                                                                
+/**********************************************************************/        
+/* SQL return code handling                                           */        
+/**********************************************************************/        
+EXEC SQL WHENEVER SQLERROR   CONTINUE;                                          
+EXEC SQL WHENEVER SQLWARNING CONTINUE;                                          
+EXEC SQL WHENEVER NOT FOUND  CONTINUE;                                          
+                                                                                
+/**********************************************************************/        
+/* main program routine                                               */        
+/**********************************************************************/        
+                                                                                
+                                                                                
+                                                                                
+main()                                                                          
+{                                                                               
+ EXEC CICS RECEIVE MAP("bmsmsl ") MAPSET("BMSMSL");                             
+                                                                                
+      w_id        =(((bmsmsl.bmsmsli.infld2i [0]- '0')   * 1000) +              
+                     ((bmsmsl.bmsmsli.infld2i[1]- '0')   * 100)  +              
+                     ((bmsmsl.bmsmsli.infld2i[2]- '0')   * 10) +                
+                     ((bmsmsl.bmsmsli.infld2i[3]- '0')   * 1));                 
+                                                                                
+      d_id        =(((bmsmsl.bmsmsli.infld3i [0]- '0')   * 10) +                
+                     ((bmsmsl.bmsmsli.infld3i[1]- '0')   * 1));                 
+                                                                                
+      threshold   =(((bmsmsl.bmsmsli.infld4i [0]- '0')   * 10) +                
+                     ((bmsmsl.bmsmsli.infld4i[1]- '0')   * 1));                 
+                                                                                
+      printf("w_id   =%d\n", w_id);                                             
+      printf("d_id   =%d\n", d_id);                                             
+      printf("threshold  =%d\n", threshold);                                    
+                                                                                
+      printf("%9sd\n", bmsmsl.bmsmsli.infld2i);                                 
+      printf("%9sd\n", bmsmsl.bmsmsli.infld3i);                                 
+      printf("%9sd\n", bmsmsl.bmsmsli.infld4i);                                 
+                                                                                
+      EXEC SQL SELECT D_NEXT_O_ID INTO :o_id                                    
+           FROM DAVID.DISTRICT                                                  
+           WHERE D_W_ID = :w_id                                                 
+             AND D_ID = :d_id;                                                  
+                                                                                
+      printf("%d\n", sqlca.sqlcode);                                            
+      printf("%70s\n", sqlca.sqlerrmc);                                         
+      printf("o_id =%d\n", o_id);                                               
+                                                                                
+      EXEC SQL SELECT COUNT(DISTINCT (S_I_ID)) INTO :stock_count                
+           FROM DAVID.ORDERLINE, DAVID.STOCK                                    
+           WHERE OL_W_ID = :w_id                                                
+             AND OL_D_ID = :d_id                                                
+             AND OL_O_ID < :o_id                                                
+             AND OL_O_ID >= :o_id - 21                                          
+             AND S_W_ID = :w_id                                                 
+             AND S_I_ID = OL_I_ID                                               
+             AND S_QUANTITY < :threshold;                                       
+                                                                                
+      printf("%d\n", sqlca.sqlcode);                                            
+      printf("%70s\n", sqlca.sqlerrmc);                                         
+      printf("stock_count =%d\n", stock_count);                                 
+                                                                                
+                                                                                
+                                                                                
+ memcpy(bmsmsl.bmsmslo.infld1o,"ABCD",4);                                       
+ memcpy(bmsmsl.bmsmslo.infld2o,bmsmsl.bmsmsli.infld2i,4);                       
+ memcpy(bmsmsl.bmsmslo.infld3o,bmsmsl.bmsmsli.infld3i,2);                       
+ memcpy(bmsmsl.bmsmslo.infld4o,bmsmsl.bmsmsli.infld4i,2);                       
+                                                                                
+ hundthous = stock_count / 100000;                                              
+      printf("hundthous =%d\n", hundthous);                                     
+ tenthous = (stock_count- (hundthous*100000)) / 10000;                          
+      printf("tenthous =%d\n", tenthous);                                       
+ thous = (stock_count - ((hundthous*100000)+(tenthous*10000)))/ 1000;           
+      printf("thous =%d\n", thous);                                             
+ hunds = (stock_count - ((hundthous*100000) + (tenthous*10000)                  
+         +(thous*1000)))/ 100;                                                  
+      printf("hunds =%d\n", hunds);                                             
+ tens  = (stock_count - ((hundthous*100000) + (tenthous*10000)                  
+         +(thous*1000) + (hunds*100)))/ 10;                                     
+      printf("tens =%d\n", tens);                                               
+ ones  = (stock_count - ((hundthous*100000) + (tenthous*10000)                  
+         +(thous*1000) + (hunds*100) + (tens*10)));                             
+      printf("ones =%d\n", ones);                                               
+ bmsmsl.bmsmslo.infld5o[0] = hundthous + '0';                                   
+ bmsmsl.bmsmslo.infld5o[1] = tenthous + '0';                                    
+ bmsmsl.bmsmslo.infld5o[2] = thous + '0';                                       
+ bmsmsl.bmsmslo.infld5o[3] = hunds + '0';                                       
+ bmsmsl.bmsmslo.infld5o[4] = tens + '0';                                        
+ bmsmsl.bmsmslo.infld5o[5] = ones + '0';                                        
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+ EXEC CICS SEND MAP("bmsmsl ") MAPSET("bmsmsl") ERASE;                          
+   EXEC CICS RETURN;                                                            
+}                                                                               

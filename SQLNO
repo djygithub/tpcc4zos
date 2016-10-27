@@ -1,0 +1,94 @@
+int neword()                                                            00010000
+{                                                                       00020000
+    EXEC SQL WHENEVER NOT FOUND GOTO sqlerr;                            00030000
+    EXEC SQL WHENEVER SQLERROR GOTO sqlerr;                             00031000
+                                                                        00040000
+    gettimestamp(datetime);                                             00050000
+                                                                        00060000
+    EXEC SQL SELECT c_discount, c_last, c_credit, w_tax                 00070000
+         INTO :c_discount, :c_last, :c_credit, :w_tax                   00080000
+         FROM customer, warehouse                                       00090000
+         WHERE w_id = :w_id AND c_w_id = w_id AND                       00100000
+               c_d_id = :d_id AND c_id = :c_id;                         00110000
+                                                                        00120000
+    EXEC SQL SELECT d_next_o_id, d_tax INTO :d_next_o_id, :d_tax        00130000
+         FROM district                                                  00140000
+         WHERE d_id = :d_id and d_w_id = :w_id;                         00150000
+                                                                        00160000
+    EXEC SQL UPDATE district SET d_next_o_id = :d_next_o_id + 1         00170000
+         WHERE d_id = :d_id AND d_w_id = :w_id;                         00180000
+                                                                        00190000
+    o_id = d_next_o_id;                                                 00200000
+                                                                        00210000
+    EXEC SQL INSERT INTO order (o_id, o_d_id, o_w_id, o_c_id,           00220000
+                                o_entry_d, o_ol_cnt, o_all_local)       00230000
+         VALUES (:o_id, :d_id, :w_id, :c_id,                            00240000
+                 :datetime, :o_ol_cnt, :o_all_local);                   00250000
+                                                                        00260000
+    for (ol_number = 1, ol_number <= o_ol_cnt; ol_number++)             00270000
+    {                                                                   00280000
+     ol_supply_w_id = atol(supware(ol_number - 1));                     00290000
+     if  (ol_supply_w_id != w_id) o_all_local = 0;                      00300000
+     ol_i_id = atol (itemid(ol_number - 1));                            00310000
+     ol_quantity = atol (qty(ol_number - 1));                           00311000
+                                                                        00312000
+    EXEC SQL WHENEVER NOT FOUND GOTO invaliditem;                       00313000
+                                                                        00314000
+    EXEC SQL SELECT i_price, i_name, i_data                             00315000
+         INTO :i_price, :i_name, :i_data                                00316000
+         FROM item                                                      00317000
+         WHERE i_id = :ol_i_id;                                         00318000
+                                                                        00319000
+    price(ol_number - 1) = i_price;                                     00319100
+    strncpy(iname(ol_number - 1),i_name,24);                            00319200
+                                                                        00319300
+    EXEC SQL WHENEVER NOT FOUND GOTO sqlerr;                            00319400
+                                                                        00319500
+    EXEC SQL SELECT s_quantity, s_data,                                 00319600
+         s_dist_01, s_dist_02, s_dist_03, s_dist_04, s_dist_05,         00319700
+         s_dist_06, s_dist_07, s_dist_08, s_dist_09, s_dist_10,         00319800
+         INTO :s_quantity, :s_data,                                     00319900
+         :s_dist_01, :s_dist_02, :s_dist_03, :s_dist_04, :s_dist_05,    00320000
+         :s_dist_06, :s_dist_07, :s_dist_08, :s_dist_09, :s_dist_10,    00320100
+         FROM stock                                                     00320200
+         WHERE s_i_id = :ol_i_id AND s_w_id = :ol_supply_w_id;          00320300
+                                                                        00320400
+    pick_dist_info(ol_dist_info, ol_w_id);  // pick correct s_dist_xx   00321000
+    stock(ol_number - 1) = s_quantity;                                  00322000
+                                                                        00323000
+    if (  (strstr(i_data,"original") != NULL) &&                        00324000
+          (strstr(s_data,"original") != NULL) )                         00325000
+      bg(ol_number - 1) = 'B';                                          00326000
+    else                                                                00327000
+      bg(ol_number - 1) = 'G';                                          00327100
+                                                                        00328000
+    EXEC SQL UPDATE stock SET s_quantity = :s_quantity                  00329000
+         WHERE s_i_id = :ol_i_id                                        00329100
+         AND s_w_id = :ol_supply_w_id:                                  00329200
+                                                                        00329300
+         ol_amount = ol_quantity * i_price * (1 + w_tax + d_tax)        00329400
+                     * (1 - c_discount);                                00329500
+         amt(ol_number - 1) = ol_amount;                                00329600
+         total += ol_amount;                                            00329700
+                                                                        00329800
+         EXEC SQL INSERT INTO order_line (ol_o_id, ol_d_id, ol_w_id,    00329900
+                                          ol_number, ol_i_id,           00330000
+                                          ol_supply_w_id, ol_quantity,  00330100
+                                          ol_amount, ol_dist_info)      00330200
+                         VALUES (:o_id, :d_id, :w_id, :ol_number,       00330300
+                                 :ol_i_id, :ol_supply_w_id,             00330400
+                                 :ol_quantity, :ol_amount,              00330500
+                                 :ol_dist_info);                        00330600
+                                                                        00330700
+    }                                                                   00330800
+    EXEC SQL COMMIT WORK:                                               00330900
+    return(0);                                                          00331000
+                                                                        00331100
+    invaliditem:                                                        00331200
+        EXEC SQL ROLLBACK WORK;                                         00331300
+        printf("item number is not valid");                             00331400
+        return(0);                                                      00331500
+                                                                        00331600
+    sqlerr:                                                             00331700
+       error();                                                         00332000
+    }                                                                   00340000

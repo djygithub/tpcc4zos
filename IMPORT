@@ -1,0 +1,11 @@
+//IMPORT2  JOB (0,MS44),'AZIZ',MSGCLASS=X,MSGLEVEL=(1,1),                       
+//         REGION=4000K,NOTIFY=SRD50                                            
+//S1       EXEC  PGM=IDCAMS                                                     
+//SYSPRINT DD    SYSOUT=*                                                       
+//SYSIN    DD    *                                                              
+   IMPORT-                                                                      
+           OBJECTS -                                                            
+                 ((SYS1.ICFUCAT.VSPARE2 -                                       
+                 VOLUMES(SPARE2) -                                              
+                 DEVICETYPE(3390))) -                                           
+           CONNECT                                                              

@@ -1,0 +1,23 @@
+//SORTIT   JOB (DJY),'D J YOUNG',MSGCLASS=Y,USER=DJY00,NOTIFY=DJY00,    00050000
+//         REGION=8M                                                    00060000
+//SORTSTEP EXEC PGM=SORT,REGION=8M                                      00100005
+//*TEPLIB DD DSNAME=SYS1.ICELIB,DISP=SHR                                00200006
+//*       DD DSN=SYS1.LINKLIB,DISP=SHR                                  00210006
+//SORTIN  DD DSN=DJY00.SORTFILE,DISP=SHR                                00300000
+//*ORTWK01 DD UNIT=SYSDA,SPACE=(TRK,(50),,CONTIG)                       00400002
+//*ORTWK02 DD UNIT=SYSDA,SPACE=(TRK,(50),,CONTIG)                       00450002
+//*ORTWK03 DD UNIT=SYSDA,SPACE=(TRK,(50),,CONTIG)                       00500002
+//SORTOUT  DD DSN=&TEMPT,UNIT=3390,VOL=SER=SPARE2,              C       00550002
+//         DISP=(,PASS),SPACE=(TRK,(5,5)),                              00600001
+//         DCB=(LRECL=80,RECFM=FB,BLKSIZE=6160)                         00610000
+//SORDATA  DD  UNIT=SYSDA,SPACE=(CYL,(1,1)),                           C00650000
+//             DCB=(RECFM=VBS,LRECL=600,BLKSIZE=200)                    00700000
+//HDRDATA  DD  UNIT=SYSDA,SPACE=(TRK,(5,5)),                           C00750000
+//             DCB=(RECFM=VBS,LRECL=600,BLKSIZE=200)                    00800000
+//SYSIN  DD  *                                                          00850000
+ OPTION DSPSIZE=0,HIPRMAX=0,MAINSIZE=4K,NOBLKSET                        00860005
+ SORT  FIELDS=(1,4,A),FORMAT=BI,SIZE=E10                                00900000
+ RECORD TYPE=F,LENGTH=80                                                00901004
+ END                                                                    01000000
+//SYSOUT DD SYSOUT=*                                                    01010003
+//SORTDIAG DD DUMMY                                                     01020004

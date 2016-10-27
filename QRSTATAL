@@ -1,0 +1,12 @@
+SELECT *                                                                        
+ FROM SYSIBM.SYSTABLES WHERE CREATOR = 'DJY00';                                 
+SELECT  * FROM                                                                  
+         SYSIBM.SYSCOLUMNS WHERE TBCREATOR = 'DJY00';                           
+SELECT *                                                                        
+ FROM SYSIBM.SYSINDEXES WHERE CREATOR = 'DJY00';                                
+ SELECT *                                                                       
+        FROM SYSIBM.SYSTABLESPACE WHERE CREATOR = 'DJY00';                      
+ SELECT *                                                                       
+ FROM SYSIBM.SYSTABLEPART WHERE DBNAME = 'TPCCDB';                              
+ SELECT *                                                                       
+ FROM SYSIBM.SYSINDEXPART WHERE IXCREATOR = 'DJY00';                            

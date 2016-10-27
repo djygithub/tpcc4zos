@@ -1,0 +1,23 @@
+//RUNSCU   JOB (AAA),'D J YOUNG',MSGCLASS=X,TIME=1440,USER=DAVID                
+//DSNUPROC PROC LIB='SYS1.DSN310.SDSNLOAD',                                     
+//         SYSTEM=DB3,                                                          
+//         SIZE=1024K,UID='',UTPROC=''                                          
+//*        SIZE=1024K,UID='',UTPROC='RESTART'                                   
+//DSNUPROC EXEC PGM=DSNUTILB,REGION=&SIZE,                                      
+//         PARM=(&SYSTEM,'&UID','&UTPROC')                                      
+//STEPLIB  DD DSN=&LIB,DISP=SHR                                                 
+//SYSPRINT DD SYSOUT=*                                                          
+//UTPRINT  DD SYSOUT=*                                                          
+//SYSUDUMP DD SYSOUT=*                                                          
+//    PEND                                                                      
+//UTIL EXEC DSNUPROC,SYSTEM=DB3,UID='RSQ100'                                    
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.SYSIN    DD  *                                                       
+ RUNSTATS TABLESPACE TPCCDB.CUTS TABLE (ALL) INDEX (ALL)                00010000
