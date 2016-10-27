@@ -1,0 +1,8 @@
+//DSNTEJ0A JOB (330RWM00,),'D J YOUNG',MSGCLASS=Y,REGION=4096K,         00001000
+//       USER=DJY00,NOTIFY=DJY00                                        00002000
+//DELETE    EXEC PGM=IDCAMS,REGION=1M                                   00680000
+//SYSPRINT DD SYSOUT=*                                                  00690000
+//DB2FILE DD DSN=DSN2.DSNDBD.DSN8D41A.XDEPT2.I0001.A001,                00691000
+//  UNIT=3390,VOL=SER=DB22SY,DISP=SHR                                   00692000
+//SYSIN    DD *                                                         00700000
+ DELETE FILE(DB2FILE)                                                   00710000

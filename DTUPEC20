@@ -1,0 +1,26 @@
+//JAN13962 JOB   (0,75),                                                        
+//         'YOUNG   ',                                        /*OPER*/          
+//         CLASS=A,                                           /*JCLAS*/         
+//         MSGLEVEL=(1,1),                                                      
+//         MSGCLASS=Y,                                                          
+//         NOTIFY=DJY00,                                                        
+//         TIME=30,                                                             
+//         USER=DJY00                                         /*RACF*/          
+//*                                                           /*JCTRL*/         
+//PRNTSTAT EXEC PGM=DFHSTUP,REGION=0M                                           
+//STEPLIB  DD DSN=CICS410.SDFHLOAD,DISP=SHR                                     
+//*        DD DSN=CICSVS.LOADLIB1,DISP=SHR                                      
+//*                                                                             
+//DFHSTATS DD DSN=SPARE2.JAN13962.SMFDATA.EC20,DISP=SHR,UNIT=3390,              
+//         VOL=SER=SPARE2                                                       
+//DFHPRINT DD SYSOUT=*                                                          
+//SYSPRINT DD SYSOUT=*                                                          
+//SYSUDUMP DD SYSOUT=*                                                          
+//SYSABEND DD SYSOUT=*                                                          
+//DFHSTWRK DD UNIT=3390,VOL=SER=SPARE2,SPACE=(CYL,(50,50)),                     
+// DSN=&&SORT1,DISP=(,DELETE),DCB=BLKSIZE=15400              SP=SHR             
+//SYSOUT   DD SYSOUT=*                                                          
+//SYSIN DD *                                                                    
+COLLECTION TYPE=ALL                                                             
+/*                                                                              
+//*                                                                             

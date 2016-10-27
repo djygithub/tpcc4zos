@@ -1,0 +1,55 @@
+  CREATE STOGROUP EXPLANSG VOLUMES (DB22SY) VCAT DSN2;                  00070000
+  CREATE DATABASE EXPLANDB STOGROUP EXPLANSG;                           00071000
+  CREATE TABLESPACE EXPLANTS                                            00080000
+     IN EXPLANDB                                                        00090000
+     BUFFERPOOL BP0                                                     00091001
+     USING STOGROUP EXPLANSG                                            00100000
+       PRIQTY 5000                                                      00110000
+       SECQTY 1000                                                      00111000
+       ERASE NO LOCKSIZE PAGE CLOSE NO;                                 00112000
+  CREATE TABLE DJY00.PLAN_TABLE                                         00120000
+                ( QUERYNO          INTEGER NOT NULL,                    00130000
+                  QBLOCKNO         SMALLINT NOT NULL,                   00140000
+                  APPLNAME         CHAR(8) NOT NULL,                    00150000
+                  PROGNAME         CHAR(8) NOT NULL,                    00160000
+                  PLANNO           SMALLINT NOT NULL,                   00170000
+                  METHOD           SMALLINT NOT NULL,                   00180000
+                  CREATOR          CHAR(8) NOT NULL,                    00190000
+                  TNAME            CHAR(18) NOT NULL,                   00200000
+                  TABNO            SMALLINT NOT NULL,                   00210000
+                  ACCESSTYPE       CHAR(2) NOT NULL,                    00220000
+                  MATCHCOLS        SMALLINT NOT NULL,                   00230000
+                  ACCESSCREATOR    CHAR(8) NOT NULL,                    00240000
+                  ACCESSNAME       CHAR(18) NOT NULL,                   00250000
+                  INDEXONLY        CHAR(1) NOT NULL,                    00260000
+                  SORTN_UNIQ       CHAR(1) NOT NULL,                    00270000
+                  SORTN_JOIN       CHAR(1) NOT NULL,                    00280000
+                  SORTN_ORDERBY    CHAR(1) NOT NULL,                    00290000
+                  SORTN_GROUPBY    CHAR(1) NOT NULL,                    00300000
+                  SORTC_UNIQ       CHAR(1) NOT NULL,                    00310000
+                  SORTC_JOIN       CHAR(1) NOT NULL,                    00320000
+                  SORTC_ORDERBY    CHAR(1) NOT NULL,                    00330000
+                  SORTC_GROUPBY    CHAR(1) NOT NULL,                    00340000
+                  TSLOCKMODE       CHAR(3) NOT NULL,                    00350000
+                  TIMESTAMP        CHAR(16) NOT NULL,                   00360000
+                  REMARKS          VARCHAR(254) NOT NULL,               00370000
+                  PREFETCH         CHAR(1)  NOT NULL,                   00380000
+                  COLUMN_FN_EVAL   CHAR(1)  NOT NULL,                   00390000
+                  MIXOPSEQ         SMALLINT NOT NULL,                   00400000
+                  VERSION          VARCHAR(64) NOT NULL,                00410000
+                  COLLID           CHAR(18) NOT NULL,                   00420000
+                  ACCESS_DEGREE    SMALLINT,                            00430000
+                  ACCESS_PGROUP_ID SMALLINT,                            00440000
+                  JOIN_DEGREE      SMALLINT,                            00450000
+                  JOIN_PGROUP_ID   SMALLINT,                            00460000
+                  SORTC_PGROUP_ID  SMALLINT,                            00470000
+                  SORTN_PGROUP_ID  SMALLINT,                            00480000
+                  PARALLELISM_MODE CHAR(1),                             00490000
+                  MERGE_JOIN_COLS  SMALLINT,                            00500000
+                  CORRELATION_NAME CHAR(18),                            00510000
+                  PAGE_RANGE       CHAR(1) NOT NULL,                    00520000
+                  JOIN_TYPE        CHAR(1) NOT NULL,                    00530000
+                  GROUP_MEMBER     CHAR(8) NOT NULL,                    00540000
+                  IBM_SERVICE_DATA VARCHAR(254) NOT NULL                00550000
+                                              )                         00560000
+           IN EXPLANDB.EXPLANTS;                                        00570000

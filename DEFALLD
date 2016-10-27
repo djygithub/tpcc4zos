@@ -1,0 +1,410 @@
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                             
+--                                                                    --        
+--                                                                    --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE STOGROUP TPCCSG01 VOLUMES (DB22W1) VCAT DSN2;                           
+ CREATE DATABASE TPCCDB STOGROUP TPCCSG01;                                      
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  WAREHOUSE                                                  --        
+--  TABLESPACE WHTS                                                   --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE WHTS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 1000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS NO;                                                               
+ CREATE TABLE DJY00.WAREHOUSE                                                   
+     (W_ID              INTEGER  NOT NULL,                                      
+      W_NAME            CHAR(10) NOT NULL,                                      
+      W_STREET_1        CHAR(20) NOT NULL,                                      
+      W_STREET_2        CHAR(20) NOT NULL,                                      
+      W_CITY            CHAR(20) NOT NULL,                                      
+      W_STATE           CHAR(2)  NOT NULL,                                      
+      W_ZIP             CHAR(9)  NOT NULL,                                      
+      W_TAX             FLOAT    NOT NULL,                                      
+      W_YTD             FLOAT    NOT NULL,                                      
+      PRIMARY KEY (W_ID))                                                       
+      IN  TPCCDB.WHTS;                                                          
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE TYPE 2 UNIQUE INDEX DJY00.WHIN01                                        
+        ON DJY00.WAREHOUSE(W_ID)                                                
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 1                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  ITEM                                                       --        
+--  TABLESPACE ITEMTS                                                 --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE ITEMTS                                                       
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 20000                                                               
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS NO;                                                               
+ CREATE TABLE DJY00.ITEM                                                        
+     (I_ID              INTEGER  NOT NULL,                                      
+      I_IM_ID           INTEGER  NOT NULL,                                      
+      I_NAME            CHAR(24) NOT NULL,                                      
+      I_PRICE           FLOAT    NOT NULL,                                      
+      I_DATA            CHAR(50) NOT NULL,                                      
+      PRIMARY KEY (I_ID))                                                       
+      IN  TPCCDB.ITEMTS;                                                        
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE TYPE 2 UNIQUE INDEX DJY00.ITIN01                                        
+        ON DJY00.ITEM(I_ID)                                                     
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 900                                                             
+         SECQTY 200                                                             
+         SUBPAGES 1                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  STOCK                                                      --        
+--  TABLESPACE STOCKTS                                                --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE STOCKTS                                                      
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 74000                                                               
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS NO;                                                               
+ CREATE TABLE DJY00.STOCK                                                       
+     (S_I_ID            INTEGER  NOT NULL,                                      
+      S_W_ID            INTEGER  NOT NULL,                                      
+      S_QUANTITY        INTEGER,                                                
+      S_DIST_01         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_02         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_03         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_04         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_05         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_06         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_07         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_08         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_09         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_10         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_YTD             FLOAT,                                                  
+      S_ORDER_CNT       INTEGER  NOT NULL,                                      
+      S_REMOTE_CNT      INTEGER  NOT NULL,                                      
+      S_DATA            CHAR(50) NOT NULL WITH DEFAULT,                         
+      PRIMARY KEY (S_W_ID,S_I_ID),                                              
+      FOREIGN KEY STFK1 (S_W_ID)                                                
+          REFERENCES DJY00.WAREHOUSE ON DELETE RESTRICT,                        
+      FOREIGN KEY STFK2 (S_I_ID)                                                
+          REFERENCES DJY00.ITEM ON DELETE RESTRICT)                             
+      IN  TPCCDB.STOCKTS;                                                       
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE TYPE 2 UNIQUE INDEX DJY00.STIN01                                        
+        ON DJY00.STOCK(S_W_ID,S_I_ID)                                           
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 2700                                                            
+         SECQTY 200                                                             
+         SUBPAGES 1                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  DISTRICT                                                   --        
+--  TABLESPACE DITS                                                  --         
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE DITS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 1000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS NO;                                                               
+ CREATE TABLE DJY00.DISTRICT                                                    
+     (D_ID              INTEGER  NOT NULL,                                      
+      D_W_ID            INTEGER  NOT NULL,                                      
+      D_NAME            CHAR(10) NOT NULL,                                      
+      D_STREET_1        CHAR(20) NOT NULL,                                      
+      D_STREET_2        CHAR(20) NOT NULL,                                      
+      D_CITY            CHAR(20) NOT NULL,                                      
+      D_STATE           CHAR(2)  NOT NULL,                                      
+      D_ZIP             CHAR(9)  NOT NULL,                                      
+      D_TAX             FLOAT    NOT NULL,                                      
+      D_YTD             FLOAT    NOT NULL,                                      
+      D_NEXT_O_ID       INTEGER  NOT NULL,                                      
+      PRIMARY KEY (D_W_ID,D_ID),                                                
+      FOREIGN KEY DIFK1 (D_W_ID)                                                
+            REFERENCES DJY00.WAREHOUSE ON DELETE RESTRICT)                      
+      IN  TPCCDB.DITS;                                                          
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE TYPE 2 UNIQUE INDEX DJY00.DIIN01                                        
+        ON DJY00.DISTRICT(D_W_ID,D_ID)                                          
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 1                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  CUSTOMER                                                   --        
+--  TABLESPACE CUTS                                                   --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE CUTS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 48000                                                               
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS NO;                                                               
+ CREATE TABLE DJY00.CUSTOMER                                                    
+     (C_ID              INTEGER  NOT NULL,                                      
+      C_D_ID            INTEGER  NOT NULL,                                      
+      C_W_ID            INTEGER  NOT NULL,                                      
+      C_FIRST           CHAR(16) NOT NULL,                                      
+      C_MIDDLE          CHAR(2)  NOT NULL,                                      
+      C_LAST            CHAR(16) NOT NULL,                                      
+      C_STREET_1        CHAR(20) NOT NULL,                                      
+      C_STREET_2        CHAR(20) NOT NULL,                                      
+      C_CITY            CHAR(20) NOT NULL,                                      
+      C_STATE           CHAR(2)  NOT NULL,                                      
+      C_ZIP             CHAR(9)  NOT NULL,                                      
+      C_PHONE           CHAR(16) NOT NULL,                                      
+      C_SINCE           TIMESTAMP NOT NULL WITH DEFAULT,                        
+      C_CREDIT          CHAR(2)  NOT NULL,                                      
+      C_CREDIT_LIM      FLOAT    NOT NULL,                                      
+      C_DISCOUNT        FLOAT    NOT NULL,                                      
+      C_BALANCE         FLOAT    NOT NULL,                                      
+      C_YTD_PAYMENT     FLOAT    NOT NULL,                                      
+      C_PAYMENT_CNT     FLOAT    NOT NULL,                                      
+      C_DELIVERY_CNT    FLOAT    NOT NULL,                                      
+      C_DATA1           CHAR(250) NOT NULL WITH DEFAULT,                        
+      C_DATA2           CHAR(250) NOT NULL WITH DEFAULT,                        
+      PRIMARY KEY (C_W_ID,C_D_ID,C_ID),                                         
+      FOREIGN KEY CUFK1 (C_W_ID,C_D_ID)                                         
+          REFERENCES DJY00.DISTRICT ON DELETE RESTRICT)                         
+      IN  TPCCDB.CUTS;                                                          
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE TYPE 2 UNIQUE INDEX DJY00.CUIN01                                        
+        ON DJY00.CUSTOMER(C_W_ID,C_D_ID,C_ID)                                   
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 1300                                                            
+         SECQTY 200                                                             
+         SUBPAGES 1                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  HISTORY                                                    --        
+--  TABLESPACE HITS                                                   --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE HITS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 10000                                                               
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS NO;                                                               
+ CREATE TABLE DJY00.HISTORY                                                     
+     (H_C_ID            INTEGER  NOT NULL,                                      
+      H_C_D_ID          INTEGER NOT NULL,                                       
+      H_C_W_ID          INTEGER NOT NULL,                                       
+      H_D_ID            INTEGER NOT NULL,                                       
+      H_W_ID            INTEGER NOT NULL,                                       
+      H_DATE            TIMESTAMP NOT NULL WITH DEFAULT,                        
+      H_AMOUNT          FLOAT NOT NULL,                                         
+      H_DATA            CHAR(24) NOT NULL,                                      
+      FOREIGN KEY HIFK1 (H_C_W_ID,H_C_D_ID,H_C_ID)                              
+          REFERENCES DJY00.CUSTOMER ON DELETE RESTRICT,                         
+      FOREIGN KEY HIFK2 (H_W_ID,H_D_ID)                                         
+          REFERENCES DJY00.DISTRICT ON DELETE RESTRICT)                         
+      IN  TPCCDB.HITS;                                                          
+-- **************************************************************** --   --     
+--    NO INDEX REQUIRED                                             --   --     
+--                                                                  --          
+-- **************************************************************** --          
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  ORDER                                                      --        
+--  TABLESPACE ORDERTS                                                --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE ORDERTS                                                      
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 10000                                                               
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS NO;                                                               
+ CREATE TABLE DJY00.ORDER                                                       
+     (O_ID              INTEGER  NOT NULL,                                      
+      O_D_ID            INTEGER  NOT NULL,                                      
+      O_W_ID            INTEGER  NOT NULL,                                      
+      O_C_ID            INTEGER  NOT NULL,                                      
+      O_ENTRY_D         TIMESTAMP NOT NULL WITH DEFAULT,                        
+      O_CARRIER_ID      INTEGER  NOT NULL,                                      
+      O_OL_CNT          INTEGER  NOT NULL,                                      
+      O_ALL_LOCAL       INTEGER  NOT NULL,                                      
+      PRIMARY KEY (O_W_ID,O_D_ID,O_ID),                                         
+      FOREIGN KEY ORFK1 (O_W_ID,O_D_ID,O_C_ID)                                  
+          REFERENCES DJY00.CUSTOMER ON DELETE RESTRICT)                         
+      IN  TPCCDB.ORDERTS;                                                       
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE TYPE 2 UNIQUE INDEX DJY00.ORIN01                                        
+        ON DJY00.ORDER(O_W_ID,O_D_ID,O_ID)                                      
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 1100                                                            
+         SECQTY 200                                                             
+         SUBPAGES 1                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  NEWORDER                                                   --        
+--  TABLESPACE NOTS                                                   --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE NOTS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 5000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS NO;                                                               
+ CREATE TABLE DJY00.NEWORDER                                                    
+     (NO_O_ID           INTEGER  NOT NULL,                                      
+      NO_D_ID           INTEGER  NOT NULL,                                      
+      NO_W_ID           INTEGER  NOT NULL,                                      
+      PRIMARY KEY (NO_W_ID,NO_D_ID,NO_O_ID),                                    
+      FOREIGN KEY NOFK1 (NO_W_ID,NO_D_ID,NO_O_ID)                               
+          REFERENCES DJY00.ORDER ON DELETE RESTRICT)                            
+      IN  TPCCDB.NOTS;                                                          
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE TYPE 2 UNIQUE INDEX DJY00.NOIN01                                        
+        ON DJY00.NEWORDER(NO_W_ID,NO_D_ID,NO_O_ID)                              
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 1                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  ORDERLINE                                                  --        
+--  TABLESPACE OLTS                                                   --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE OLTS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 50000                                                               
+     SECQTY 5000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS NO;                                                               
+ CREATE TABLE DJY00.ORDERLINE                                                   
+     (OL_O_ID           INTEGER  NOT NULL,                                      
+      OL_D_ID           INTEGER  NOT NULL,                                      
+      OL_W_ID           INTEGER  NOT NULL,                                      
+      OL_NUMBER         INTEGER  NOT NULL,                                      
+      OL_I_ID           INTEGER  NOT NULL,                                      
+      OL_SUPPLY_W_ID    INTEGER  NOT NULL,                                      
+      OL_DELIVERY_D     TIMESTAMP NOT NULL WITH DEFAULT,                        
+      OL_QUANTITY       INTEGER  NOT NULL,                                      
+      OL_AMOUNT         FLOAT    NOT NULL,                                      
+      OL_DIST_INFO      CHAR(24) NOT NULL,                                      
+      PRIMARY KEY (OL_W_ID,OL_D_ID,OL_O_ID,OL_NUMBER),                          
+      FOREIGN KEY OLFK1 (OL_W_ID,OL_D_ID,OL_O_ID)                               
+          REFERENCES DJY00.ORDER ON DELETE RESTRICT,                            
+      FOREIGN KEY OLFK2 (OL_SUPPLY_W_ID,OL_I_ID)                                
+          REFERENCES DJY00.STOCK ON DELETE RESTRICT)                            
+      IN  TPCCDB.OLTS;                                                          
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE TYPE 2 UNIQUE INDEX DJY00.OLIN01                                        
+        ON DJY00.ORDERLINE(OL_W_ID,OL_D_ID,OL_O_ID,OL_NUMBER)                   
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 13300                                                           
+         SECQTY 200                                                             
+         SUBPAGES 1                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              

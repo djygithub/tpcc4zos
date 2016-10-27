@@ -1,0 +1,27 @@
+//BUPDT2   JOB (AMW,000),'DEFINE UCAT',MSGCLASS=Y,                              
+//             TIME=(1440),USER=DJY00,NOTIFY=DJY00                              
+//*        GETDBID TEST                            */                           
+//*                                                                 */          
+//* *************************************************************** */          
+//JOBLIB  DD  DISP=SHR,                                                         
+//            DSN=DSN410.SDSNLOAD                                               
+//        DD  DSN=DSN410.RUNLIB.LOAD,DISP=SHR                                   
+//DSNTICU EXEC PGM=IKJEFT01,DYNAMNBR=20                                         
+//SYSTSPRT DD  SYSOUT=*                                                         
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSUDUMP DD  SYSOUT=*                                                         
+//SYSABOUT DD  SYSOUT=*                                                         
+//SYSOUT   DD  SYSOUT=*                                                         
+//OUTPUT   DD  SYSOUT=*                                                         
+//SNAPOUT DD  SYSOUT=*                                                          
+//SYSTSIN  DD  *                                                                
+  DSN SYSTEM(DB2G)                                                              
+  RUN PROGRAM(BTBLUPDT) PLAN(BTBLUPDT) -                                        
+       LIB('DSN410.RUNLIB.LOAD')                                                
+  END                                                                           
+/*                                                                              
+//INPUT DD *                                                                    
+000000001000000001000000001000000001000000001000003000                          
+//COMMIT DD *                                                                   
+000000001ABCDEFCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+//                                                                              

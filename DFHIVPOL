@@ -1,0 +1,231 @@
+//DFHIVPOL JOB (USER,ACCT,NUMBER),'D J YOUNG',                                  
+// CLASS=A,MSGCLASS=Y,REGION=0M,NOTIFY=DJY00                                    
+//*********************************************************************         
+//* THIS JOB CAN BE USED TO VERIFY CICS ONLINE OPERATION.                       
+//*                                                                             
+//*  CICS                                                                       
+//*     RUN THE CICS BRING-UP PROCEDURE.  CICS IS BROUGHT UP USING              
+//*     THE IBM-SUPPLIED GROUP LIST FROM THE CSD, AS SPECIFIED IN               
+//*     THE SAMPLE SIT.  SAMPLE TRANSACTIONS AND PROGRAMS ARE THEN              
+//*     DYNAMICALLY INSTALLED USING 'CEDA'.                                     
+//*                                                                             
+//*********************************************************************         
+//*********************************************************************         
+//* BRING UP CICS USING THE IBM-SUPPLIED LIST 'DFHLIST', THEN                   
+//* USE CEDA COMMANDS LIKE THE EXAMPLE BELOW TO ADD THE SAMPLE                  
+//* TRANSACTIONS AND PROGRAMS TO THE RUNNING CICS SYSTEM.                       
+//*                                                                             
+//*  CEDA INSTALL GROUP(DFH$AFLA)                                               
+//*       (END KEY)                                                             
+//*                                                                             
+//* THE 'CEDA' TRANSACTION SHOWN ABOVE WILL MAKE THE ASSEMBLER                  
+//* 'FILEA' SAMPLE APPLICATION AVAILABLE ONLINE.  TYPE THE                      
+//* TRANSACTION CODE 'AMNU' TO DISPLAY OPERATOR INSTRUCTION MENU.               
+//*                                                                             
+//*      THE 'RESOURCE DEFINITION (ONLINE)' MANUAL DESCRIBES                    
+//*      THE ONLINE RESOURCE DEFINITION TRANSACTION 'CEDA'.                     
+//*                                                                             
+//*********************************************************************         
+//*                                                                             
+//DFHSTART PROC START='AUTO',                                                   
+// INDEX1='CICS410',                                                            
+// INDEX2='CICS410',                                                            
+// REGNAM1='TR',                                                                
+// REGNAM2='TR',                                                                
+// REG='32M',                                                                   
+// DUMPTR='YES',                                                                
+// RUNCICS='YES',                                                               
+// OUTC='*',                                                                    
+// RDRC='A'                                                                     
+//*SIP=T                                                                        
+//*                                                                             
+//*    INDEX1 - HIGH-LEVEL QUALIFIER(S) OF CICS RUN TIME DATASETS               
+//*    INDEX2 - HIGH-LEVEL QUALIFIER(S) OF CICS LOAD LIBRARIES                  
+//*   REGNAM1 - REGION NAME OF THE XRF ACTIVE REGION OR AN MRO                  
+//*              REGION                                                         
+//*   REGNAM2 - REGION NAME OF THE XRF ALTERNATE REGION                         
+//*              NB. FOR THE XRF ACTIVE REGION OR AN MRO REGION                 
+//*                 REGNAM2 OR REGNAM1 MUST BE THE SAME                         
+//*    REGION - STORAGE REQUIRED                                                
+//*     START - TYPE OF CICS START-UP REQUIRED                                  
+//*    DUMPTR - DUMP/TRACE ANALYSIS REQUIRED, YES OR NO                         
+//*   RUNCICS - CICS STARTUP REQUIRED, YES OR NO                                
+//*      OUTC - PRINT OUTPUT CLASS                                              
+//*      RDRC - JES INTERNAL READER CLASS                                       
+//*       SIP - SUFFIX OF DFH$SIP MEMBER IN THE SYSIN DATASET                   
+//*                                                                             
+//* SET THE RETURN CODE TO CONTROL IF CICS SHOULD BE                            
+//* STARTED OR NOT                                                              
+//CICSCNTL EXEC PGM=IDCAMS,REGION=1M                                            
+//SYSPRINT DD SYSOUT=*                                                          
+//SYSIN    DD DSN=&INDEX1..SYSIN(DFHRC&RUNCICS),DISP=SHR                        
+//*                                                                             
+//* SET THE RETURN CODE TO CONTROL THE DUMP AND TRACE                           
+//* ANALYSIS STEPS                                                              
+//DTCNTL   EXEC PGM=IDCAMS,REGION=1M                                            
+//SYSPRINT DD SYSOUT=*                                                          
+//SYSIN    DD DSN=&INDEX1..SYSIN(DFHRC&DUMPTR),DISP=SHR                         
+//*                                                                             
+//***********************************************************                   
+//*******************  EXECUTE CICS  ************************                   
+//***********************************************************                   
+//CICS    EXEC PGM=DFHSIP,REGION=&REG,TIME=1440,                                
+// COND=(1,NE,CICSCNTL),                                                        
+// PARM='START=&START,SYSIN'                                                    
+//*                                                                             
+//*            THE CAVM DATASETS - XRF                                          
+//DFHXRMSG DD DISP=SHR,                                                         
+// DSN=&INDEX1..CNTL.CICS&REGNAM1..DFHXRMSG                                     
+//DFHXRCTL DD DISP=SHR,                                                         
+// DSN=&INDEX1..CNTL.CICS&REGNAM1..DFHXRCTL                                     
+//*                                                                             
+//* THE "FILEA" APPLICATIONS SAMPLE VSAM FILE                                   
+//* (THE FILEA DD STATEMENT BELOW WILL                                          
+//* OVERRIDE THE CSD DEFINITION IN GROUP DFHMROFD)                              
+//FILEA    DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM1..FILEA                                             
+//*                                                                             
+//*YSIN    DD DSN=&INDEX1..SYSIN(DFH$SIP&SIP),DISP=SHR                          
+//DFHCMACD DD DSN=CICS.CICBPT01.DFHCMACD,DISP=SHR                               
+//*        THE CICS STEPLIB CONCATENATION                                       
+//STEPLIB  DD DSN=&INDEX2..SDFHAUTH,DISP=SHR                                    
+//         DD DSN=DSN410.SDSNLOAD,DISP=SHR                                      
+//         DD DSN=CEE.V1R5M0.SCEERUN,DISP=SHR                                   
+//         DD DSN=SYS1.COB2CICS,DISP=SHR                                        
+//*        DD DSN=SYS1.COB2LIB,DISP=SHR                                         
+//*        DD DSN=IMS.RESLIB,DISP=SHR                                           
+//*        THE CICS LIBRARY (DFHRPL) CONCATENATION                              
+//DFHRPL   DD DSN=&INDEX2..SDFHLOAD,DISP=SHR                                    
+//         DD DSN=DSN410.SDSNLOAD,DISP=SHR                                      
+//         DD DSN=CEE.V1R5M0.SCEECICS,DISP=SHR                                  
+//         DD DSN=CEE.V1R5M0.SCEERUN,DISP=SHR                                   
+//         DD DSN=SYS1.COB2CICS,DISP=SHR                                        
+//         DD DSN=SYS1.COB2LIB,DISP=SHR                                         
+//         DD DSN=DSN410.RUNLIB.LOAD,DISP=SHR                                   
+//*        DD DSN=SYS1.PLILINK,DISP=SHR                                         
+//*        DD DSN=IMS.RESLIB,DISP=SHR                                           
+//* //DFSRESLB DD DSN=IMS.RESLIB,DISP=SHR                                       
+//* //IMSACB   DD DSN=IMS.ACBLIB,DISP=SHR                                       
+//*        THE AUXILIARY TEMPORARY STORAGE DATASET                              
+//DFHTEMP  DD DISP=SHR,                                                         
+// DSN=&INDEX1..CNTL.CICS&REGNAM1..DFHTEMP                                      
+//*        THE INTRAPARTITION DATASET                                           
+//DFHINTRA DD DISP=SHR,                                                         
+// DSN=&INDEX1..CNTL.CICS&REGNAM1..DFHINTRA                                     
+//*        THE AUXILIARY TRACE DATASETS                                         
+//DFHAUXT  DD DISP=SHR,DCB=BUFNO=5,                                             
+// DSN=DJY00.CICBPT01.CICS.DFHAUXT                                              
+//DFHBUXT  DD DISP=SHR,DCB=BUFNO=5,                                             
+// DSN=DJY00.CICBPT01.CICS.DFHBUXT                                              
+//*        THE CICS SYSTEM LOG DATASETS                                         
+//DFHJ01A  DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM1..DFHJ01A                                           
+//DFHJ01B  DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM1..DFHJ01B                                           
+//DFHJ01X  DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM1..DFHJ01X                                           
+//*        AUTOMATIC JOURNAL ARCHIVING DATASETS                                 
+//DFHJACD  DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM1..DFHJACD                                           
+//DFHJPDS  DD DISP=SHR,                                                         
+// DSN=&INDEX1..DFHJPDS                                                         
+//DFHJOUT  DD SYSOUT=(&RDRC,INTRDR)                                             
+//*        THE RESTART DATASET                                                  
+//DFHRSD   DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM1..DFHRSD                                            
+//*        THE CICS LOCAL CATALOG DATASET                                       
+//DFHLCD   DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM2..DFHLCD                                            
+//*        THE CICS GLOBAL CATALOG DATASET                                      
+//DFHGCD   DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM1..DFHGCD                                            
+//*            AMP=('BUFND=5,BUFNI=20,BUFSP=122880')                            
+//* EXTRAPARTITION DATASETS                                                     
+//CEEMSG   DD SYSOUT=&OUTC                                                      
+//CEEOUT   DD SYSOUT=&OUTC                                                      
+//DFHCXRF  DD SYSOUT=&OUTC                                                      
+//LOGUSR   DD SYSOUT=&OUTC,DCB=(DSORG=PS,RECFM=V,BLKSIZE=136)                   
+//MSGUSR   DD SYSOUT=&OUTC,DCB=(DSORG=PS,RECFM=V,BLKSIZE=136)                   
+//PLIMSG   DD SYSOUT=&OUTC,DCB=(DSORG=PS,RECFM=V,BLKSIZE=137)                   
+//COUT     DD SYSOUT=&OUTC,DCB=(DSORG=PS,RECFM=V,BLKSIZE=137)                   
+//*        THE DUMP DATASETS                                                    
+//DFHDMPA  DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM2..DFHDMPA                                           
+//DFHDMPB  DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM2..DFHDMPB                                           
+//SYSABEND DD SYSOUT=&OUTC                                                      
+//TRACEOUT DD SYSOUT=&OUTC                                                      
+//PRINTER  DD SYSOUT=&OUTC,DCB=BLKSIZE=121                                      
+//*        THE CICS SYSTEM DEFINITION DATASET                                   
+//DFHCSD   DD DISP=SHR,                                                         
+// DSN=&INDEX1..DFHCSD                                                          
+//* EXECUTE DUMP UTILITY PROGRAM TO PRINT THE                                   
+//* CONTENTS OF THE DUMP DATASET A                                              
+//PRTDMPA  EXEC  PGM=DFHDU410,PARM=SINGLE,                                      
+// REGION=0M,COND=(1,NE,DTCNTL)                                                 
+//STEPLIB  DD DSN=&INDEX2..SDFHLOAD,DISP=SHR                                    
+//DFHTINDX DD SYSOUT=&OUTC                                                      
+//SYSPRINT DD SYSOUT=&OUTC                                                      
+//DFHPRINT DD SYSOUT=&OUTC                                                      
+//DFHDMPDS DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM2..DFHDMPA                                           
+//SYSIN    DD DUMMY                                                             
+//*        EXECUTE DUMP UTILITY PROGRAM TO PRINT THE                            
+//*        CONTENTS OF THE DUMP DATASET B                                       
+//PRTDMPB  EXEC  PGM=DFHDU410,PARM=SINGLE,                                      
+// REGION=0M,COND=(1,NE,DTCNTL)                                                 
+//STEPLIB  DD DSN=&INDEX2..SDFHLOAD,DISP=SHR                                    
+//DFHTINDX DD SYSOUT=&OUTC                                                      
+//SYSPRINT DD SYSOUT=&OUTC                                                      
+//DFHPRINT DD SYSOUT=&OUTC                                                      
+//DFHDMPDS DD DISP=SHR,                                                         
+// DSN=&INDEX1..CICS&REGNAM2..DFHDMPB                                           
+//SYSIN    DD DUMMY                                                             
+//*        EXECUTE TRACE UTILITY PROGRAM TO PRINT THE                           
+//*        CONTENTS OF THE AUXILIARY TRACE DATASET 'A'.                         
+//*        THIS DATASET WILL BE EMPTY UNLESS SIT                                
+//*        PARAMETER AUXTR IS SET TO ON.                                        
+//*RTAUXT  EXEC PGM=DFHTU410,REGION=0M,COND=(1,NE,DTCNTL)                       
+//*TEPLIB  DD DSN=&INDEX2..SDFHLOAD,DISP=SHR                                    
+//*FHAUXT  DD DISP=OLD,                                                         
+//*DSN=DJY00.CICBPT01.CICS.DFHBUXT                                              
+//*FHAXPRT DD SYSOUT=&OUTC                                                      
+//*FHAXPRM DD DUMMY                                                             
+//**        EXECUTE TRACE UTILITY PROGRAM TO PRINT THE                          
+//**        CONTENTS OF THE AUXILIARY TRACE DATASET 'B'.                        
+//**        THIS DATASET WILL BE EMPTY UNLESS SIT                               
+//**        PARAMETER AUXTR IS SET TO ON.                                       
+//*RTBUXT  EXEC PGM=DFHTU410,REGION=0M,COND=(1,NE,DTCNTL)                       
+//*TEPLIB  DD DSN=&INDEX2..SDFHLOAD,DISP=SHR                                    
+//*FHAUXT  DD DISP=SHR,                                                         
+//*DSN=DJY00.CICBPT01.CICS.DFHAUXT                                              
+//*FHAXPRT DD SYSOUT=&OUTC                                                      
+//*FHAXPRM DD DUMMY                                                             
+// PEND                                                                         
+//*                                                                             
+//CICS    EXEC DFHSTART,                                                        
+// INDEX1='CICS.CICBPT01',    HIGH-LEVEL INDEX FOR CICS DATASETS                
+// INDEX2='CICS410',      HIGH-LEVEL INDEX FOR CICS LIBRARIES                   
+// REGNAM1='',  REGION NAME FOR XRF ACTIVE, SINGLE                              
+//*                        OR MRO REGION                                        
+// REGNAM2='',  ALWAYS THE SAME AS REGNAM1 FOR DFHIVPOL                         
+// REG=7000K,         SIZE OF REGION                                            
+// START=COLD,           TYPE OF CICS START-UP                                  
+// RUNCICS=YES,          START CICS. YES OR NO                                  
+// DUMPTR=YES,           ANALYZE DUMP/TRACE. YES OR NO                          
+// OUTC='*',             SYSOUT CLASS                                           
+// RDRC='A'              INTERNAL READER CLASS                                  
+//*                      SUFFIX OF DFHSIP MEMBER IN SYSIN DATASET               
+//CICS.SYSIN DD *                                                               
+SIT=6$,                                                                         
+SEC=NO,                                                                         
+XRF=NO,                                                                         
+AUXTR=OFF,                                                                      
+AUXTRSW=NEXT,                                                                   
+GRPLIST=TLIST,                                                                  
+APPLID=(CICAMT01),                                                              
+TS=(COLD,0),                                                                    
+MXT=300,                                                                        
+LLACOPY=NO,                                                                     
+INITPARM=(DSN2STRT='A,DB1G'),                                                   
+.END                                                                            

@@ -1,0 +1,110 @@
+//CA22STAR JOB (USER,ACCT,NUMBER),'D J YOUNG',                          00010000
+//      MSGCLASS=Y,REGION=0M,NOTIFY=DJY00                               00010000
+//*                                                                     00020000
+//* This job will invoke the DFHINST TSO CLIST                          00030000
+//* to customise the jobs from the TDFHINST library                     00040000
+//* into the XDFHINST library                                           00050000
+//*                                                                     00060000
+//DFHISTAR EXEC PGM=IKJEFT01,REGION=2M,DYNAMNBR=99                      00120000
+//SYSPROC  DD DSN=CICS410.TDFHINST,DISP=SHR                             00130000
+//SYSTSPRT DD SYSOUT=*                                                  00140000
+//SYSTSIN  DD *                                                         00150000
+  %DFHINST                                                              00160000
+/*                                                                      00170000
+//IN       DD *                                                         00180000
+TEMPLIB     CICS410.TDFHINST                                            00190000
+LIB         BICS.CICPCA22.XDFHINST                                      00200000
+*                                                                       00210000
+* Customers who are installing CICS/ESA  4.1.0 via CBIPO:               00220000
+*    - change CICS410.TDFHINST in                                       00230000
+*          the  TEMPLIB  parameter                                      00240000
+*          and  SYSPROC  DD statement above                             00250000
+*          to reflect to name of the CICS installation                  00260000
+*          target library: Eg. CICS410.SDFHINST                         00270000
+*    - change the  SCOPE parameter below to  SCOPE POST                 00280000
+*      so that only JCL required after the installation of the          00290000
+*      pre-generated CICS/ESA  system is created                        00300000
+*                                                                       00330000
+* Customers who are not installing CICS/ESA  4.1.0 via CBIPO:           00340000
+*    If you do not unload relfile 2 of the CICS/ESA  4.1.0              00350000
+*    tape to library CICS410.TDFHINST                                   00360000
+*    - change CICS410.TDFHINST in                                       00370000
+*        TEMPLIB  parameter                                             00380000
+*        and  SYSPROC  DD statements above                              00390000
+*        to reflect the library name you used.                          00400000
+*                                                                       00410000
+JOB         //XXXXXXXX JOB (USER,ACCT,NUMBER),'D J YOUNG',              00420000
+JOB         // CLASS=A,MSGCLASS=y,REGION=0M,NOTIFY=DJY00                00430000
+*           Add more JOB parameters if you need to.                     00450000
+*                                                                       00450100
+*           Do not change the jobname above,                            00460000
+*             leave the jobname as XXXXXXXX                             00470000
+*                                                                       00470010
+*           The jobname XXXXXXXX will be changed by DFHINST             00470100
+*             but no other changes will be made to the JOB              00470200
+*             statement.                                                00470300
+*                                                                       00470310
+*           A TIME parameter will NOT be added. Code a TIME             00470400
+*             parameter, if neccessary, that is large enough            00470500
+*             to allow all of the installation jobs to complete         00470600
+*             successfully                                              00470700
+*                                                                       00480000
+* Change the  SCOPE  parameter below to  SCOPE POST  if you             00490000
+* a) have installed CICS/ESA  4.1.0 via CBIPO                           00500000
+*         or                                                            00510000
+* b) do not require the Base tape installation JCL to be created        00520000
+*      - ie jobs DFHINST1/2/3/4/5/6                                     00530000
+*                                                                       00540000
+SCOPE       POST                                                        00550000
+*                                                                       00560000
+JES         JES2                                                        00570000
+UTILITIES   ASMA90 IEWL GIMSMP IEBCOPY                                  00580000
+PREFIX      DFH                                                         00590000
+INDEX       CICS410                                                     00600000
+LINDEX      SYS1.CICS410                                                00600100
+BLKFB80     6160                                                        00610000
+BLKU        6144                                                        00620000
+PARMLIB     SYS1.PARMLIB                                                00630000
+WORKUNIT    3390                                                        00640000
+DEFVOL      DB22SY 3390                                                 00650000
+DISTVOL     DB22SY 3390                                                 00660000
+TARGVOL     DB22SY 3390                                                 00670000
+SMPVOL      DB22SY 3390                                                 00680000
+OPTVOL      DB22SY 3390                                                 00700000
+CMACVOL     DB22SY                                                      00710000
+SMPWORK     3390                                                        00720000
+SMPPTS      MVSSMPE.SMPPTS                                              00730000
+SMPMTS      CICS410.SMPMTS                                              00740000
+SMPSTS      CICS410.SMPSTS                                              00750000
+SMPSCDS     CICS410.SMPSCDS                                             00760000
+SMPWRK3     CICS410.SMPWRK3                                             00770000
+GZONELOG    MVSSMPE.SMPGLOG OLD                                         00780000
+TZONELOG    CICS410.TZONE.SMPLOG NEW                                    00790000
+DZONELOG    CICS410.DZONE.SMPLOG NEW                                    00800000
+GZONECSI    MVSSMPE.GLOBAL OLD                                          00810000
+TZONECSI    CICS410.TZONE NEW CICS41 3390                               00820000
+DZONECSI    CICS410.DZONE NEW CICS41 3390                               00830000
+GZONE       OLD GLOBAL                                                  00831000
+TZONE       TZONE                                                       00832000
+DZONE       DZONE                                                       00833000
+TAPEUNIT    3490                                                        00834000
+* MAXIMUM LENGTH OF THE DATASET HIGH-LEVEL QUALIFIER(S)                 00835000
+* ON THE  DSINFO  PARAMETER IS 17                                       00836000
+DSINFO      BICS.CICPCA22 DB22SY 3390 . .                               00837000
+DLI         3.1.0 TARGLIBS                                              00838000
+DLIMACLIB   IMS.MTS     DLIMTS                                          00839000
+DLIMACLIB   IMS.OPTIONS OPTIONS                                         00840000
+DLIMACLIB   IMS.GENLIB  GENLIB                                          00850000
+DLIMACLIB   IMS.GENLIBA GENLIBA                                         00860000
+DLIMACLIB   IMS.GENLIBB GENLIBB                                         00870000
+*                                                                       00890000
+* Additional target zone information                                    00890100
+AINDEX      CICS410.A                                                   00890200
+ALINDEX     SYS1.CICS410.A                                              00890300
+AZONELOG    CICS410.A.AZONE.SMPLOG                                      00890400
+AZONECSI    CICS410.A.AZONE                                             00890500
+AZONE       AZONE                                                       00890600
+ASMPSCDS    CICS410.A.SMPSCDS                                           00890700
+ADDTVOL     DB22SY 3390                                                 00890800
+*                                                                       00890900
+/*                                                                      00891000

@@ -1,0 +1,8 @@
+//EXPORT   JOB   1,SDILJP,MSGLEVEL=(1,1),                                       
+//         REGION=400K,MSGCLASS=X                                               
+//EXPORT   EXEC  PGM=IDCAMS                                                     
+//SYSPRINT DD    SYSOUT=*                                                       
+//SYSIN    DD    *                                                              
+   EXPORT-                                                                      
+           CATALOG.DBSICF1.VDB2IMS DISCONNECT                                   
+/*                                                                              

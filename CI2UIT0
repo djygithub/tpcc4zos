@@ -1,0 +1,129 @@
+       IDENTIFICATION DIVISION.                                                 
+       PROGRAM-ID.  CI2UIT0.                                                    
+       ENVIRONMENT DIVISION.                                                    
+       DATA DIVISION.                                                           
+       WORKING-STORAGE SECTION.                                                 
+           EXEC SQL INCLUDE SQLCA END-EXEC.                                     
+       77  SQLCALEN               PIC S9(4) COMP VALUE +200.                    
+       77  SQLVALUE               PIC S9(9) COMP.                               
+       77  WH                     PIC S9(9) COMP.                               
+       77  DI                     PIC S9(9) COMP.                               
+       77  OLOID                  PIC S9(9) COMP.                               
+       77  OL-NUMBER              PIC S9(9) COMP.                               
+       77  NUM-UPDATES            PIC S9(9) COMP.                               
+       77  UPDATE-COUNTER         PIC S9(9) COMP.                               
+       77  SOC7                   PIC S9(7) COMP-3.                             
+       77  UPDATE-VALUE           PIC X(24).                                    
+       01  ROW-UPDATE-VALUES.                                                   
+           05  DEEDATE            PIC 9(6).                                     
+           05  DEETIME            PIC 9(8).                                     
+       01  COMMAREA               PIC X(1).                                     
+           EXEC SQL INCLUDE DJYMSQLA END-EXEC.                                  
+       01  MFINPUT REDEFINES DJYSQLAI.                                          
+           03  FILLER             PIC X(15).                                    
+           03  TR-CODE            PIC X(4).                                     
+           03  WH-IN              PIC 9(9).                                     
+           03  DI-IN              PIC 9(9).                                     
+           03  OLOID-IN           PIC 9(9).                                     
+           03  NUM-UPDATE-IN      PIC 9(9).                                     
+       01  DB2-RETURN-CODE.                                                     
+           03  FILLER   PIC X(8) VALUE 'HEREITIS'.                              
+           03  SQLCODE-OUT        PIC S9(9).                                    
+       01  WORKSPOT.                                                            
+           03  TRAN-CODE          PIC X(4).                                     
+           03  NUMBER1            PIC 9(9).                                     
+           03  NUMBER2            PIC 9(9).                                     
+           03  FILLER             PIC X(58).                                    
+       01  OUTSPOT.                                                             
+           03  NUMBER-2           PIC 9(9).                                     
+           03  NUMBER-1           PIC 9(9).                                     
+           03  TRANS-CODE         PIC X(4).                                     
+           03  FILLER             PIC X(18) VALUE SPACES.                       
+                                                                                
+       PROCEDURE DIVISION.                                                      
+      *(1A)                                                                     
+           EXEC SQL                                                             
+           SET :UPDATE-VALUE = CURRENT TIMESTAMP                                
+           END-EXEC.                                                            
+           DISPLAY 'UPDATE-VALUE', UPDATE-VALUE.                                
+      *                                                                         
+      *    EXEC SQL WHENEVER SQLERROR CONTINUE END-EXEC.                        
+      *                                                                         
+           EXEC CICS HANDLE CONDITION MAPFAIL (FAILMAP) END-EXEC.               
+      *                                                                         
+      *    MOVE 'TRY AGAIN' TO INFLD1O.                                         
+      *                                                                         
+           EXEC CICS RECEIVE MAP('DJYSQLA')                                     
+                             MAPSET('DJYSQLA')                                  
+                             END-EXEC.                                          
+      *                                                                         
+       FAILMAP.                                                                 
+      *                                                                         
+           DISPLAY 'WH-IN', WH-IN.                                              
+           DISPLAY 'DI-IN', DI-IN.                                              
+           DISPLAY 'OLOID-IN', OLOID-IN.                                        
+           DISPLAY 'NUM-UPDATE-IN', NUM-UPDATE-IN.                              
+           MOVE WH-IN TO WH.                                                    
+           MOVE DI-IN TO DI.                                                    
+           MOVE OLOID-IN TO OLOID.                                              
+           MOVE 0 TO UPDATE-COUNTER.                                            
+           MOVE NUM-UPDATE-IN TO NUM-UPDATES.                                   
+           PERFORM INCR-WH UNTIL UPDATE-COUNTER > NUM-UPDATES                   
+                   OR UPDATE-COUNTER = NUM-UPDATES.                             
+           DISPLAY 'HERE0001'.                                                  
+           MOVE TR-CODE TO TRANS-CODE.                                          
+           MOVE NUM-UPDATES TO NUMBER-1.                                        
+           MOVE SQLCODE TO NUMBER-2.                                            
+           MOVE OUTSPOT TO INFLD1O.                                             
+      *                                                                         
+           EXEC CICS SEND MAP('DJYSQLA')                                        
+                          MAPSET('DJYSQLA')                                     
+                          ERASEAUP                                              
+                          CURSOR(1)                                             
+                          LAST                                                  
+                          END-EXEC.                                             
+      *                                                                         
+           EXEC CICS RETURN  END-EXEC.                                          
+           GOBACK.                                                              
+       INCR-WH.                                                                 
+           PERFORM INCR-DI UNTIL UPDATE-COUNTER > NUM-UPDATES                   
+                   OR UPDATE-COUNTER = NUM-UPDATES.                             
+           ADD 1 TO WH.                                                         
+       INCR-DI.                                                                 
+           PERFORM INCR-OLOID UNTIL UPDATE-COUNTER > NUM-UPDATES                
+                   OR UPDATE-COUNTER = NUM-UPDATES.                             
+           ADD 1 TO DI.                                                         
+       INCR-OLOID.                                                              
+           MOVE 1 TO OL-NUMBER.                                                 
+           PERFORM UPDATE-IT UNTIL OL-NUMBER > 5                                
+                   OR UPDATE-COUNTER > NUM-UPDATES                              
+                   OR UPDATE-COUNTER = NUM-UPDATES.                             
+           ADD 1 TO OLOID.                                                      
+       UPDATE-IT.                                                               
+           EXEC SQL                                                             
+           UPDATE DJY00.ORDERLINE                                               
+                SET OL_DIST_INFO = :UPDATE-VALUE                                
+                WHERE OL_O_ID    = :OLOID AND                                   
+                      OL_D_ID    = :DI AND                                      
+                      OL_W_ID    = :WH AND                                      
+                      OL_NUMBER  = :OL-NUMBER                                   
+           END-EXEC.                                                            
+           IF  SQLCODE = 0                                                      
+               ADD 1 TO UPDATE-COUNTER                                          
+               DISPLAY 'GOOD-CHANGE', WH, DI,                                   
+               OLOID, OL-NUMBER, UPDATE-VALUE                                   
+           ELSE                                                                 
+               DISPLAY  'NOPE', WH, DI, OLOID, OL-NUMBER, UPDATE-VALUE,         
+                        SQLCODE, SQLERRM.                                       
+           IF  UPDATE-COUNTER > NUM-UPDATES OR = NUM-UPDATES                    
+               EXEC SQL                                                         
+               COMMIT WORK                                                      
+               END-EXEC                                                         
+               DISPLAY 'COMMIT', NUM-UPDATES.                                   
+      *(3)                                                                      
+           ADD 1 TO OL-NUMBER.                                                  
+       SQL-ERROR.                                                               
+           IF  SQLCODE NOT = 100                                                
+           DISPLAY  SQLCAID, SQLCABC, SQLCODE, SQLERRM,                         
+           SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),                    
+           SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6).                      

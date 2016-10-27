@@ -1,0 +1,7 @@
+//DSMFECA1 JOB (RWM,T),'DUMP',MSGCLASS=Y,NOTIFY=DJY00                   00010001
+//*UTPIT OUTPUT DEST=PRT5                                               00011000
+//IEFPROC  EXEC PGM=IFASMFDP,REGION=512K                                00012000
+//SYSPRINT DD  SYSOUT=*                                                 00013000
+//DUMPOUT DD DISP=(NEW,KEEP),DSN=SPARE2.FEB13973.SMFDATA.ECA1,          00014011
+//    VOL=SER=SPARE2,UNIT=3390,SPACE=(CYL,(50,50))                      00015009
+//DUMPIN DD DISP=OLD,DSN=SYS1.ECA1.MAN1                                 00016001

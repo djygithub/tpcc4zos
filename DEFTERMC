@@ -1,0 +1,1197 @@
+//CREATEI  JOB (A),'D J YOUNG',MSGCLASS=Y,NOTIFY=DJY00                  00010000
+//VTAMDEF  EXEC  PGM=DFHCSDUP                                           00020000
+//STEPLIB  DD  DSN=CICS410.SDFHLOAD,DISP=SHR                            00030000
+//DFHCSD  DD  DSN=CICS.CICBPT01.DFHCSD,DISP=SHR                         00040000
+//SYSPRINT  DD  SYSOUT=*                                                00050000
+//SYSIN  DD  *                                                          00060000
+DELETE GROUP(DB2GRP)                                                    00070000
+DELETE GROUP(COBOL2)                                                    00070100
+DELETE GROUP(CRTS)                                                      00070200
+DELETE GROUP(CEE)                                                       00070300
+DELETE LIST(TLIST)                                                      00070400
+DEFINE TYPETERM(3180S)     GROUP(CRTS)          DEVICE(3270)            00070500
+       DEFSCREEN(24,80)    ALTSCREEN(32,80)     BUILDCHAIN(NO)          00070600
+       BRACKET(YES)        SENDSIZE(1920)       AUDIBLEALARM(YES)       00070700
+       DUALCASEKYBD(YES)   UCTRAN(YES)          COLOR(NO)               00070800
+       EXTENDEDDS(NO)      HILIGHT(NO)          LIGHTPEN(NO)            00070900
+       ERRLASTLINE(NO)     ERRINTENSIFY(NO)     ERRCOLOR(NO)            00071000
+       ERRHILIGHT(NO)      AUTOCONNECT(YES)     ATI(YES)                00071100
+       TTI(YES)            LOGONMSG(YES)        RELREQ(YES)             00071200
+       SIGNOFF(YES)        RECEIVESIZE(1920)    IOAREALEN(2000,4000)    00071300
+       TERMMODEL(2)        DESCRIPTION(ATTRIBUTES FOR 3278 MODEL 2)     00071400
+       SHIPPABLE(YES)                                                   00071500
+*                                                                       00071600
+DEFINE TYPETERM(LU2)       GROUP(CRTS)          DEVICE(LUTYPE2)         00071700
+       DEFSCREEN(24,80)    ALTSCREEN(32,80)     BUILDCHAIN(NO)          00071800
+       BRACKET(YES)        SENDSIZE(1536)       AUDIBLEALARM(YES)       00071900
+       DUALCASEKYBD(YES)   UCTRAN(YES)          COLOR(NO)               00072000
+       EXTENDEDDS(NO)      HILIGHT(NO)          LIGHTPEN(NO)            00072100
+       ERRLASTLINE(NO)     ERRINTENSIFY(NO)     ERRCOLOR(NO)            00072200
+       ERRHILIGHT(NO)      AUTOCONNECT(YES)     ATI(YES)                00072300
+       TTI(YES)            LOGONMSG(YES)        RELREQ(YES)             00072400
+       SIGNOFF(YES)        RECEIVESIZE(256)    IOAREALEN(256,4000)      00072500
+       TERMMODEL(2)        DESCRIPTION(ATTRIBUTES FOR 3278 MODEL 2)     00072600
+       SHIPPABLE(YES)                                                   00072700
+*                                                                       00072800
+DEFINE TERMINAL(C020)    NETNAME(HM31T020)      GROUP(CRTS)             00072900
+       TYPETERM(3180S)   AUTINSTMODEL(NO) INSERVICE(NO)                 00073000
+*                                                                       00074000
+DEFINE TERMINAL(C021)    NETNAME(TCP00001)      GROUP(CRTS)             00075000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00076000
+*                                                                       00077000
+DEFINE TERMINAL(C022)    NETNAME(TCP00002)      GROUP(CRTS)             00078000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00079000
+*                                                                       00080000
+DEFINE TERMINAL(C023)    NETNAME(TCP00003)      GROUP(CRTS)             00090000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00100000
+*                                                                       00110000
+DEFINE TERMINAL(C024)    NETNAME(TCP00004)      GROUP(CRTS)             00120000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00130000
+*                                                                       00140000
+DEFINE TERMINAL(C025)    NETNAME(TCP00005)      GROUP(CRTS)             00150000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00160000
+*                                                                       00170000
+DEFINE TERMINAL(C026)    NETNAME(TCP00006)      GROUP(CRTS)             00180000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00190000
+*                                                                       00200000
+DEFINE TERMINAL(C027)    NETNAME(TCP00007)      GROUP(CRTS)             00210000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00220000
+*                                                                       00230000
+DEFINE TERMINAL(C028)    NETNAME(TCP00008)      GROUP(CRTS)             00240000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00250000
+*                                                                       00260000
+DEFINE TERMINAL(C029)    NETNAME(TCP00009)      GROUP(CRTS)             00270000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00271000
+*                                                                       00272000
+DEFINE TERMINAL(C030)    NETNAME(TCP00010)      GROUP(CRTS)             00273000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00274000
+*                                                                       00275000
+DEFINE TERMINAL(C031)    NETNAME(TCP00011)      GROUP(CRTS)             00276000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00277000
+*                                                                       00278000
+DEFINE TERMINAL(C032)    NETNAME(TCP00012)      GROUP(CRTS)             00279000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00279100
+*                                                                       00279200
+DEFINE TERMINAL(C033)    NETNAME(TCP00013)      GROUP(CRTS)             00279300
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00279400
+*                                                                       00279500
+DEFINE TERMINAL(C034)    NETNAME(TCP00014)      GROUP(CRTS)             00279600
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00279700
+*                                                                       00279800
+DEFINE TERMINAL(C035)    NETNAME(TCP00015)      GROUP(CRTS)             00279900
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00280000
+*                                                                       00280100
+DEFINE TERMINAL(C036)    NETNAME(TCP00016)      GROUP(CRTS)             00280200
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00280300
+*                                                                       00280400
+DEFINE TERMINAL(C037)    NETNAME(TCP00017)      GROUP(CRTS)             00280500
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00280600
+*                                                                       00280700
+DEFINE TERMINAL(C038)    NETNAME(TCP00018)      GROUP(CRTS)             00280800
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00280900
+*                                                                       00281000
+DEFINE TERMINAL(C039)    NETNAME(TCP00019)      GROUP(CRTS)             00281100
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00281200
+*                                                                       00281300
+DEFINE TERMINAL(C040)    NETNAME(TCP00020)      GROUP(CRTS)             00281400
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00281500
+*                                                                       00281600
+DEFINE TERMINAL(CSYS)    GROUP(CRTS)     TYPETERM(DFHCONS)              00281700
+       CONSNAME(SYSLOG)                                                 00281800
+*                                                                       00281900
+DEFINE TERMINAL(CDJY)    GROUP(CRTS)     TYPETERM(DFHCONS)              00282000
+       CONSNAME(DJY00)                                                  00282100
+*                                                                       00282200
+DEFINE TERMINAL(C001)    GROUP(CRTS)     TYPETERM(DFHCONS)              00282300
+       CONSNAME(EC20220)                                                00282400
+*                                                                       00282500
+DEFINE TERMINAL(C002)    GROUP(CRTS)     TYPETERM(DFHCONS)              00282600
+       CONSNAME(EC20221)                                                00282700
+*                                                                       00282800
+DEFINE TERMINAL(C022)    NETNAME(HM31T022)      GROUP(CRTS)             00282900
+       TYPETERM(3180S)   AUTINSTMODEL(YES) INSERVICE(YES)               00283000
+*                                                                       00284000
+*                                                                       00290400
+DEFINE TERMINAL(0001)    NETNAME(TPNS0001)     GROUP(CRTS)              00290500
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00290600
+*                                                                       00290700
+DEFINE TERMINAL(0002)    NETNAME(TPNS0002)     GROUP(CRTS)              00290800
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00290900
+*                                                                       00291000
+DEFINE TERMINAL(0003)    NETNAME(TPNS0003)     GROUP(CRTS)              00291100
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00291200
+*                                                                       00291300
+DEFINE TERMINAL(0004)    NETNAME(TPNS0004)     GROUP(CRTS)              00291400
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00291500
+*                                                                       00291600
+DEFINE TERMINAL(0005)    NETNAME(TPNS0005)     GROUP(CRTS)              00291700
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00291800
+*                                                                       00291900
+DEFINE TERMINAL(0006)    NETNAME(TPNS0006)     GROUP(CRTS)              00292000
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00292100
+*                                                                       00292200
+DEFINE TERMINAL(0007)    NETNAME(TPNS0007)     GROUP(CRTS)              00292300
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00292400
+*                                                                       00292500
+DEFINE TERMINAL(0008)    NETNAME(TPNS0008)     GROUP(CRTS)              00292600
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00292700
+*                                                                       00292800
+DEFINE TERMINAL(0009)    NETNAME(TPNS0009)     GROUP(CRTS)              00292900
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00293000
+*                                                                       00293100
+DEFINE TERMINAL(0010)    NETNAME(TPNS0010)     GROUP(CRTS)              00293200
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00293300
+*                                                                       00293400
+DEFINE TERMINAL(0011)    NETNAME(TPNS0011)     GROUP(CRTS)              00293500
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00293600
+*                                                                       00293700
+DEFINE TERMINAL(0012)    NETNAME(TPNS0012)     GROUP(CRTS)              00293800
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00293900
+*                                                                       00294000
+DEFINE TERMINAL(0013)    NETNAME(TPNS0013)     GROUP(CRTS)              00294100
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00294200
+*                                                                       00294300
+DEFINE TERMINAL(0014)    NETNAME(TPNS0014)     GROUP(CRTS)              00294400
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00294500
+*                                                                       00294600
+DEFINE TERMINAL(0015)    NETNAME(TPNS0015)     GROUP(CRTS)              00294700
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00294800
+*                                                                       00294900
+DEFINE TERMINAL(0016)    NETNAME(TPNS0016)     GROUP(CRTS)              00295000
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00295100
+*                                                                       00295200
+DEFINE TERMINAL(0017)    NETNAME(TPNS0017)     GROUP(CRTS)              00295300
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00295400
+*                                                                       00295500
+DEFINE TERMINAL(0018)    NETNAME(TPNS0018)     GROUP(CRTS)              00295600
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00295700
+*                                                                       00295800
+DEFINE TERMINAL(0019)    NETNAME(TPNS0019)     GROUP(CRTS)              00295900
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00296000
+*                                                                       00296100
+DEFINE TERMINAL(0020)    NETNAME(TPNS0020)     GROUP(CRTS)              00296200
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00296300
+*                                                                       00296400
+DEFINE TERMINAL(0021)    NETNAME(TPNS0021)     GROUP(CRTS)              00296500
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00296600
+*                                                                       00296700
+DEFINE TERMINAL(0022)    NETNAME(TPNS0022)     GROUP(CRTS)              00296800
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00296900
+*                                                                       00297000
+DEFINE TERMINAL(0023)    NETNAME(TPNS0023)     GROUP(CRTS)              00297100
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00297200
+*                                                                       00297300
+DEFINE TERMINAL(0024)    NETNAME(TPNS0024)     GROUP(CRTS)              00297400
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00297500
+*                                                                       00297600
+DEFINE TERMINAL(0025)    NETNAME(TPNS0025)     GROUP(CRTS)              00297700
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00297800
+*                                                                       00297900
+DEFINE TERMINAL(0026)    NETNAME(TPNS0026)     GROUP(CRTS)              00298000
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00298100
+*                                                                       00298200
+DEFINE TERMINAL(0027)    NETNAME(TPNS0027)     GROUP(CRTS)              00298300
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00298400
+*                                                                       00298500
+DEFINE TERMINAL(0028)    NETNAME(TPNS0028)     GROUP(CRTS)              00298600
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00298700
+*                                                                       00298800
+DEFINE TERMINAL(0029)    NETNAME(TPNS0029)     GROUP(CRTS)              00298900
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00299000
+*                                                                       00299100
+DEFINE TERMINAL(0030)    NETNAME(TPNS0030)     GROUP(CRTS)              00299200
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00299300
+*                                                                       00299400
+DEFINE TERMINAL(0031)    NETNAME(TPNS0031)     GROUP(CRTS)              00299500
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00299600
+*                                                                       00299700
+DEFINE TERMINAL(0032)    NETNAME(TPNS0032)     GROUP(CRTS)              00299800
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00299900
+*                                                                       00300000
+DEFINE TERMINAL(0033)    NETNAME(TPNS0033)     GROUP(CRTS)              00300100
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00300200
+*                                                                       00300300
+DEFINE TERMINAL(0034)    NETNAME(TPNS0034)     GROUP(CRTS)              00300400
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00300500
+*                                                                       00300600
+DEFINE TERMINAL(0035)    NETNAME(TPNS0035)     GROUP(CRTS)              00300700
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00300800
+*                                                                       00300900
+DEFINE TERMINAL(0036)    NETNAME(TPNS0036)     GROUP(CRTS)              00301000
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00301100
+*                                                                       00301200
+DEFINE TERMINAL(0037)    NETNAME(TPNS0037)     GROUP(CRTS)              00301300
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00301400
+*                                                                       00301500
+DEFINE TERMINAL(0038)    NETNAME(TPNS0038)     GROUP(CRTS)              00301600
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00301700
+*                                                                       00301800
+DEFINE TERMINAL(0039)    NETNAME(TPNS0039)     GROUP(CRTS)              00301900
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00302000
+*                                                                       00302100
+DEFINE TERMINAL(0040)    NETNAME(TPNS0040)     GROUP(CRTS)              00302200
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00302300
+*                                                                       00302400
+DEFINE TERMINAL(0041)    NETNAME(TPNS0041)     GROUP(CRTS)              00302500
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00302600
+*                                                                       00302700
+DEFINE TERMINAL(0042)    NETNAME(TPNS0042)     GROUP(CRTS)              00302800
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00302900
+*                                                                       00303000
+DEFINE TERMINAL(0043)    NETNAME(TPNS0043)     GROUP(CRTS)              00303100
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00303200
+*                                                                       00303300
+DEFINE TERMINAL(0044)    NETNAME(TPNS0044)     GROUP(CRTS)              00303400
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00303500
+*                                                                       00303600
+DEFINE TERMINAL(0045)    NETNAME(TPNS0045)     GROUP(CRTS)              00303700
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00303800
+*                                                                       00303900
+DEFINE TERMINAL(0046)    NETNAME(TPNS0046)     GROUP(CRTS)              00304000
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00304100
+*                                                                       00304200
+DEFINE TERMINAL(0047)    NETNAME(TPNS0047)     GROUP(CRTS)              00304300
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00304400
+*                                                                       00304500
+DEFINE TERMINAL(0048)    NETNAME(TPNS0048)     GROUP(CRTS)              00304600
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00304700
+*                                                                       00304800
+DEFINE TERMINAL(0049)    NETNAME(TPNS0049)     GROUP(CRTS)              00304900
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00305000
+*                                                                       00305100
+DEFINE TERMINAL(0050)    NETNAME(TPNS0050)     GROUP(CRTS)              00305200
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00305300
+*                                                                       00305400
+DEFINE TERMINAL(0051)    NETNAME(TPNS0051)     GROUP(CRTS)              00305500
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00305600
+*                                                                       00305700
+DEFINE TERMINAL(0052)    NETNAME(TPNS0052)     GROUP(CRTS)              00305800
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00305900
+*                                                                       00306000
+DEFINE TERMINAL(0053)    NETNAME(TPNS0053)     GROUP(CRTS)              00306100
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00306200
+*                                                                       00306300
+DEFINE TERMINAL(0054)    NETNAME(TPNS0054)     GROUP(CRTS)              00306400
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00306500
+*                                                                       00306600
+DEFINE TERMINAL(0055)    NETNAME(TPNS0055)     GROUP(CRTS)              00306700
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00306800
+*                                                                       00306900
+DEFINE TERMINAL(0056)    NETNAME(TPNS0056)     GROUP(CRTS)              00307000
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00307100
+*                                                                       00307200
+DEFINE TERMINAL(0057)    NETNAME(TPNS0057)     GROUP(CRTS)              00307300
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00307400
+*                                                                       00307500
+DEFINE TERMINAL(0058)    NETNAME(TPNS0058)     GROUP(CRTS)              00307600
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00307700
+*                                                                       00307800
+DEFINE TERMINAL(0059)    NETNAME(TPNS0059)     GROUP(CRTS)              00307900
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00308000
+*                                                                       00308100
+DEFINE TERMINAL(0060)    NETNAME(TPNS0060)     GROUP(CRTS)              00308200
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00308300
+*                                                                       00308400
+DEFINE TERMINAL(0061)    NETNAME(TPNS0061)     GROUP(CRTS)              00308500
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00308600
+*                                                                       00308700
+DEFINE TERMINAL(0062)    NETNAME(TPNS0062)     GROUP(CRTS)              00308800
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00308900
+*                                                                       00309000
+DEFINE TERMINAL(0063)    NETNAME(TPNS0063)     GROUP(CRTS)              00309100
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00309200
+*                                                                       00309300
+DEFINE TERMINAL(0064)    NETNAME(TPNS0064)     GROUP(CRTS)              00309400
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00309500
+*                                                                       00309600
+DEFINE TERMINAL(0065)    NETNAME(TPNS0065)     GROUP(CRTS)              00309700
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00309800
+*                                                                       00309900
+DEFINE TERMINAL(0066)    NETNAME(TPNS0066)     GROUP(CRTS)              00310000
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00310100
+*                                                                       00310200
+DEFINE TERMINAL(0067)    NETNAME(TPNS0067)     GROUP(CRTS)              00310300
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00310400
+*                                                                       00310500
+DEFINE TERMINAL(0068)    NETNAME(TPNS0068)     GROUP(CRTS)              00310600
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00310700
+*                                                                       00310800
+DEFINE TERMINAL(0069)    NETNAME(TPNS0069)     GROUP(CRTS)              00310900
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00311000
+*                                                                       00311100
+DEFINE TERMINAL(0070)    NETNAME(TPNS0070)     GROUP(CRTS)              00311200
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00311300
+*                                                                       00311400
+DEFINE TERMINAL(0071)    NETNAME(TPNS0071)     GROUP(CRTS)              00311500
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00311600
+*                                                                       00311700
+DEFINE TERMINAL(0072)    NETNAME(TPNS0072)     GROUP(CRTS)              00311800
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00311900
+*                                                                       00312000
+DEFINE TERMINAL(0073)    NETNAME(TPNS0073)     GROUP(CRTS)              00312100
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00312200
+*                                                                       00312300
+DEFINE TERMINAL(0074)    NETNAME(TPNS0074)     GROUP(CRTS)              00312400
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00312500
+*                                                                       00312600
+DEFINE TERMINAL(0075)    NETNAME(TPNS0075)     GROUP(CRTS)              00312700
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00312800
+*                                                                       00312900
+DEFINE TERMINAL(0076)    NETNAME(TPNS0076)     GROUP(CRTS)              00313000
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00313100
+*                                                                       00313200
+DEFINE TERMINAL(0077)    NETNAME(TPNS0077)     GROUP(CRTS)              00313300
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00313400
+*                                                                       00313500
+DEFINE TERMINAL(0078)    NETNAME(TPNS0078)     GROUP(CRTS)              00313600
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00313700
+*                                                                       00313800
+DEFINE TERMINAL(0079)    NETNAME(TPNS0079)     GROUP(CRTS)              00313900
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00314000
+*                                                                       00314100
+DEFINE TERMINAL(0080)    NETNAME(TPNS0080)     GROUP(CRTS)              00314200
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00314300
+*                                                                       00314400
+DEFINE TERMINAL(0081)    NETNAME(TPNS0081)     GROUP(CRTS)              00314500
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00314600
+*                                                                       00314700
+DEFINE TERMINAL(0082)    NETNAME(TPNS0082)     GROUP(CRTS)              00314800
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00314900
+*                                                                       00315000
+DEFINE TERMINAL(0083)    NETNAME(TPNS0083)     GROUP(CRTS)              00315100
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00315200
+*                                                                       00315300
+DEFINE TERMINAL(0084)    NETNAME(TPNS0084)     GROUP(CRTS)              00315400
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00315500
+*                                                                       00315600
+DEFINE TERMINAL(0085)    NETNAME(TPNS0085)     GROUP(CRTS)              00315700
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00315800
+*                                                                       00315900
+DEFINE TERMINAL(0086)    NETNAME(TPNS0086)     GROUP(CRTS)              00316000
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00316100
+*                                                                       00316200
+DEFINE TERMINAL(0087)    NETNAME(TPNS0087)     GROUP(CRTS)              00316300
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00316400
+*                                                                       00316500
+DEFINE TERMINAL(0088)    NETNAME(TPNS0088)     GROUP(CRTS)              00316600
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00316700
+*                                                                       00316800
+DEFINE TERMINAL(0089)    NETNAME(TPNS0089)     GROUP(CRTS)              00316900
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00317000
+*                                                                       00317100
+DEFINE TERMINAL(0090)    NETNAME(TPNS0090)     GROUP(CRTS)              00317200
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00317300
+*                                                                       00317400
+DEFINE TERMINAL(0091)    NETNAME(TPNS0091)     GROUP(CRTS)              00317500
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00317600
+*                                                                       00317700
+DEFINE TERMINAL(0092)    NETNAME(TPNS0092)     GROUP(CRTS)              00317800
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00317900
+*                                                                       00318000
+DEFINE TERMINAL(0093)    NETNAME(TPNS0093)     GROUP(CRTS)              00318100
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00318200
+*                                                                       00318300
+DEFINE TERMINAL(0094)    NETNAME(TPNS0094)     GROUP(CRTS)              00318400
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00318500
+*                                                                       00318600
+DEFINE TERMINAL(0095)    NETNAME(TPNS0095)     GROUP(CRTS)              00318700
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00318800
+*                                                                       00318900
+DEFINE TERMINAL(0096)    NETNAME(TPNS0096)     GROUP(CRTS)              00319000
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00319100
+*                                                                       00319200
+DEFINE TERMINAL(0097)    NETNAME(TPNS0097)     GROUP(CRTS)              00319300
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00319400
+*                                                                       00319500
+DEFINE TERMINAL(0098)    NETNAME(TPNS0098)     GROUP(CRTS)              00319600
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00319700
+*                                                                       00319800
+DEFINE TERMINAL(0099)    NETNAME(TPNS0099)     GROUP(CRTS)              00319900
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00320000
+*                                                                       00320100
+DEFINE TERMINAL(0100)    NETNAME(TPNS0100)     GROUP(CRTS)              00320200
+       TYPETERM(LU2)     AUTINSTMODEL(NO)                               00320300
+*/********************************************************************/ 00593000
+*/*                                                                  */ 00593100
+*/*  LICENSED MATERIALS - PROPERTY OF IBM                            */ 00593200
+*/*                                                                  */ 00593300
+*/*    5688-198  (C) COPYRIGHT IBM CORP. 1991,  1995                 */ 00593400
+*/*    ALL RIGHTS RESERVED.                                          */ 00593500
+*/*                                                                  */ 00593600
+*/*    US Government Users Restricted Rights - Use, duplication or   */ 00593700
+*/*    disclosure restricted by GSA ADP Schedule Contract with IBM   */ 00593800
+*/*    Corp.                                                         */ 00593900
+*/*                                                                  */ 00594000
+*/********************************************************************/ 00594100
+                                                                        00594200
+*---------------------------------------------------------------------* 00594300
+*                                                                     * 00594400
+* LE/370 - CICS CSD Definitions                                       * 00594500
+*                                                                     * 00594600
+*                                                                     * 00594700
+* Note: The group that contains the LE/370 run time routines          * 00594800
+*       must be in the group list used during CICS startup.           * 00594900
+*                                                                     * 00595000
+*---------------------------------------------------------------------* 00595100
+                                                                        00595200
+*                                                                       00595300
+* Common run time routines                                              00595400
+*                                                                       00595500
+  DEFINE PROGRAM(CEECCICS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00595600
+  DEFINE PROGRAM(CEECDATX) GROUP(CEE) LANGUAGE(ASSEMBLER)               00595700
+  DEFINE PROGRAM(CEEPLPKA) GROUP(CEE) LANGUAGE(ASSEMBLER)               00595800
+  DEFINE PROGRAM(CEEVHEAP) GROUP(CEE) LANGUAGE(ASSEMBLER)               00595900
+  DEFINE PROGRAM(CEEMMS)   GROUP(CEE) LANGUAGE(ASSEMBLER)               00596000
+  DEFINE PROGRAM(CEEQMATH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00596100
+  DEFINE PROGRAM(CEEYDTS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00596200
+  DEFINE PROGRAM(CEEKDS)   GROUP(CEE) LANGUAGE(ASSEMBLER)               00596300
+  DEFINE PROGRAM(CEELCLE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00596400
+  DEFINE PROGRAM(CEEMENU0) GROUP(CEE) LANGUAGE(ASSEMBLER)               00596500
+  DEFINE PROGRAM(CEEMENU2) GROUP(CEE) LANGUAGE(ASSEMBLER)               00596600
+  DEFINE PROGRAM(CEEMENU3) GROUP(CEE) LANGUAGE(ASSEMBLER)               00596700
+  DEFINE PROGRAM(CEEMUEN0) GROUP(CEE) LANGUAGE(ASSEMBLER)               00596800
+  DEFINE PROGRAM(CEEMUEN2) GROUP(CEE) LANGUAGE(ASSEMBLER)               00596900
+  DEFINE PROGRAM(CEEMUEN3) GROUP(CEE) LANGUAGE(ASSEMBLER)               00597000
+  DEFINE PROGRAM(CEEMJPN0) GROUP(CEE) LANGUAGE(ASSEMBLER)               00597100
+  DEFINE PROGRAM(CEEMJPN2) GROUP(CEE) LANGUAGE(ASSEMBLER)               00597200
+  DEFINE PROGRAM(CEEMJPN3) GROUP(CEE) LANGUAGE(ASSEMBLER)               00597300
+*                                                                       00597400
+* COBOL specific run time routines                                      00597500
+*                                                                       00597600
+  DEFINE PROGRAM(CEEEV005) GROUP(CEE) LANGUAGE(ASSEMBLER)               00597700
+  DEFINE PROGRAM(IGZCPCC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00597800
+  DEFINE PROGRAM(IGZCPAC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00597900
+  DEFINE PROGRAM(IIGZMSGT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00598000
+  DEFINE PROGRAM(IGZCMGEN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00598100
+  DEFINE PROGRAM(IGZCMGUE) GROUP(CEE) LANGUAGE(ASSEMBLER)               00598200
+  DEFINE PROGRAM(IGZCACS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00598300
+  DEFINE PROGRAM(IGZCANE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00598400
+  DEFINE PROGRAM(IGZCANF)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00598500
+  DEFINE PROGRAM(IGZCBID)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00598600
+  DEFINE PROGRAM(IGZCBUG)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00598700
+  DEFINE PROGRAM(IGZCCLS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00598800
+  DEFINE PROGRAM(IGZCCTL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00598900
+  DEFINE PROGRAM(IGZCCVB)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00599000
+  DEFINE PROGRAM(IGZCFCC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00599100
+  DEFINE PROGRAM(IGZCFDP)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00599200
+  DEFINE PROGRAM(IGZCFDW)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00599300
+  DEFINE PROGRAM(IGZCFPW)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00599400
+  DEFINE PROGRAM(IGZCHCM)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00599500
+  DEFINE PROGRAM(IGZCIDB)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00599600
+  DEFINE PROGRAM(IGZCINS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00599700
+  DEFINE PROGRAM(IGZCIN1)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00599800
+  DEFINE PROGRAM(IGZCIN2)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00599900
+  DEFINE PROGRAM(IGZCIPS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00600000
+  DEFINE PROGRAM(IGZCIVL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00600100
+  DEFINE PROGRAM(IGZCLDL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00600200
+  DEFINE PROGRAM(IGZCLDR)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00600300
+  DEFINE PROGRAM(IGZCLLM)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00600400
+  DEFINE PROGRAM(IGZCLNK)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00600500
+  DEFINE PROGRAM(IGZCMED)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00600600
+  DEFINE PROGRAM(IGZCMSG)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00600700
+  DEFINE PROGRAM(IGZCNMV)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00600800
+  DEFINE PROGRAM(IGZCONV)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00600900
+  DEFINE PROGRAM(IGZCPPL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00601000
+  DEFINE PROGRAM(IGZCPRC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00601100
+  DEFINE PROGRAM(IGZCPRS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00601200
+  DEFINE PROGRAM(IGZCRCL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00601300
+  DEFINE PROGRAM(IGZCREV)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00601400
+  DEFINE PROGRAM(IGZCRSU)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00601500
+  DEFINE PROGRAM(IGZCSCH)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00601600
+  DEFINE PROGRAM(IGZCSMV)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00601700
+  DEFINE PROGRAM(IGZCSPC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00601800
+  DEFINE PROGRAM(IGZCSPM)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00601900
+  DEFINE PROGRAM(IGZCSSN)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00602000
+  DEFINE PROGRAM(IGZCSSR)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00602100
+  DEFINE PROGRAM(IGZCSTA)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00602200
+  DEFINE PROGRAM(IGZCSTG)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00602300
+  DEFINE PROGRAM(IGZCXPR)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00602400
+  DEFINE PROGRAM(IGZCUPL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00602500
+  DEFINE PROGRAM(IGZCUST)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00602600
+  DEFINE PROGRAM(IGZCVLD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00602700
+  DEFINE PROGRAM(IGZCVMO)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00602800
+  DEFINE PROGRAM(IGZCXDI)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00602900
+  DEFINE PROGRAM(IGZCXMU)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00603000
+  DEFINE PROGRAM(IGZEDCM)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00603100
+  DEFINE PROGRAM(IGZEINI)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00603200
+  DEFINE PROGRAM(IGZEMSG)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00603300
+  DEFINE PROGRAM(IGZEPOP)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00603400
+  DEFINE PROGRAM(IGZESMG)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00603500
+  DEFINE PROGRAM(IGZETRM)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00603600
+  DEFINE PROGRAM(IGZETCL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00603700
+  DEFINE PROGRAM(IGZETSU)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00603800
+  DEFINE PROGRAM(IGZINSH)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00603900
+  DEFINE PROGRAM(IGZCD2A)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00604000
+  DEFINE PROGRAM(IGZCA2D)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00604100
+  DEFINE PROGRAM(IGZCCAL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00604200
+  DEFINE PROGRAM(IGZCMGJA) GROUP(CEE) LANGUAGE(ASSEMBLER)               00604300
+*                                                                       00604400
+* C/370 CSD Start                                                       00604500
+*                                                                       00604600
+* C/370 specific run time routines                                      00604700
+*                                                                       00604800
+ DEFINE PROGRAM(CEEEV003) GROUP(CEE) LANGUAGE(ASSEMBLER)                00604900
+ DEFINE PROGRAM(EDCZEMSG) GROUP(CEE) LANGUAGE(ASSEMBLER)                00605000
+ DEFINE PROGRAM(EDCZUMSG) GROUP(CEE) LANGUAGE(ASSEMBLER)                00605100
+ DEFINE PROGRAM(EDCZJMSG) GROUP(CEE) LANGUAGE(ASSEMBLER)                00605200
+ DEFINE PROGRAM(EDCNINSP) GROUP(CEE) LANGUAGE(ASSEMBLER)                00605300
+ DEFINE PROGRAM(EDCMSGT)  GROUP(CEE) LANGUAGE(ASSEMBLER)                00605400
+ DEFINE PROGRAM(IEDCMSGT) GROUP(CEE) LANGUAGE(ASSEMBLER)                00605500
+ DEFINE PROGRAM(EDC$LCNM) GROUP(CEE) LANGUAGE(ASSEMBLER)                00605600
+ DEFINE PROGRAM(EDCUCSNM) GROUP(CEE) LANGUAGE(ASSEMBLER)                00605700
+ DEFINE PROGRAM(EDCHDMNP) GROUP(CEE) LANGUAGE(ASSEMBLER)                00605800
+ DEFINE PROGRAM(EDCHDEST) GROUP(CEE) LANGUAGE(ASSEMBLER)                00605900
+*                                                                       00606000
+* C/370 compatibility locales                                           00606100
+*                                                                       00606200
+ DEFINE PROGRAM(EDC$FRAN) GROUP(CEE) LANGUAGE(ASSEMBLER)                00606300
+ DEFINE PROGRAM(EDC$GERM) GROUP(CEE) LANGUAGE(ASSEMBLER)                00606400
+ DEFINE PROGRAM(EDC$ITAL) GROUP(CEE) LANGUAGE(ASSEMBLER)                00606500
+ DEFINE PROGRAM(EDC$SPAI) GROUP(CEE) LANGUAGE(ASSEMBLER)                00606600
+ DEFINE PROGRAM(EDC$S370) GROUP(CEE) LANGUAGE(ASSEMBLER)                00606700
+ DEFINE PROGRAM(EDC$UK)   GROUP(CEE) LANGUAGE(ASSEMBLER)                00606800
+ DEFINE PROGRAM(EDC$USA)  GROUP(CEE) LANGUAGE(ASSEMBLER)                00606900
+*                                                                       00607000
+* C/370 POSIX-style locales                                             00607100
+*                                                                       00607200
+ DEFINE PROGRAM(EDC$DAEE) GROUP(CEE) LANGUAGE(ASSEMBLER)                00607300
+ DEFINE PROGRAM(EDC$DAEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00607400
+ DEFINE PROGRAM(EDC$DCEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00607500
+ DEFINE PROGRAM(EDC$DCEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00607600
+ DEFINE PROGRAM(EDC$DDEB) GROUP(CEE) LANGUAGE(ASSEMBLER)                00607700
+ DEFINE PROGRAM(EDC$DDEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00607800
+ DEFINE PROGRAM(EDC$EJEX) GROUP(CEE) LANGUAGE(ASSEMBLER)                00607900
+ DEFINE PROGRAM(EDC$EKEK) GROUP(CEE) LANGUAGE(ASSEMBLER)                00608000
+ DEFINE PROGRAM(EDC$EKEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00608100
+ DEFINE PROGRAM(EDC$ELES) GROUP(CEE) LANGUAGE(ASSEMBLER)                00608200
+ DEFINE PROGRAM(EDC$ESEJ) GROUP(CEE) LANGUAGE(ASSEMBLER)                00608300
+ DEFINE PROGRAM(EDC$ESEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00608400
+ DEFINE PROGRAM(EDC$EUEA) GROUP(CEE) LANGUAGE(ASSEMBLER)                00608500
+ DEFINE PROGRAM(EDC$EUEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00608600
+ DEFINE PROGRAM(EDC$FBEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00608700
+ DEFINE PROGRAM(EDC$FBEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00608800
+ DEFINE PROGRAM(EDC$FCEA) GROUP(CEE) LANGUAGE(ASSEMBLER)                00608900
+ DEFINE PROGRAM(EDC$FCEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00609000
+ DEFINE PROGRAM(EDC$FFEM) GROUP(CEE) LANGUAGE(ASSEMBLER)                00609100
+ DEFINE PROGRAM(EDC$FFEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00609200
+ DEFINE PROGRAM(EDC$FIEF) GROUP(CEE) LANGUAGE(ASSEMBLER)                00609300
+ DEFINE PROGRAM(EDC$FIEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00609400
+ DEFINE PROGRAM(EDC$FSEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00609500
+ DEFINE PROGRAM(EDC$FSEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00609600
+ DEFINE PROGRAM(EDC$ISER) GROUP(CEE) LANGUAGE(ASSEMBLER)                00609700
+ DEFINE PROGRAM(EDC$ISEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00609800
+ DEFINE PROGRAM(EDC$ITEG) GROUP(CEE) LANGUAGE(ASSEMBLER)                00609900
+ DEFINE PROGRAM(EDC$ITEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00610000
+ DEFINE PROGRAM(EDC$JAEL) GROUP(CEE) LANGUAGE(ASSEMBLER)                00610100
+ DEFINE PROGRAM(EDC$JAEU) GROUP(CEE) LANGUAGE(ASSEMBLER)                00610200
+ DEFINE PROGRAM(EDC$JAEV) GROUP(CEE) LANGUAGE(ASSEMBLER)                00610300
+ DEFINE PROGRAM(EDC$JAEX) GROUP(CEE) LANGUAGE(ASSEMBLER)                00610400
+ DEFINE PROGRAM(EDC$NBEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00610500
+ DEFINE PROGRAM(EDC$NBEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00610600
+ DEFINE PROGRAM(EDC$NNEA) GROUP(CEE) LANGUAGE(ASSEMBLER)                00610700
+ DEFINE PROGRAM(EDC$NNEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00610800
+ DEFINE PROGRAM(EDC$NOEE) GROUP(CEE) LANGUAGE(ASSEMBLER)                00610900
+ DEFINE PROGRAM(EDC$NOEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00611000
+ DEFINE PROGRAM(EDC$PTEA) GROUP(CEE) LANGUAGE(ASSEMBLER)                00611100
+ DEFINE PROGRAM(EDC$PTEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00611200
+ DEFINE PROGRAM(EDC$SVEF) GROUP(CEE) LANGUAGE(ASSEMBLER)                00611300
+ DEFINE PROGRAM(EDC$SVEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00611400
+ DEFINE PROGRAM(EDC$TREW) GROUP(CEE) LANGUAGE(ASSEMBLER)                00611500
+*                                                                       00611600
+* C/370 Code set converters                                             00611700
+*                                                                       00611800
+ DEFINE PROGRAM(EDCUAAEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00611900
+ DEFINE PROGRAM(EDCUABEL) GROUP(CEE) LANGUAGE(ASSEMBLER)                00612000
+ DEFINE PROGRAM(EDCUABEN) GROUP(CEE) LANGUAGE(ASSEMBLER)                00612100
+ DEFINE PROGRAM(EDCUABEU) GROUP(CEE) LANGUAGE(ASSEMBLER)                00612200
+ DEFINE PROGRAM(EDCUABEV) GROUP(CEE) LANGUAGE(ASSEMBLER)                00612300
+ DEFINE PROGRAM(EDCUABEX) GROUP(CEE) LANGUAGE(ASSEMBLER)                00612400
+ DEFINE PROGRAM(EDCUACEL) GROUP(CEE) LANGUAGE(ASSEMBLER)                00612500
+ DEFINE PROGRAM(EDCUACEN) GROUP(CEE) LANGUAGE(ASSEMBLER)                00612600
+ DEFINE PROGRAM(EDCUACEU) GROUP(CEE) LANGUAGE(ASSEMBLER)                00612700
+ DEFINE PROGRAM(EDCUACEV) GROUP(CEE) LANGUAGE(ASSEMBLER)                00612800
+ DEFINE PROGRAM(EDCUACEX) GROUP(CEE) LANGUAGE(ASSEMBLER)                00612900
+ DEFINE PROGRAM(EDCUEAEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00613000
+ DEFINE PROGRAM(EDCUEAEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00613100
+ DEFINE PROGRAM(EDCUEAI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00613200
+ DEFINE PROGRAM(EDCUEBEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00613300
+ DEFINE PROGRAM(EDCUEBEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00613400
+ DEFINE PROGRAM(EDCUEBI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00613500
+ DEFINE PROGRAM(EDCUECEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00613600
+ DEFINE PROGRAM(EDCUECEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00613700
+ DEFINE PROGRAM(EDCUECI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00613800
+ DEFINE PROGRAM(EDCUEDEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00613900
+ DEFINE PROGRAM(EDCUEDEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00614000
+ DEFINE PROGRAM(EDCUEDI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00614100
+ DEFINE PROGRAM(EDCUEEEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00614200
+ DEFINE PROGRAM(EDCUEEEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00614300
+ DEFINE PROGRAM(EDCUEEI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00614400
+ DEFINE PROGRAM(EDCUEFEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00614500
+ DEFINE PROGRAM(EDCUEFEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00614600
+ DEFINE PROGRAM(EDCUEFI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00614700
+ DEFINE PROGRAM(EDCUEGEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00614800
+ DEFINE PROGRAM(EDCUEGEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00614900
+ DEFINE PROGRAM(EDCUEGI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00615000
+ DEFINE PROGRAM(EDCUEHEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00615100
+ DEFINE PROGRAM(EDCUEHEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00615200
+ DEFINE PROGRAM(EDCUEHI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00615300
+ DEFINE PROGRAM(EDCUEIEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00615400
+ DEFINE PROGRAM(EDCUEIEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00615500
+ DEFINE PROGRAM(EDCUEII1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00615600
+ DEFINE PROGRAM(EDCUEJEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00615700
+ DEFINE PROGRAM(EDCUEJEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00615800
+ DEFINE PROGRAM(EDCUEJI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00615900
+ DEFINE PROGRAM(EDCUEKEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00616000
+ DEFINE PROGRAM(EDCUEKEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00616100
+ DEFINE PROGRAM(EDCUEKI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00616200
+ DEFINE PROGRAM(EDCUELAB) GROUP(CEE) LANGUAGE(ASSEMBLER)                00616300
+ DEFINE PROGRAM(EDCUELAC) GROUP(CEE) LANGUAGE(ASSEMBLER)                00616400
+ DEFINE PROGRAM(EDCUELEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00616500
+ DEFINE PROGRAM(EDCUELEX) GROUP(CEE) LANGUAGE(ASSEMBLER)                00616600
+ DEFINE PROGRAM(EDCUELEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00616700
+ DEFINE PROGRAM(EDCUELI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00616800
+ DEFINE PROGRAM(EDCUEMEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00616900
+ DEFINE PROGRAM(EDCUEMEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00617000
+ DEFINE PROGRAM(EDCUEMI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00617100
+ DEFINE PROGRAM(EDCUENAB) GROUP(CEE) LANGUAGE(ASSEMBLER)                00617200
+ DEFINE PROGRAM(EDCUENAC) GROUP(CEE) LANGUAGE(ASSEMBLER)                00617300
+ DEFINE PROGRAM(EDCUEOEA) GROUP(CEE) LANGUAGE(ASSEMBLER)                00617400
+ DEFINE PROGRAM(EDCUEOEB) GROUP(CEE) LANGUAGE(ASSEMBLER)                00617500
+ DEFINE PROGRAM(EDCUEOEC) GROUP(CEE) LANGUAGE(ASSEMBLER)                00617600
+ DEFINE PROGRAM(EDCUEOED) GROUP(CEE) LANGUAGE(ASSEMBLER)                00617700
+ DEFINE PROGRAM(EDCUEOEE) GROUP(CEE) LANGUAGE(ASSEMBLER)                00617800
+ DEFINE PROGRAM(EDCUEOEF) GROUP(CEE) LANGUAGE(ASSEMBLER)                00617900
+ DEFINE PROGRAM(EDCUEOEG) GROUP(CEE) LANGUAGE(ASSEMBLER)                00618000
+ DEFINE PROGRAM(EDCUEOEH) GROUP(CEE) LANGUAGE(ASSEMBLER)                00618100
+ DEFINE PROGRAM(EDCUEOEI) GROUP(CEE) LANGUAGE(ASSEMBLER)                00618200
+ DEFINE PROGRAM(EDCUEOEJ) GROUP(CEE) LANGUAGE(ASSEMBLER)                00618300
+ DEFINE PROGRAM(EDCUEOEK) GROUP(CEE) LANGUAGE(ASSEMBLER)                00618400
+ DEFINE PROGRAM(EDCUEOEL) GROUP(CEE) LANGUAGE(ASSEMBLER)                00618500
+ DEFINE PROGRAM(EDCUEOEM) GROUP(CEE) LANGUAGE(ASSEMBLER)                00618600
+ DEFINE PROGRAM(EDCUEOER) GROUP(CEE) LANGUAGE(ASSEMBLER)                00618700
+ DEFINE PROGRAM(EDCUEOEX) GROUP(CEE) LANGUAGE(ASSEMBLER)                00618800
+ DEFINE PROGRAM(EDCUEOEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00618900
+ DEFINE PROGRAM(EDCUEOI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00619000
+ DEFINE PROGRAM(EDCUEREO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00619100
+ DEFINE PROGRAM(EDCUEREY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00619200
+ DEFINE PROGRAM(EDCUERI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00619300
+ DEFINE PROGRAM(EDCUESEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00619400
+ DEFINE PROGRAM(EDCUESI7) GROUP(CEE) LANGUAGE(ASSEMBLER)                00619500
+ DEFINE PROGRAM(EDCUEUAB) GROUP(CEE) LANGUAGE(ASSEMBLER)                00619600
+ DEFINE PROGRAM(EDCUEUAC) GROUP(CEE) LANGUAGE(ASSEMBLER)                00619700
+ DEFINE PROGRAM(EDCUEVAB) GROUP(CEE) LANGUAGE(ASSEMBLER)                00619800
+ DEFINE PROGRAM(EDCUEVAC) GROUP(CEE) LANGUAGE(ASSEMBLER)                00619900
+ DEFINE PROGRAM(EDCUEWEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00620000
+ DEFINE PROGRAM(EDCUEWI9) GROUP(CEE) LANGUAGE(ASSEMBLER)                00620100
+ DEFINE PROGRAM(EDCUEXAB) GROUP(CEE) LANGUAGE(ASSEMBLER)                00620200
+ DEFINE PROGRAM(EDCUEXAC) GROUP(CEE) LANGUAGE(ASSEMBLER)                00620300
+ DEFINE PROGRAM(EDCUEXEL) GROUP(CEE) LANGUAGE(ASSEMBLER)                00620400
+ DEFINE PROGRAM(EDCUEXEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00620500
+ DEFINE PROGRAM(EDCUEXEY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00620600
+ DEFINE PROGRAM(EDCUEXI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00620700
+ DEFINE PROGRAM(EDCUEYAA) GROUP(CEE) LANGUAGE(ASSEMBLER)                00620800
+ DEFINE PROGRAM(EDCUEYEA) GROUP(CEE) LANGUAGE(ASSEMBLER)                00620900
+ DEFINE PROGRAM(EDCUEYEB) GROUP(CEE) LANGUAGE(ASSEMBLER)                00621000
+ DEFINE PROGRAM(EDCUEYEC) GROUP(CEE) LANGUAGE(ASSEMBLER)                00621100
+ DEFINE PROGRAM(EDCUEYED) GROUP(CEE) LANGUAGE(ASSEMBLER)                00621200
+ DEFINE PROGRAM(EDCUEYEE) GROUP(CEE) LANGUAGE(ASSEMBLER)                00621300
+ DEFINE PROGRAM(EDCUEYEF) GROUP(CEE) LANGUAGE(ASSEMBLER)                00621400
+ DEFINE PROGRAM(EDCUEYEG) GROUP(CEE) LANGUAGE(ASSEMBLER)                00621500
+ DEFINE PROGRAM(EDCUEYEH) GROUP(CEE) LANGUAGE(ASSEMBLER)                00621600
+ DEFINE PROGRAM(EDCUEYEI) GROUP(CEE) LANGUAGE(ASSEMBLER)                00621700
+ DEFINE PROGRAM(EDCUEYEJ) GROUP(CEE) LANGUAGE(ASSEMBLER)                00621800
+ DEFINE PROGRAM(EDCUEYEK) GROUP(CEE) LANGUAGE(ASSEMBLER)                00621900
+ DEFINE PROGRAM(EDCUEYEL) GROUP(CEE) LANGUAGE(ASSEMBLER)                00622000
+ DEFINE PROGRAM(EDCUEYEM) GROUP(CEE) LANGUAGE(ASSEMBLER)                00622100
+ DEFINE PROGRAM(EDCUEYEO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00622200
+ DEFINE PROGRAM(EDCUEYER) GROUP(CEE) LANGUAGE(ASSEMBLER)                00622300
+ DEFINE PROGRAM(EDCUEYES) GROUP(CEE) LANGUAGE(ASSEMBLER)                00622400
+ DEFINE PROGRAM(EDCUEYEW) GROUP(CEE) LANGUAGE(ASSEMBLER)                00622500
+ DEFINE PROGRAM(EDCUEYEX) GROUP(CEE) LANGUAGE(ASSEMBLER)                00622600
+ DEFINE PROGRAM(EDCUEYI1) GROUP(CEE) LANGUAGE(ASSEMBLER)                00622700
+ DEFINE PROGRAM(EDCUI1EA) GROUP(CEE) LANGUAGE(ASSEMBLER)                00622800
+ DEFINE PROGRAM(EDCUI1EB) GROUP(CEE) LANGUAGE(ASSEMBLER)                00622900
+ DEFINE PROGRAM(EDCUI1EC) GROUP(CEE) LANGUAGE(ASSEMBLER)                00623000
+ DEFINE PROGRAM(EDCUI1ED) GROUP(CEE) LANGUAGE(ASSEMBLER)                00623100
+ DEFINE PROGRAM(EDCUI1EE) GROUP(CEE) LANGUAGE(ASSEMBLER)                00623200
+ DEFINE PROGRAM(EDCUI1EF) GROUP(CEE) LANGUAGE(ASSEMBLER)                00623300
+ DEFINE PROGRAM(EDCUI1EG) GROUP(CEE) LANGUAGE(ASSEMBLER)                00623400
+ DEFINE PROGRAM(EDCUI1EH) GROUP(CEE) LANGUAGE(ASSEMBLER)                00623500
+ DEFINE PROGRAM(EDCUI1EI) GROUP(CEE) LANGUAGE(ASSEMBLER)                00623600
+ DEFINE PROGRAM(EDCUI1EJ) GROUP(CEE) LANGUAGE(ASSEMBLER)                00623700
+ DEFINE PROGRAM(EDCUI1EK) GROUP(CEE) LANGUAGE(ASSEMBLER)                00623800
+ DEFINE PROGRAM(EDCUI1EL) GROUP(CEE) LANGUAGE(ASSEMBLER)                00623900
+ DEFINE PROGRAM(EDCUI1EM) GROUP(CEE) LANGUAGE(ASSEMBLER)                00624000
+ DEFINE PROGRAM(EDCUI1EO) GROUP(CEE) LANGUAGE(ASSEMBLER)                00624100
+ DEFINE PROGRAM(EDCUI1ER) GROUP(CEE) LANGUAGE(ASSEMBLER)                00624200
+ DEFINE PROGRAM(EDCUI1EX) GROUP(CEE) LANGUAGE(ASSEMBLER)                00624300
+ DEFINE PROGRAM(EDCUI1EY) GROUP(CEE) LANGUAGE(ASSEMBLER)                00624400
+ DEFINE PROGRAM(EDCUI7ES) GROUP(CEE) LANGUAGE(ASSEMBLER)                00624500
+ DEFINE PROGRAM(EDCUI9EW) GROUP(CEE) LANGUAGE(ASSEMBLER)                00624600
+*                                                                       00624700
+* C/370 CSD End                                                         00624800
+*                                                                       00624900
+*                                                                       00625000
+* PL/I specific run time routines                                       00625100
+*                                                                       00625200
+  DEFINE PROGRAM(CEEEV010) GROUP(CEE) LANGUAGE(ASSEMBLER)               00625300
+  DEFINE PROGRAM(IBMRSAP)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00625400
+  DEFINE PROGRAM(IBMRLIB1) GROUP(CEE) LANGUAGE(ASSEMBLER)               00625500
+  DEFINE PROGRAM(IBMRDMPJ) GROUP(CEE) LANGUAGE(ASSEMBLER)               00625600
+  DEFINE PROGRAM(IBMRDMPM) GROUP(CEE) LANGUAGE(ASSEMBLER)               00625700
+  DEFINE PROGRAM(IBMRDMPU) GROUP(CEE) LANGUAGE(ASSEMBLER)               00625800
+  DEFINE PROGRAM(IBMRKMRA) GROUP(CEE) LANGUAGE(ASSEMBLER)               00625900
+  DEFINE PROGRAM(IBMRLANA) GROUP(CEE) LANGUAGE(ASSEMBLER)               00626000
+  DEFINE PROGRAM(IBMRLANN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00626100
+  DEFINE PROGRAM(IBMRLANU) GROUP(CEE) LANGUAGE(ASSEMBLER)               00626200
+  DEFINE PROGRAM(IBMRLNTA) GROUP(CEE) LANGUAGE(ASSEMBLER)               00626300
+  DEFINE PROGRAM(IBMRLNTN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00626400
+  DEFINE PROGRAM(IBMRLNTU) GROUP(CEE) LANGUAGE(ASSEMBLER)               00626500
+  DEFINE PROGRAM(IBM9LMSA) GROUP(CEE) LANGUAGE(ASSEMBLER)               00626600
+  DEFINE PROGRAM(IBM9LMSN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00626700
+  DEFINE PROGRAM(IBM9LMSU) GROUP(CEE) LANGUAGE(ASSEMBLER)               00626800
+  DEFINE PROGRAM(IBM9LM2A) GROUP(CEE) LANGUAGE(ASSEMBLER)               00626900
+  DEFINE PROGRAM(IBM9LM2N) GROUP(CEE) LANGUAGE(ASSEMBLER)               00627000
+  DEFINE PROGRAM(IBM9LM2U) GROUP(CEE) LANGUAGE(ASSEMBLER)               00627100
+  DEFINE PROGRAM(IIBMMSGT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00627200
+*                                                                       00627300
+* PL/I specific debugger modules                                        00627400
+*                                                                       00627500
+  DEFINE PROGRAM(IBM3ABF)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00627600
+  DEFINE PROGRAM(IBM3AMI)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00627700
+  DEFINE PROGRAM(IBM3ANL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00627800
+  DEFINE PROGRAM(IBM3ANX)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00627900
+  DEFINE PROGRAM(IBM3ASD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00628000
+  DEFINE PROGRAM(IBM3ASK)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00628100
+  DEFINE PROGRAM(IBM3ASN)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00628200
+  DEFINE PROGRAM(IBM3BGE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00628300
+  DEFINE PROGRAM(IBM3BIF)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00628400
+  DEFINE PROGRAM(IBM3BLK)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00628500
+  DEFINE PROGRAM(IBM3BRN)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00628600
+  DEFINE PROGRAM(IBM3CCD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00628700
+  DEFINE PROGRAM(IBM3CMD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00628800
+  DEFINE PROGRAM(IBM3COG)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00628900
+  DEFINE PROGRAM(IBM3CSV)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00629000
+  DEFINE PROGRAM(IBM3CUS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00629100
+  DEFINE PROGRAM(IBM3DCD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00629200
+  DEFINE PROGRAM(IBM3DCL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00629300
+  DEFINE PROGRAM(IBM3DCU)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00629400
+  DEFINE PROGRAM(IBM3DED)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00629500
+  DEFINE PROGRAM(IBM3DEV)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00629600
+  DEFINE PROGRAM(IBM3DLL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00629700
+  DEFINE PROGRAM(IBM3DPA)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00629800
+  DEFINE PROGRAM(IBM3DSF)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00629900
+  DEFINE PROGRAM(IBM3DSL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00630000
+  DEFINE PROGRAM(IBM3DST)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00630100
+  DEFINE PROGRAM(IBM3DTP)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00630200
+  DEFINE PROGRAM(IBM3EAB)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00630300
+  DEFINE PROGRAM(IBM3ECO)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00630400
+  DEFINE PROGRAM(IBM3EEX)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00630500
+  DEFINE PROGRAM(IBM3EFB)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00630600
+  DEFINE PROGRAM(IBM3EFD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00630700
+  DEFINE PROGRAM(IBM3EMC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00630800
+  DEFINE PROGRAM(IBM3ESL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00630900
+  DEFINE PROGRAM(IBM3EVB)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00631000
+  DEFINE PROGRAM(IBM3EVC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00631100
+  DEFINE PROGRAM(IBM3EVX)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00631200
+  DEFINE PROGRAM(IBM3EXP)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00631300
+  DEFINE PROGRAM(IBM3FER)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00631400
+  DEFINE PROGRAM(IBM3FLT)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00631500
+  DEFINE PROGRAM(IBM3FTA)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00631600
+  DEFINE PROGRAM(IBM3FTI)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00631700
+  DEFINE PROGRAM(IBM3FTV)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00631800
+  DEFINE PROGRAM(IBM3GGE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00631900
+  DEFINE PROGRAM(IBM3GLL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00632000
+  DEFINE PROGRAM(IBM3GNLA) GROUP(CEE) LANGUAGE(ASSEMBLER)               00632100
+  DEFINE PROGRAM(IBM3GNLU) GROUP(CEE) LANGUAGE(ASSEMBLER)               00632200
+  DEFINE PROGRAM(IBM3GNLN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00632300
+  DEFINE PROGRAM(IBM3GQD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00632400
+  DEFINE PROGRAM(IBM3GQN)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00632500
+  DEFINE PROGRAM(IBM3GRW)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00632600
+  DEFINE PROGRAM(IBM3GTO)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00632700
+  DEFINE PROGRAM(IBM3GVH)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00632800
+  DEFINE PROGRAM(IBM3ICU)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00632900
+  DEFINE PROGRAM(IBM3IDB)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00633000
+  DEFINE PROGRAM(IBM3IDC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00633100
+  DEFINE PROGRAM(IBM3IDE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00633200
+  DEFINE PROGRAM(IBM3IDO)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00633300
+  DEFINE PROGRAM(IBM3IDV)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00633400
+  DEFINE PROGRAM(IBM3IEE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00633500
+  DEFINE PROGRAM(IBM3ILB)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00633600
+  DEFINE PROGRAM(IBM3IMC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00633700
+  DEFINE PROGRAM(IBM3IMH)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00633800
+  DEFINE PROGRAM(IBM3INP)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00633900
+  DEFINE PROGRAM(IBM3IRC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00634000
+  DEFINE PROGRAM(IBM3ISL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00634100
+  DEFINE PROGRAM(IBM3IVH)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00634200
+  DEFINE PROGRAM(IBM3IXE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00634300
+  DEFINE PROGRAM(IBM3LEXA) GROUP(CEE) LANGUAGE(ASSEMBLER)               00634400
+  DEFINE PROGRAM(IBM3LEXU) GROUP(CEE) LANGUAGE(ASSEMBLER)               00634500
+  DEFINE PROGRAM(IBM3LEXN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00634600
+  DEFINE PROGRAM(IBM3LNK)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00634700
+  DEFINE PROGRAM(IBM3LXB)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00634800
+  DEFINE PROGRAM(IBM3MBA)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00634900
+  DEFINE PROGRAM(IBM3MBE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00635000
+  DEFINE PROGRAM(IBM3MBF)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00635100
+  DEFINE PROGRAM(IBM3MBL)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00635200
+  DEFINE PROGRAM(IBM3MBP)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00635300
+  DEFINE PROGRAM(IBM3MBS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00635400
+  DEFINE PROGRAM(IBM3MBX)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00635500
+  DEFINE PROGRAM(IBM3NRM)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00635600
+  DEFINE PROGRAM(IBM3OPE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00635700
+  DEFINE PROGRAM(IBM3PEX)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00635800
+  DEFINE PROGRAM(IBM3PRD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00635900
+  DEFINE PROGRAM(IBM3QAE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00636000
+  DEFINE PROGRAM(IBM3QAI)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00636100
+  DEFINE PROGRAM(IBM3QNS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00636200
+  DEFINE PROGRAM(IBM3QRT)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00636300
+  DEFINE PROGRAM(IBM3QSE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00636400
+  DEFINE PROGRAM(IBM3QSI)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00636500
+  DEFINE PROGRAM(IBM3QUI)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00636600
+  DEFINE PROGRAM(IBM3REP)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00636700
+  DEFINE PROGRAM(IBM3RIR)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00636800
+  DEFINE PROGRAM(IBM3RSV)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00636900
+  DEFINE PROGRAM(IBM3SBE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00637000
+  DEFINE PROGRAM(IBM3STR)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00637100
+  DEFINE PROGRAM(IBM3STT)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00637200
+  DEFINE PROGRAM(IBM3TEX)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00637300
+  DEFINE PROGRAM(IBM3UTV)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00637400
+  DEFINE PROGRAM(IBM3UPD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00637500
+  DEFINE PROGRAM(IBM3VAR)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00637600
+  DEFINE PROGRAM(IBM3VAT)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00637700
+  DEFINE PROGRAM(IBM3VEX)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00637800
+  DEFINE PROGRAM(IBM3VGT)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00637900
+  DEFINE PROGRAM(IBM3VIA)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00638000
+  DEFINE PROGRAM(IBM3VOCA) GROUP(CEE) LANGUAGE(ASSEMBLER)               00638100
+  DEFINE PROGRAM(IBM3VOCU) GROUP(CEE) LANGUAGE(ASSEMBLER)               00638200
+  DEFINE PROGRAM(IBM3VOCN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00638300
+*                                                                       00638400
+* LE/370 callable services                                              00638500
+*                                                                       00638600
+  DEFINE PROGRAM(CEE3ABD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00638700
+  DEFINE PROGRAM(CEE3CIB)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00638800
+  DEFINE PROGRAM(CEE3CTY)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00638900
+  DEFINE PROGRAM(CEE3DMP)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00639000
+  DEFINE PROGRAM(CEE3GRC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00639100
+  DEFINE PROGRAM(CEE3GRN)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00639200
+  DEFINE PROGRAM(CEE3LNG)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00639300
+  DEFINE PROGRAM(CEE3MCS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00639400
+  DEFINE PROGRAM(CEE3MDS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00639500
+  DEFINE PROGRAM(CEE3MTS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00639600
+  DEFINE PROGRAM(CEE3PRM)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00639700
+  DEFINE PROGRAM(CEE3RPH)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00639800
+  DEFINE PROGRAM(CEE3SPM)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00639900
+  DEFINE PROGRAM(CEE3SRC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00640000
+  DEFINE PROGRAM(CEE3USR)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00640100
+  DEFINE PROGRAM(CEECBLDY) GROUP(CEE) LANGUAGE(ASSEMBLER)               00640200
+  DEFINE PROGRAM(CEECMI)   GROUP(CEE) LANGUAGE(ASSEMBLER)               00640300
+  DEFINE PROGRAM(CEECRHP)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00640400
+  DEFINE PROGRAM(CEECZST)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00640500
+  DEFINE PROGRAM(CEEDATE)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00640600
+  DEFINE PROGRAM(CEEDATM)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00640700
+  DEFINE PROGRAM(CEEDAYS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00640800
+  DEFINE PROGRAM(CEEDCOD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00640900
+  DEFINE PROGRAM(CEEDSHP)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00641000
+  DEFINE PROGRAM(CEEDYWK)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00641100
+  DEFINE PROGRAM(CEEFMDA)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00641200
+  DEFINE PROGRAM(CEEFMDT)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00641300
+  DEFINE PROGRAM(CEEFMTM)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00641400
+  DEFINE PROGRAM(CEEFRST)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00641500
+  DEFINE PROGRAM(CEEGMT)   GROUP(CEE) LANGUAGE(ASSEMBLER)               00641600
+  DEFINE PROGRAM(CEEGMTO)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00641700
+  DEFINE PROGRAM(CEEGPID)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00641800
+  DEFINE PROGRAM(CEEGQDT)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00641900
+  DEFINE PROGRAM(CEEGTST)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00642000
+  DEFINE PROGRAM(CEEHDLR)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00642100
+  DEFINE PROGRAM(CEEHDLU)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00642200
+  DEFINE PROGRAM(CEEISEC)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00642300
+  DEFINE PROGRAM(CEEITOK)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00642400
+  DEFINE PROGRAM(CEELOCT)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00642500
+  DEFINE PROGRAM(CEEMGET)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00642600
+  DEFINE PROGRAM(CEEMOUT)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00642700
+  DEFINE PROGRAM(CEEMRCR)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00642800
+  DEFINE PROGRAM(CEEMSG)   GROUP(CEE) LANGUAGE(ASSEMBLER)               00642900
+  DEFINE PROGRAM(CEENCOD)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00643000
+  DEFINE PROGRAM(CEEQCEN)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00643100
+  DEFINE PROGRAM(CEERAN0)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00643200
+  DEFINE PROGRAM(CEESCEN)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00643300
+  DEFINE PROGRAM(CEESECI)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00643400
+  DEFINE PROGRAM(CEESECS)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00643500
+  DEFINE PROGRAM(CEESGL)   GROUP(CEE) LANGUAGE(ASSEMBLER)               00643600
+  DEFINE PROGRAM(CEETEST)  GROUP(CEE) LANGUAGE(ASSEMBLER)               00643700
+  DEFINE PROGRAM(CEEUTC)   GROUP(CEE) LANGUAGE(ASSEMBLER)               00643800
+*                                                                       00643900
+* LE/370 math routines                                                  00644000
+*                                                                       00644100
+  DEFINE PROGRAM(CEESIABS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00644200
+  DEFINE PROGRAM(CEESSABS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00644300
+  DEFINE PROGRAM(CEESDABS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00644400
+  DEFINE PROGRAM(CEESQABS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00644500
+  DEFINE PROGRAM(CEESTABS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00644600
+  DEFINE PROGRAM(CEESEABS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00644700
+  DEFINE PROGRAM(CEESRABS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00644800
+  DEFINE PROGRAM(CEESSACS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00644900
+  DEFINE PROGRAM(CEESDACS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00645000
+  DEFINE PROGRAM(CEESQACS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00645100
+  DEFINE PROGRAM(CEESSASN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00645200
+  DEFINE PROGRAM(CEESDASN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00645300
+  DEFINE PROGRAM(CEESQASN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00645400
+  DEFINE PROGRAM(CEESSATH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00645500
+  DEFINE PROGRAM(CEESDATH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00645600
+  DEFINE PROGRAM(CEESQATH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00645700
+  DEFINE PROGRAM(CEESTATH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00645800
+  DEFINE PROGRAM(CEESEATH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00645900
+  DEFINE PROGRAM(CEESRATH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00646000
+  DEFINE PROGRAM(CEESSATN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00646100
+  DEFINE PROGRAM(CEESDATN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00646200
+  DEFINE PROGRAM(CEESQATN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00646300
+  DEFINE PROGRAM(CEESTATN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00646400
+  DEFINE PROGRAM(CEESEATN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00646500
+  DEFINE PROGRAM(CEESRATN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00646600
+  DEFINE PROGRAM(CEESSAT2) GROUP(CEE) LANGUAGE(ASSEMBLER)               00646700
+  DEFINE PROGRAM(CEESDAT2) GROUP(CEE) LANGUAGE(ASSEMBLER)               00646800
+  DEFINE PROGRAM(CEESQAT2) GROUP(CEE) LANGUAGE(ASSEMBLER)               00646900
+  DEFINE PROGRAM(CEESTCJG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00647000
+  DEFINE PROGRAM(CEESECJG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00647100
+  DEFINE PROGRAM(CEESRCJG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00647200
+  DEFINE PROGRAM(CEESSCOS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00647300
+  DEFINE PROGRAM(CEESDCOS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00647400
+  DEFINE PROGRAM(CEESQCOS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00647500
+  DEFINE PROGRAM(CEESTCOS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00647600
+  DEFINE PROGRAM(CEESECOS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00647700
+  DEFINE PROGRAM(CEESRCOS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00647800
+  DEFINE PROGRAM(CEESSCSH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00647900
+  DEFINE PROGRAM(CEESDCSH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00648000
+  DEFINE PROGRAM(CEESQCSH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00648100
+  DEFINE PROGRAM(CEESTCSH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00648200
+  DEFINE PROGRAM(CEESECSH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00648300
+  DEFINE PROGRAM(CEESRCSH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00648400
+  DEFINE PROGRAM(CEESSCTN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00648500
+  DEFINE PROGRAM(CEESDCTN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00648600
+  DEFINE PROGRAM(CEESQCTN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00648700
+  DEFINE PROGRAM(CEESIDIM) GROUP(CEE) LANGUAGE(ASSEMBLER)               00648800
+  DEFINE PROGRAM(CEESSDIM) GROUP(CEE) LANGUAGE(ASSEMBLER)               00648900
+  DEFINE PROGRAM(CEESDDIM) GROUP(CEE) LANGUAGE(ASSEMBLER)               00649000
+  DEFINE PROGRAM(CEESQDIM) GROUP(CEE) LANGUAGE(ASSEMBLER)               00649100
+  DEFINE PROGRAM(CEESTDVD) GROUP(CEE) LANGUAGE(ASSEMBLER)               00649200
+  DEFINE PROGRAM(CEESEDVD) GROUP(CEE) LANGUAGE(ASSEMBLER)               00649300
+  DEFINE PROGRAM(CEESRDVD) GROUP(CEE) LANGUAGE(ASSEMBLER)               00649400
+  DEFINE PROGRAM(CEESSERC) GROUP(CEE) LANGUAGE(ASSEMBLER)               00649500
+  DEFINE PROGRAM(CEESDERC) GROUP(CEE) LANGUAGE(ASSEMBLER)               00649600
+  DEFINE PROGRAM(CEESQERC) GROUP(CEE) LANGUAGE(ASSEMBLER)               00649700
+  DEFINE PROGRAM(CEESSERF) GROUP(CEE) LANGUAGE(ASSEMBLER)               00649800
+  DEFINE PROGRAM(CEESDERF) GROUP(CEE) LANGUAGE(ASSEMBLER)               00649900
+  DEFINE PROGRAM(CEESQERF) GROUP(CEE) LANGUAGE(ASSEMBLER)               00650000
+  DEFINE PROGRAM(CEESSEXP) GROUP(CEE) LANGUAGE(ASSEMBLER)               00650100
+  DEFINE PROGRAM(CEESDEXP) GROUP(CEE) LANGUAGE(ASSEMBLER)               00650200
+  DEFINE PROGRAM(CEESQEXP) GROUP(CEE) LANGUAGE(ASSEMBLER)               00650300
+  DEFINE PROGRAM(CEESTEXP) GROUP(CEE) LANGUAGE(ASSEMBLER)               00650400
+  DEFINE PROGRAM(CEESEEXP) GROUP(CEE) LANGUAGE(ASSEMBLER)               00650500
+  DEFINE PROGRAM(CEESREXP) GROUP(CEE) LANGUAGE(ASSEMBLER)               00650600
+  DEFINE PROGRAM(CEESSGMA) GROUP(CEE) LANGUAGE(ASSEMBLER)               00650700
+  DEFINE PROGRAM(CEESDGMA) GROUP(CEE) LANGUAGE(ASSEMBLER)               00650800
+  DEFINE PROGRAM(CEESTIMG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00650900
+  DEFINE PROGRAM(CEESEIMG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00651000
+  DEFINE PROGRAM(CEESRIMG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00651100
+  DEFINE PROGRAM(CEESSINT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00651200
+  DEFINE PROGRAM(CEESDINT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00651300
+  DEFINE PROGRAM(CEESQINT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00651400
+  DEFINE PROGRAM(CEESSLGM) GROUP(CEE) LANGUAGE(ASSEMBLER)               00651500
+  DEFINE PROGRAM(CEESDLGM) GROUP(CEE) LANGUAGE(ASSEMBLER)               00651600
+  DEFINE PROGRAM(CEESSLG1) GROUP(CEE) LANGUAGE(ASSEMBLER)               00651700
+  DEFINE PROGRAM(CEESDLG1) GROUP(CEE) LANGUAGE(ASSEMBLER)               00651800
+  DEFINE PROGRAM(CEESQLG1) GROUP(CEE) LANGUAGE(ASSEMBLER)               00651900
+  DEFINE PROGRAM(CEESSLG2) GROUP(CEE) LANGUAGE(ASSEMBLER)               00652000
+  DEFINE PROGRAM(CEESDLG2) GROUP(CEE) LANGUAGE(ASSEMBLER)               00652100
+  DEFINE PROGRAM(CEESQLG2) GROUP(CEE) LANGUAGE(ASSEMBLER)               00652200
+  DEFINE PROGRAM(CEESSLOG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00652300
+  DEFINE PROGRAM(CEESDLOG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00652400
+  DEFINE PROGRAM(CEESQLOG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00652500
+  DEFINE PROGRAM(CEESTLOG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00652600
+  DEFINE PROGRAM(CEESELOG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00652700
+  DEFINE PROGRAM(CEESRLOG) GROUP(CEE) LANGUAGE(ASSEMBLER)               00652800
+  DEFINE PROGRAM(CEESTMLT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00652900
+  DEFINE PROGRAM(CEESEMLT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00653000
+  DEFINE PROGRAM(CEESRMLT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00653100
+  DEFINE PROGRAM(CEESIMOD) GROUP(CEE) LANGUAGE(ASSEMBLER)               00653200
+  DEFINE PROGRAM(CEESSMOD) GROUP(CEE) LANGUAGE(ASSEMBLER)               00653300
+  DEFINE PROGRAM(CEESDMOD) GROUP(CEE) LANGUAGE(ASSEMBLER)               00653400
+  DEFINE PROGRAM(CEESQMOD) GROUP(CEE) LANGUAGE(ASSEMBLER)               00653500
+  DEFINE PROGRAM(CEESSNIN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00653600
+  DEFINE PROGRAM(CEESDNIN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00653700
+  DEFINE PROGRAM(CEESSNWN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00653800
+  DEFINE PROGRAM(CEESDNWN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00653900
+  DEFINE PROGRAM(CEESISGN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00654000
+  DEFINE PROGRAM(CEESSSGN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00654100
+  DEFINE PROGRAM(CEESDSGN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00654200
+  DEFINE PROGRAM(CEESQSGN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00654300
+  DEFINE PROGRAM(CEESSSIN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00654400
+  DEFINE PROGRAM(CEESDSIN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00654500
+  DEFINE PROGRAM(CEESQSIN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00654600
+  DEFINE PROGRAM(CEESTSIN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00654700
+  DEFINE PROGRAM(CEESESIN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00654800
+  DEFINE PROGRAM(CEESRSIN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00654900
+  DEFINE PROGRAM(CEESSSNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00655000
+  DEFINE PROGRAM(CEESDSNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00655100
+  DEFINE PROGRAM(CEESQSNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00655200
+  DEFINE PROGRAM(CEESTSNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00655300
+  DEFINE PROGRAM(CEESESNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00655400
+  DEFINE PROGRAM(CEESRSNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00655500
+  DEFINE PROGRAM(CEESSSQT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00655600
+  DEFINE PROGRAM(CEESDSQT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00655700
+  DEFINE PROGRAM(CEESQSQT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00655800
+  DEFINE PROGRAM(CEESTSQT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00655900
+  DEFINE PROGRAM(CEESESQT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00656000
+  DEFINE PROGRAM(CEESRSQT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00656100
+  DEFINE PROGRAM(CEESSTAN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00656200
+  DEFINE PROGRAM(CEESDTAN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00656300
+  DEFINE PROGRAM(CEESQTAN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00656400
+  DEFINE PROGRAM(CEESTTAN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00656500
+  DEFINE PROGRAM(CEESETAN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00656600
+  DEFINE PROGRAM(CEESRTAN) GROUP(CEE) LANGUAGE(ASSEMBLER)               00656700
+  DEFINE PROGRAM(CEESSTNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00656800
+  DEFINE PROGRAM(CEESDTNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00656900
+  DEFINE PROGRAM(CEESQTNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00657000
+  DEFINE PROGRAM(CEESTTNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00657100
+  DEFINE PROGRAM(CEESETNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00657200
+  DEFINE PROGRAM(CEESRTNH) GROUP(CEE) LANGUAGE(ASSEMBLER)               00657300
+  DEFINE PROGRAM(CEESIXPI) GROUP(CEE) LANGUAGE(ASSEMBLER)               00657400
+  DEFINE PROGRAM(CEESSXPI) GROUP(CEE) LANGUAGE(ASSEMBLER)               00657500
+  DEFINE PROGRAM(CEESDXPI) GROUP(CEE) LANGUAGE(ASSEMBLER)               00657600
+  DEFINE PROGRAM(CEESQXPI) GROUP(CEE) LANGUAGE(ASSEMBLER)               00657700
+  DEFINE PROGRAM(CEESTXPI) GROUP(CEE) LANGUAGE(ASSEMBLER)               00657800
+  DEFINE PROGRAM(CEESEXPI) GROUP(CEE) LANGUAGE(ASSEMBLER)               00657900
+  DEFINE PROGRAM(CEESRXPI) GROUP(CEE) LANGUAGE(ASSEMBLER)               00658000
+  DEFINE PROGRAM(CEESSXPS) GROUP(CEE) LANGUAGE(ASSEMBLER)               00658100
+  DEFINE PROGRAM(CEESDXPD) GROUP(CEE) LANGUAGE(ASSEMBLER)               00658200
+  DEFINE PROGRAM(CEESQXPQ) GROUP(CEE) LANGUAGE(ASSEMBLER)               00658300
+  DEFINE PROGRAM(CEESTXPT) GROUP(CEE) LANGUAGE(ASSEMBLER)               00658400
+  DEFINE PROGRAM(CEESEXPE) GROUP(CEE) LANGUAGE(ASSEMBLER)               00658500
+  DEFINE PROGRAM(CEESRXPR) GROUP(CEE) LANGUAGE(ASSEMBLER)               00658600
+DEFINE PROGRAM(CIFORMAT)   GROUP(DB2GRP)     LANGUAGE(COBOL)            00658700
+DEFINE TRANSACTION(CFMT) PROGRAM(CIFORMAT) GROUP(DB2GRP)                00658800
+DEFINE MAPSET(DJYSQLA) GROUP(DB2GRP)                                    00658901
+DEFINE PROGRAM(CI2UIT0)    GROUP(DB2GRP)     LANGUAGE(COBOL)            00659000
+DEFINE TRANSACTION(UIT0) PROGRAM(CI2UIT0) GROUP(DB2GRP)                 00659100
+DEFINE PROGRAM(CI2SL00)    GROUP(DB2GRP)     LANGUAGE(COBOL)            00659200
+DEFINE TRANSACTION(SL00) PROGRAM(CI2SL00) GROUP(DB2GRP)                 00659300
+*                                                                       00659400
+APPEND LIST(DFHLIST) TO(TLIST)                                          00659500
+ADD GROUP(DFHRMI) LIST(TLIST)                                           00659600
+ADD GROUP(CRTS) LIST(TLIST)                                             00659700
+ADD GROUP(DB2GRP) LIST(TLIST)                                           00659800
+ADD GROUP(CEE) LIST(TLIST)                                              00659900
+LIST LIST(TLIST) OBJECTS                                                00660000
+/*                                                                      00660100
+//                                                                      00660200
+*****************************************************************       00660300
+*                                                                       00660400
+*                                                                       00660500
+* VS COBOL II - CICS CSD DEFINITIONS FOR THE PPT                        00660600
+*                                                                       00660700
+*                                                                       00660800
+* NOTE: THE GROUP THAT CONTAINS THE VS COBOL II RUN TIME ROUTINES       00660900
+*       MUST BE IN THE GROUP LIST USED DURING CICS STARTUP.             00661000
+*                                                                       00661100
+*****************************************************************       00661200
+*                                                                       00661300
+*        VS COBOL II COBPACKS                                           00661400
+*                                                                       00661500
+*****************************************************************       00661600
+  DEFINE PROGRAM(IGZCPAC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00661700
+  DEFINE PROGRAM(IGZCPCC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00661800
+*****************************************************************       00661900
+*                                                                       00662000
+*        ANY OF THE FOLLOWING MODULES WHICH ARE IN                      00662100
+*        IGZCPAC OR IGZCPCC NEED NOT APPEAR AS A                        00662200
+*        SEPARATE ENTRY IN THE PROCESSING PROGRAM TABLE                 00662300
+*                                                                       00662400
+*****************************************************************       00662500
+*****************************************************************       00662600
+*                                                               *       00662700
+*        VS COBOL II LIBRARY MODULES - NON ESM                  *       00662800
+*                                                               *       00662900
+*****************************************************************       00663000
+  DEFINE PROGRAM(IGZCACS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00663100
+  DEFINE PROGRAM(IGZCANE)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00663200
+  DEFINE PROGRAM(IGZCANF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00663300
+  DEFINE PROGRAM(IGZCBID)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00663400
+  DEFINE PROGRAM(IGZCBUG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00663500
+  DEFINE PROGRAM(IGZCCLS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00663600
+  DEFINE PROGRAM(IGZCCTL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00663700
+  DEFINE PROGRAM(IGZCCVB)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00663800
+  DEFINE PROGRAM(IGZCDIF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00663900
+  DEFINE PROGRAM(IGZCD2A)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00664000
+  DEFINE PROGRAM(IGZCA2D)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00664100
+  DEFINE PROGRAM(IGZCFDP)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00664200
+  DEFINE PROGRAM(IGZCFDW)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00664300
+  DEFINE PROGRAM(IGZCFPW)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00664400
+  DEFINE PROGRAM(IGZCIDB)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00664500
+  DEFINE PROGRAM(IGZCINS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00664600
+  DEFINE PROGRAM(IGZCIN1)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00664700
+  DEFINE PROGRAM(IGZCIN2)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00665000
+  DEFINE PROGRAM(IGZCIPS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00670000
+  DEFINE PROGRAM(IGZCIVL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00680000
+  DEFINE PROGRAM(IGZCLDR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00690000
+  DEFINE PROGRAM(IGZCLLM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00700000
+  DEFINE PROGRAM(IGZCLNK)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00710000
+  DEFINE PROGRAM(IGZCMSF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00720000
+  DEFINE PROGRAM(IGZCMST)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00730000
+  DEFINE PROGRAM(IGZCONV)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00740000
+  DEFINE PROGRAM(IGZCPRC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00750000
+  DEFINE PROGRAM(IGZCPRS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00760000
+  DEFINE PROGRAM(IGZCRCL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00770000
+  DEFINE PROGRAM(IGZCRSU)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00780000
+  DEFINE PROGRAM(IGZCSCH)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00790000
+  DEFINE PROGRAM(IGZCSFT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00800000
+  DEFINE PROGRAM(IGZCSMV)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00810000
+  DEFINE PROGRAM(IGZCSPC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00820000
+  DEFINE PROGRAM(IGZCSSN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00830000
+  DEFINE PROGRAM(IGZCSSR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00840000
+  DEFINE PROGRAM(IGZCSTG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00850000
+  DEFINE PROGRAM(IGZCXPR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00860000
+  DEFINE PROGRAM(IGZETRM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00870000
+  DEFINE PROGRAM(IGZCUST)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00880000
+  DEFINE PROGRAM(IGZCVLD)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00890000
+  DEFINE PROGRAM(IGZCVMO)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00900000
+  DEFINE PROGRAM(IGZCXDI)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00910000
+  DEFINE PROGRAM(IGZCXMU)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00920000
+*****************************************************************       00930000
+*                                                               *       00940000
+*  VS COBOL II LIBRARY MODULES - ENVIRONMENT SPECIFIC FOR CICS  *       00950000
+*                                                               *       00960000
+*****************************************************************       00970000
+  DEFINE PROGRAM(IGZEABN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00980000
+  DEFINE PROGRAM(IGZEABX)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00990000
+  DEFINE PROGRAM(IGZEAFT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01000000
+  DEFINE PROGRAM(IGZEBEF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01010000
+  DEFINE PROGRAM(IGZEDBG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01020000
+  DEFINE PROGRAM(IGZEDBR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01030000
+  DEFINE PROGRAM(IGZEDBW)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01040000
+  DEFINE PROGRAM(IGZEDCM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01050000
+  DEFINE PROGRAM(IGZEDXT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01060000
+  DEFINE PROGRAM(IGZEGOB)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01070000
+  DEFINE PROGRAM(IGZEINI)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01080000
+  DEFINE PROGRAM(IGZELDL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01090000
+  DEFINE PROGRAM(IGZEMSG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01100000
+  DEFINE PROGRAM(IGZEOPD)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01110000
+  DEFINE PROGRAM(IGZERID)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01120000
+  DEFINE PROGRAM(IGZESAT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01130000
+  DEFINE PROGRAM(IGZESNP)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01140000
+  DEFINE PROGRAM(IGZESPM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01150000
+  DEFINE PROGRAM(IGZESMG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01160000
+  DEFINE PROGRAM(IGZETCL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01170000
+  DEFINE PROGRAM(IGZETID)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01180000
+  DEFINE PROGRAM(IGZETSU)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01190000
+  DEFINE PROGRAM(IGZETUN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01200000
+  DEFINE PROGRAM(IGZEWTO)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01210000
+*****************************************************************       01220000
+*                                                               *       01230000
+*  VS COBOL II LIBRARY MODULES - COBTEST                        *       01240000
+*                                                               *       01250000
+*****************************************************************       01260000
+  DEFINE PROGRAM(COBTEST)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01270000
+  DEFINE PROGRAM(COBDBG)   GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01280000
+  DEFINE PROGRAM(IGZTBGT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01290000
+  DEFINE PROGRAM(IGZTBMN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01300000
+  DEFINE PROGRAM(IGZTTCL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01310000

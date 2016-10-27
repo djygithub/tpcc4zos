@@ -1,0 +1,97 @@
+//DJYISTAR JOB  (USER,ACCT,NUMBER),'D J YOUNG',                         00010003
+//             MSGCLASS=Y,REGION=0M,NOTIFY=DJY00                        00020001
+//*                                                                     00030000
+//* This job will invoke REXX exec EYUINST to customise the members     00040021
+//* from the library referenced by the TEMPLIB parameter.               00050021
+//* Output is placed in the library referenced by the LIB parameter.    00060021
+//*                                                                     00070021
+//* The ENVIRONMENT parameter value MAS or CMAS must be specfied.       00080021
+//*-------------------------------------------------------------------- 00090021
+//EYUISTAR EXEC PGM=IKJEFT01,                                           00100000
+//             REGION=2M,DYNAMNBR=99                                    00110000
+//SYSPROC   DD  DISP=SHR,                                               00120000
+//             DSN=CPSM120.SEYUINST                                     00130022
+//SYSTSPRT  DD SYSOUT=*                                                 00140000
+//SYSTSIN   DD *                                                        00150000
+  %EYUINST                                                              00160000
+/*                                                                      00170000
+//IN        DD *                                                        00180000
+TEMPLIB     CPSM120.SEYUINST                                            00190022
+LIB         DJY00.CPSM120.XEYUINST                                      00200022
+ENVIRONMENT CMAS                                                        00210021
+SCOPE       ALL                                                         00220021
+*                                                                       00230021
+* Customers who are installing CICSPLEX SM/ESA 1.1.1 via CBIPO:         00240000
+*                                                                       00250014
+* 1) Change CPSM120.TEYUINST to reflect the name of the CICSPlex SM     00260022
+*    installation target library (e.g., CPSM120.SEYUINST) in the        00270022
+*    following locations:                                               00280014
+*    - The TEMPLIB  parameter above.                                    00290014
+*    - The SYSPROC  DD statement above.                                 00300014
+*                                                                       00310014
+* 2) Change the SCOPE parameter to SCOPE POST.                          00320021
+*    This causes only JCL required after the installation of the        00330014
+*    pre-generated CICSPLEX SM/ESA system to be created.                00340014
+*                                                                       00350000
+* Customers who are not installing CICSPLEX SM/ESA 1.1.1 via CBIPO:     00360000
+*                                                                       00370014
+* 1) Change CPSM120.TEYUINST to reflect the name of the CICSPlex SM     00380022
+*    installation materials library in the below locations if you       00390014
+*    did not unload RELFILE 2 of the install tape into the default      00400014
+*    library CPSM120.TEYUINST                                           00410022
+*    - The TEMPLIB  parameter above.                                    00420014
+*    - The SYSPROC  DD statement above.                                 00430014
+*                                                                       00440014
+* --------------------------------------------------------------------- 00450014
+JOB         //XXXXXXXX JOB (USER,ACCT,NUMBER),'D J YOUNG',              00460000
+JOB         // CLASS=A,MSGCLASS=Y,REGION=0M,NOTIFY=DJY00                00470000
+*                                                                       00490014
+* Add more JOB parameters as required by your environment.              00500014
+* The job name is ignored.  The job name will be the input member name  00510001
+* after being altered by the EYUINST PREFIX parameter.                  00520001
+* A time parameter will not be added.                                   00520021
+* Code an appropriate value for your environment.                       00530021
+*                                                                       00540014
+* --------------------------------------------------------------------- 00550014
+*                                                                       00560000
+BLKFB80     6160                                                        00570012
+BLKISPF     3200                                                        00580014
+BLKU        6144                                                        00590012
+CINDEX410   CICS410                                                     00610000
+CMASNAME    CICPCM01                                                    00610020
+CRELEASE    4.1.0                                                       00630001
+DEFVOL      DB23SY 3390                                                 00630012
+DISTVOL     DB23SY 3390                                                 00640012
+* Maximum length of the dataset name high level qualifier               00650019
+*   on the DSINFO parameter is 17.                                      00660012
+DSINFO      BICS.CICPCM01 DB23SY 3390                                   00670023
+DZONE       CPDZONE                                                     00680012
+DZONECSI    CPSM120.CPDZONE NEW CICS41 3390                             00690012
+DZONELOG    CPSM120.CPDZONE.SMPLOG NEW                                  00700012
+EYUIPRM     DJY00.EYUIPRM NEW                                           00710029
+EYUSDEF     DJY00.EYUSDEF NEW                                           00720029
+GZONE       OLD GLOBAL                                                  00730000
+GZONECSI    MVSSMPE.GLOBAL OLD                                          00730026
+GZONELOG    MVSSMPE.SMPGLOG OLD                                         00740026
+INDEX       CPSM120                                                     00750000
+JES         JES2                                                        00760012
+LINDEX      SYS1.CPSM120                                                00770000
+PARMLIB     SYS1.PARMLIB                                                00780000
+PREFIX      EYU                                                         00790012
+SMPMTS      CPSM120.SMPMTS                                              00800000
+SMPPTS      MVSSMPE.SMPPTS                                              00810030
+SMPSCDS     CPSM120.SMPSCDS                                             00820000
+SMPSTS      CPSM120.SMPSTS                                              00830012
+SMPVOL      CICS41 3390                                                 00840012
+SMPWORK     3390                                                        00850012
+SMPWRK3     CPSM120.SMPWRK3                                             00860000
+SYSIDNT     CM01                                                        00870027
+TAPEUNIT    3490                                                        00880012
+TARGVOL     CICS41 3390                                                 00890012
+TIMEZONE    R                                                           00900000
+TZONE       CPTZONE                                                     00900012
+TZONECSI    CPSM120.CPTZONE NEW CICS41 3390                             00910012
+TZONELOG    CPSM120.CPTZONE.SMPLOG NEW                                  00920012
+UTILITIES   ASMA90 IEWL GIMSMP                                          00930012
+WORKUNIT    3390                                                        00940012
+/*                                                                      00950000

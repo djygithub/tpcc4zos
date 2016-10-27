@@ -1,0 +1,61 @@
+//FEB13973 JOB (DB2PM),'DB2PM INSTALL IVP',NOTIFY=DJY00,                        
+//             MSGCLASS=Y,CLASS=A,MSGLEVEL=(1,1)                                
+//*                                                                             
+//*=================================================================***         
+//* LIB = DB2PM INSTALLATION LIBRARY                                ***         
+//* DOC = INSTALLATION VERIFICATION                                 ***         
+//*       GENERATE DB2PM REPORTS                                    ***         
+//*=================================================================***         
+//*       IBM DATABASE 2 PERFORMANCE MONITOR                        ***         
+//*       5685-140 (C) COPYRIGHT IBM CORP. 1986, 1991               ***         
+//*       LICENSED MATERIAL - PROGRAM PROPERTY OF IBM               ***         
+//*       REFER TO COPYRIGHT INSTRUCTIONS FORM NO. G120-2083        ***         
+//*=================================================================***         
+//*                                                                             
+//DB2PM   PROC HLQ='DJY00.V410',                                                
+//             OUT='*',                                                         
+//             DB2=41                                                           
+//*                                                                             
+//REPORT  EXEC PGM=DB2PM                                                        
+//STEPLIB  DD  DSN=&HLQ..SDGOLOAD,DISP=SHR                                      
+//*PMPARMS DD  DSN=&HLQ..DPMPARMS,DISP=SHR,UNIT=3390,VOL=SER=DB25CD             
+//INPUTDD  DD  DSN=&HLQ..DPMIN&DB2,DISP=SHR                                     
+//SYSPRINT DD  SYSOUT=&OUT                                                      
+//SYSOUT   DD  SYSOUT=&OUT                                                      
+//JOBSUMDD DD  SYSOUT=&OUT                                                      
+//MSGRPTDD DD  SYSOUT=&OUT                                                      
+//ACRPTDD  DD  SYSOUT=&OUT                                                      
+//ACTRCDD1 DD  SYSOUT=&OUT                                                      
+//RTTRCDD1 DD  SYSOUT=&OUT                                                      
+//RTTRCDD2 DD  SYSOUT=&OUT                                                      
+//*                                                                             
+//        PEND                                                                  
+//*                                                                             
+//*--------------------------------------------------------------------         
+//*                                                                             
+//DB2PM   EXEC DB2PM,DB2=41                                                     
+//REPORT.INPUTDD DD DSN=DB100L21.DB100L21.SMFDATA2,DISP=SHR                     
+//REPORT.SYSIN DD *                                                             
+ PARM PLI,NOSTAE                                                                
+*                                                                               
+*                                                                               
+ DB2PM GLOBAL(FROM(02/13/97,19:00:00:00),TO(02/13/97,19:10:00:00))              
+*DB2PM ACCOUNTING                                                               
+*DB2PM STATISTICS(REDUCE,REPORT(LEVEL(DETAIL)))                                 
+*DB2PM RECTRACE(TRACE(LEVEL(LONG)))                                             
+*DB2PM ACCOUNTING(TRACE(LEVEL(LONG)))                                           
+*DB2PM ACCOUNTING(REPORT(LEVEL(DETAIL),ORDER(PLANNAME)))                        
+*DB2PM ACCOUNTING(REDUCE(INTERVAL(0)),REPORT(LEVEL(DETAIL)))                    
+*DB2PM ACCOUNTING(TRACE(LEVEL(LONG),INCLUDE(PLANNAME(CI2UI15)))                 
+*                REDUCE,REPORT(LEVEL(DETAIL)))                                  
+*DB2PM ACCOUNTING(TRACE(LEVEL(LONG),INCLUDE(PLANNAME(CI2UI15T,CHECK)))          
+*                REDUCE(INTERVAL(0)),REPORT(LEVEL(DETAIL)))                     
+*DB2PM RECTRACE(TRACE(LEVEL(LONG),                                              
+*               INCLUDE(IFCID(6,7,9,10,38,39,70,71,72))))                       
+*DB2PM RECTRACE(TRACE(LEVEL(LONG),                                              
+*               INCLUDE(IFCID(72,73,82,83,86,87))))                             
+ DB2PM RECTRACE(TRACE(LEVEL(LONG),                                              
+                INCLUDE(IFCID(1,2))))                                           
+*                                                                               
+ DB2PM EXEC                                                                     
+/*                                                                              

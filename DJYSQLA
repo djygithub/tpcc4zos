@@ -1,0 +1,18 @@
+DJYSQLA  DFHMSD TYPE=MAP,                                              X        
+               MODE=INOUT,                                             X        
+               LANG=COBOL,                                             X        
+               TERM=3270-2,                                            X        
+               CTRL=(FREEKB),                                          X        
+               STORAGE=AUTO,                                           X        
+               TIOAPFX=YES                                                      
+*                                                                               
+DJYSQLA  DFHMDI SIZE=(24,80),                                          X        
+               LINE=1,                                                 X        
+               COLUMN=1                                                         
+*                                                                               
+INFLD1   DFHMDF POS=(1,1),                                             X        
+               LENGTH=43,                                              X        
+               ATTRB=UNPROT                                                     
+*                                                                               
+         DFHMSD TYPE=FINAL                                                      
+         END                                                                    

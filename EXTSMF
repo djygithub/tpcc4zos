@@ -1,0 +1,15 @@
+//DUMPSMF JOB (RWM,T),'DUMP',MSGCLASS=Y,NOTIFY=DJY00                    00001001
+//*UTPIT OUTPUT DEST=PRT5                                               00002001
+//IEFPROC  EXEC PGM=IFASMFDP,REGION=512K                                00003001
+//SYSPRINT DD  SYSOUT=*                                                 00004001
+//DUMPOUT DD DISP=(NEW,KEEP),DSN=SPARE2.NOV06961.SMFDATAE,              00005001
+//    VOL=SER=SPARE2,UNIT=3390,SPACE=(CYL,(15,15))                      00006001
+//DUMPIN DD DISP=OLD,DSN=SPARE2.NOV06961.SMFDATA2,                      00006101
+//    VOL=SER=SPARE2,UNIT=3390                                          00006201
+//SYSIN DD *                                                            00018001
+ INDD(DUMPIN,OPTIONS(DUMP))                                             00019001
+ OUTDD(DUMPOUT,TYPE(0:255))                                             00020001
+    START(1200)                                                         00021001
+    END(1300)                                                           00022001
+    DATE(1996310,1996310)                                               00022101
+/*                                                                      00022201

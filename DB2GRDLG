@@ -1,0 +1,88 @@
+//DB2GRDLG JOB (1),'D J YOUNG',CLASS=A,MSGCLASS=Y,NOTIFY=DJY00                  
+//*********************************************************************/00010000
+//* JOB NAME = DSNTIJIN                                               */00020000
+//*                                                                   */00030000
+//* DESCRIPTIVE NAME = INSTALLATION JOB STREAM                        */00040000
+//*                                                                   */00050000
+//*    LICENSED MATERIALS - PROPERTY OF IBM                           */00060000
+//*    5695-DB2                                                       */00070000
+//*    (C) COPYRIGHT 1982, 1995 IBM CORP.  ALL RIGHTS RESERVED.       */00080000
+//*                                                                   */00090000
+//*    STATUS = VERSION 4                                             */00100000
+//*                                                                   */00110000
+//* FUNCTION = DEFINE DB2 DATA SETS                                   */00120000
+//*                                                                   */00130000
+//* PSEUDOCODE =                                                      */00140000
+//*   DSNTIC   PROC      FOR INVOKING AMS                             */00150000
+//*   DSNTDBL  STEP      DEFINES BOOTSTRAP DATA SETS                  */00170000
+//*                          AND ACTIVE LOG DATA SETS                 */00180000
+//*                                                                   */00320000
+//* NOTES =                                                           */00330000
+//*   1. THE INSTALL CLIST SHOULD DO MOST OF THE WORK,                */00340000
+//*      BUT THE INSTALLER MAY INSPECT THE AMS COMMANDS AND           */00350000
+//*      JCL  AND EDIT THEM WHERE NECESSARY                           */00360000
+//*      TO FIT LOCAL SITE REQUIREMENTS.                              */00370000
+//*   2. DSNAMES, CONTROL INTERVAL SIZE, RECORDSIZE,                  */00380000
+//*      LINEAR, NONORDERED, AND SHAREOPTIONS                         */00390000
+//*      MUST NOT BE CHANGED FOR DIRECTORY AND CATALOG DATA.          */00400000
+//*   3. MANY PARAMETERS DO NOT APPLY, INCLUDING SPANNED,             */00410000
+//*      EXCEPTIONEXIT, SPEED, BUFFERSPACE, AND                       */00420000
+//*      WRITECHECK FOR DIRECTORY AND CATALOG DATA.                   */00430000
+//*   4. DATA SET SIZES, PASSWORDS, AND VOLUMES MAY BE CHANGED.       */00440000
+//*      MSS STAGING OPTIONS MAY BE ADDED.                            */00450000
+//*                                                                   */00460000
+//*********************************************************************/00470000
+//*                                                                     00480000
+//DSNTIC  PROC                                                          00490000
+//* ***************************************************************** */00500000
+//* DIRECTORY/CATALOG AMS INVOCATION INSTREAM JCL PROCEDURE           */00510000
+//* ***************************************************************** */00520000
+//DSNTIC  EXEC PGM=IDCAMS,COND=(2,LT)                                   00530000
+//SYSPRINT DD SYSOUT=*                                                  00540000
+//SYSUDUMP DD SYSOUT=*                                                  00550000
+//DSNTIC  PEND                                                          00560000
+//DSNTDBL EXEC DSNTIC                                                   00720000
+//SYSIN    DD  *                                                        00730000
+   DEFINE CLUSTER -                                                     01130001
+         ( NAME (DSN2.DB2G.LOGCOPY1.DS04) -                             01130002
+           VOLUMES(DB23SY)      -                                       01130003
+           REUSE                         -                              01130004
+           SHAREOPTIONS(2 3)             -                              01130005
+           CYLINDERS(300)             -                                 01130006
+           LINEAR )                      -                              01130007
+      DATA                             -                                01130008
+         ( NAME (DSN2.DB2G.LOGCOPY1.DS04.DATA)) -                       01130009
+      CATALOG(DSN2/DSNDEFPW)                                            01130010
+                                                                        01130011
+   DEFINE CLUSTER -                                                     01130012
+         ( NAME (DSN2.DB2G.LOGCOPY1.DS05) -                             01130013
+           VOLUMES(DB23SY)      -                                       01130014
+           REUSE                         -                              01130015
+           SHAREOPTIONS(2 3)             -                              01130016
+           CYLINDERS(300)             -                                 01130017
+           LINEAR )                      -                              01130018
+      DATA                             -                                01130019
+         ( NAME (DSN2.DB2G.LOGCOPY1.DS05.DATA)) -                       01130020
+      CATALOG(DSN2/DSNDEFPW)                                            01130021
+                                                                        01130022
+   DEFINE CLUSTER -                                                     01130023
+         ( NAME (DSN2.DB2G.LOGCOPY1.DS06) -                             01130024
+           VOLUMES(DB23SY)      -                                       01130025
+           REUSE                         -                              01130026
+           SHAREOPTIONS(2 3)             -                              01130027
+           CYLINDERS(300)             -                                 01130028
+           LINEAR )                      -                              01130029
+      DATA                             -                                01130030
+         ( NAME (DSN2.DB2G.LOGCOPY1.DS06.DATA)) -                       01130031
+      CATALOG(DSN2/DSNDEFPW)                                            01130032
+//DSNTLOG EXEC PGM=DSNJU003                                             00320000
+//STEPLIB DD DSN=DSN410.SDSNLOAD,DISP=SHR                                       
+//SYSUT1   DD  DISP=OLD,DSN=DSN2.DB2G.BSDS01                            00330000
+//SYSUT2   DD  DISP=OLD,DSN=DSN2.DB2G.BSDS02                            00340000
+//SYSPRINT DD  SYSOUT=*                                                 00350000
+//SYSUDUMP DD SYSOUT=*                                                  00360000
+//SYSIN    DD  *                                                        00370000
+NEWLOG DSNAME=DSN2.DB2G.LOGCOPY1.DS04,COPY1                                     
+NEWLOG DSNAME=DSN2.DB2G.LOGCOPY1.DS05,COPY1                                     
+NEWLOG DSNAME=DSN2.DB2G.LOGCOPY1.DS06,COPY1                                     
+                                                                                

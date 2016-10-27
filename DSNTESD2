@@ -1,0 +1,34 @@
+-- To test your data sharing setup, run SPUFI with this file as      -- 00010000
+-- input on each member of your data sharing group.                  -- 00020000
+--                                                                   -- 00030000
+-- To avoid the possibility of deadlocks on the PARTS table when     -- 00040000
+-- multiple members run this job concurrently, lock the table in     -- 00050000
+-- exclusive mode:                                                   -- 00060000
+--                                                                   -- 00061000
+   LOCK TABLE DSN8410.PARTS IN EXCLUSIVE MODE;                          00062000
+--                                                                   -- 00063000
+-- Determine the number of rows the PARTS table starts with:         -- 00064000
+--                                                                   -- 00065000
+   SELECT COUNT(*) AS ITEM_COUNT FROM DSN8410.PARTS;                    00066000
+--                                                                   -- 00067000
+-- Insert five new rows:                                             -- 00068000
+--                                                                   -- 00069000
+   INSERT INTO DSN8410.PARTS                                            00070000
+     VALUES ( '463256' , 'RULER'        , NULL    , 'LOWE'    );        00080000
+   INSERT INTO DSN8410.PARTS                                            00090000
+     VALUES ( '000111' , 'PENCIL'       , 'YELLOW', 'MIYAZAWA');        00100000
+   INSERT INTO DSN8410.PARTS                                            00110000
+     VALUES ( '151617' , 'PEN'          , 'BLUE'  , 'LE'      );        00120000
+   INSERT INTO DSN8410.PARTS                                            00130000
+     VALUES ( '709031' , 'SCISSORS'     , NULL    , 'LA ROSA' );        00140000
+   INSERT INTO DSN8410.PARTS                                            00150000
+     VALUES ( '189431' , 'LETTER OPENER', 'SILVER', 'PACIFIC' );        00160000
+--                                                                   -- 00170000
+-- Do a SELECT with an ORDER BY clause to verify that your data      -- 00180000
+-- sharing group can access the workfile data base:                  -- 00190000
+--                                                                   -- 00200000
+   SELECT * FROM DSN8410.PARTS ORDER BY COLOR;                          00210000
+--                                                                   -- 00211000
+-- Count the number of rows again. It should have increased by five: -- 00212000
+--                                                                   -- 00213000
+   SELECT COUNT(*) AS ITEM_COUNT FROM DSN8410.PARTS;                    00214000

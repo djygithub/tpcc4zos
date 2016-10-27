@@ -1,0 +1,144 @@
+       ID DIVISION.                                                             
+       PROGRAM-ID.  BTBLUPDT.                                                   
+       AUTHOR.  D J YOUNG, AMDAHL SUNNYVALE.                                    
+       DATE-COMPILED.                                                           
+       ENVIRONMENT DIVISION.                                                    
+       INPUT-OUTPUT SECTION.                                                    
+       FILE-CONTROL.                                                            
+           SELECT INPUT-FILE ASSIGN TO UT-S-INPUT.                              
+           SELECT COMMIT-FILE ASSIGN TO UT-S-COMMIT.                            
+       DATA DIVISION.                                                           
+       FILE SECTION.                                                            
+       FD  INPUT-FILE                                                           
+           BLOCK CONTAINS 0 RECORDS                                             
+           LABEL RECORDS ARE STANDARD                                           
+           DATA RECORD IS INPUT-RECORD.                                         
+       01  INPUT-RECORD                PIC X(80).                               
+       FD  COMMIT-FILE                                                          
+           BLOCK CONTAINS 0 RECORDS                                             
+           LABEL RECORDS ARE STANDARD                                           
+           DATA RECORD IS COMMIT-RECORD.                                        
+       01  COMMIT-RECORD               PIC X(80).                               
+       WORKING-STORAGE SECTION.                                                 
+       77  EOF-FLAG                    PIC X(3).                                
+       77  COMMIT-EOF-FLAG             PIC X(3).                                
+       77  CUST-NUM-SQL                PIC S9(9) COMP.                          
+       77  COMMIT-COUNTER              PIC S9(9) COMP.                          
+       77  WORK-DATE                   PIC X(10).                               
+       77  COMMIT-SAVE                 PIC S9(9) COMP.                          
+       77  WH-NUMBER                   PIC S9(9) COMP.                          
+       77  DI-NUMBER                   PIC S9(9) COMP.                          
+       77  OLID-NUMBER                 PIC S9(9) COMP.                          
+       77  OL-NUMBER                   PIC S9(9) COMP.                          
+       77  UPDATE-VALUE                PIC X(24).                               
+       01  INPUT-WORK-RECORD.                                                   
+           03  STARTING-WH             PIC 9(9).                                
+           03  ENDING-WH               PIC 9(9).                                
+           03  STARTING-DI             PIC 9(9).                                
+           03  ENDING-DI               PIC 9(9).                                
+           03  STARTING-OLID           PIC 9(9).                                
+           03  ENDING-OLID             PIC 9(9).                                
+           03  FILLER                  PIC X(26).                               
+       01  COMMIT-WORK-RECORD.                                                  
+           05  UPDATES-PER-COMMIT      PIC 9(9).                                
+           05  UPDATE-VALUE-1          PIC X(30).                               
+           05  UPDATE-VALUE-2          PIC X(41).                               
+       01  ROW-UPDATE-VALUES.                                                   
+           05  DEEDATE                 PIC 9(6).                                
+           05  DEETIME                 PIC 9(8).                                
+       01  SQLCA.                                                               
+           05  SQLCAID                 PIC X(8).                                
+           05  SQLCABC                 PIC S9(9) COMP.                          
+           05  SQLCODE                 PIC S9(9) COMP.                          
+           05  SQLERRM.                                                         
+               49  SQLERRML            PIC S9(4) COMP.                          
+               49  SQLERRMC            PIC X(70).                               
+           05  SQLERRP                 PIC X(8).                                
+           05  SQLERRD                 PIC S9(9) COMP OCCURS 6 TIMES.           
+           05  SQLWARN.                                                         
+               10  SQLWARN0            PIC X.                                   
+               10  SQLWARN1            PIC X.                                   
+               10  SQLWARN2            PIC X.                                   
+               10  SQLWARN3            PIC X.                                   
+               10  SQLWARN4            PIC X.                                   
+               10  SQLWARN5            PIC X.                                   
+               10  SQLWARN6            PIC X.                                   
+               10  SQLWARN7            PIC X.                                   
+           05  SQLEXT                  PIC X(8).                                
+       PROCEDURE DIVISION.                                                      
+       MAIN-ROUTINE.                                                            
+           EXEC SQL                                                             
+           WHENEVER SQLERROR CONTINUE                                           
+           END-EXEC.                                                            
+      *(1)                                                                      
+           OPEN INPUT INPUT-FILE                                                
+                      COMMIT-FILE.                                              
+           MOVE 0 TO COMMIT-COUNTER.                                            
+      *(1A)                                                                     
+           ACCEPT DEEDATE FROM DATE.                                            
+           ACCEPT DEETIME FROM TIME.                                            
+           MOVE ROW-UPDATE-VALUES TO UPDATE-VALUE.                              
+      *(2)                                                                      
+           READ COMMIT-FILE INTO COMMIT-WORK-RECORD AT END MOVE                 
+           'YES' TO COMMIT-EOF-FLAG.                                            
+           MOVE UPDATES-PER-COMMIT TO COMMIT-SAVE.                              
+      *(3)                                                                      
+           READ INPUT-FILE INTO INPUT-WORK-RECORD AT END MOVE                   
+           'YES' TO EOF-FLAG.                                                   
+           MOVE STARTING-WH  TO WH-NUMBER.                                      
+      *(4)                                                                      
+           PERFORM INCR-WH UNTIL WH-NUMBER > ENDING-WH.                         
+      *(5)                                                                      
+           CLOSE INPUT-FILE COMMIT-FILE.                                        
+      *(7)                                                                      
+           EXEC SQL                                                             
+           COMMIT WORK                                                          
+           END-EXEC.                                                            
+           DISPLAY 'COMMIT', COMMIT-COUNTER.                                    
+      *(8)                                                                      
+           GOBACK.                                                              
+       INCR-WH.                                                                 
+      *(1)                                                                      
+           MOVE STARTING-DI  TO DI-NUMBER.                                      
+           PERFORM INCR-DI UNTIL DI-NUMBER > ENDING-DI.                         
+           ADD 1 TO WH-NUMBER.                                                  
+       INCR-DI.                                                                 
+           MOVE STARTING-OLID TO OLID-NUMBER                                    
+           PERFORM INCR-OLID UNTIL OLID-NUMBER > ENDING-OLID.                   
+           ADD 1 TO DI-NUMBER.                                                  
+       INCR-OLID.                                                               
+           MOVE 1 TO OL-NUMBER.                                                 
+           PERFORM UPDATE-IT UNTIL OL-NUMBER > 5.                               
+           ADD 1 TO OLID-NUMBER.                                                
+       UPDATE-IT.                                                               
+      *(1)                                                                      
+           EXEC SQL                                                             
+           UPDATE DJY00.ORDERLINE                                               
+                  SET OL_DIST_INFO = :UPDATE-VALUE                              
+                  WHERE OL_O_ID  = :OLID-NUMBER AND                             
+                        OL_D_ID  = :DI-NUMBER AND                               
+                        OL_W_ID  = :WH-NUMBER AND                               
+                        OL_NUMBER = :OL-NUMBER                                  
+           END-EXEC.                                                            
+      *(2)                                                                      
+           IF  SQLCODE = 0                                                      
+               ADD 1 TO COMMIT-COUNTER                                          
+               DISPLAY 'GOOD-CHANGE', WH-NUMBER, DI-NUMBER,                     
+               OLID-NUMBER, OL-NUMBER, UPDATE-VALUE                             
+           ELSE                                                                 
+               DISPLAY  SQLCAID, SQLCABC, SQLCODE, SQLERRM,                     
+               SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),                
+               SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6).                  
+           IF  COMMIT-COUNTER > COMMIT-SAVE OR = COMMIT-SAVE                    
+               EXEC SQL                                                         
+               COMMIT WORK                                                      
+               END-EXEC                                                         
+               DISPLAY 'COMMIT', COMMIT-COUNTER                                 
+               MOVE 0 TO COMMIT-COUNTER.                                        
+      *(3)                                                                      
+           ADD 1 TO OL-NUMBER.                                                  
+       SQL-ERROR.                                                               
+           IF  SQLCODE NOT = 100                                                
+           DISPLAY  SQLCAID, SQLCABC, SQLCODE, SQLERRM,                         
+           SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),                    
+           SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6).                      

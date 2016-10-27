@@ -1,0 +1,115 @@
+//BST      JOB (1),'D J YOUNG',CLASS=A,MSGCLASS=Y,NOTIFY=DJY00                  
+//JOBLIB  DD  DISP=SHR,                                                 00290000
+//            DSN=DSN410.SDSNLOAD                                       00300000
+//DSNTIAS EXEC PGM=IKJEFT01,DYNAMNBR=20,COND=(4,LT)                     00650000
+//SYSTSPRT DD  SYSOUT=*                                                 00660000
+//SYSPRINT DD  SYSOUT=*                                                 00670000
+//SYSUDUMP DD  SYSOUT=*                                                 00680000
+//SYSTSIN  DD  *                                                        00690000
+  DSN SYSTEM(DB1G)                                                      00700000
+  RUN PROGRAM(DSNTIAD)  PLAN(DSNTIA41) PARM('RC0')  -                   00740000
+       LIB('DSN410.RUNLIB.LOAD')                                        00750000
+  END                                                                   00760000
+//SYSIN    DD  *                                                        00770000
+ CREATE TABLESPACE STOCKTS                                                      
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 50000                                                               
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS NO;                                                               
+ CREATE TABLE DJY00.STOCK                                                       
+     (S_I_ID            INTEGER  NOT NULL,                                      
+      S_W_ID            INTEGER  NOT NULL,                                      
+      S_QUANTITY        INTEGER,                                                
+      S_DIST_01         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_02         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_03         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_04         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_05         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_06         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_07         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_08         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_09         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_DIST_10         CHAR(24) NOT NULL WITH DEFAULT,                         
+      S_YTD             FLOAT,                                                  
+      S_ORDER_CNT       INTEGER  NOT NULL,                                      
+      S_REMOTE_CNT      INTEGER  NOT NULL,                                      
+      S_DATA            CHAR(50) NOT NULL WITH DEFAULT)                         
+      IN  TPCCDB.STOCKTS;                                                       
+/*                                                                              
+//DSNUPROC PROC LIB='DSN410.SDSNLOAD',                                          
+//         SYSTEM=DB1G,                                                         
+//         SIZE=8M,UID='',UTPROC=''                                             
+//*        SIZE=1024K,UID='',UTPROC='RESTART'                                   
+//*        COMPRESS = YES                                                       
+//DSNUPROC EXEC PGM=DSNUTILB,REGION=&SIZE,                                      
+//         PARM=(&SYSTEM,'&UID','&UTPROC')                                      
+//STEPLIB  DD DSN=&LIB,DISP=SHR                                                 
+//*        DD DSN=SYS1.ICELIB,DISP=SHR                                          
+//SYSPRINT DD SYSOUT=*                                                          
+//UTPRINT  DD SYSOUT=*                                                          
+//SYSUDUMP DD SYSOUT=*                                                          
+//    PEND                                                                      
+//UTIL EXEC DSNUPROC,SYSTEM=DB1G,UID='LDWH',UTPROC=''                           
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.MYDD1 DD DSN=DJY00.BIG.STOCK.INPUT,                                  
+//        UNIT=3390,VOL=SER=SPARE2,DISP=SHR                                     
+//DSNUPROC.SYSIN    DD  *                                                       
+ LOAD DATA INDDN(MYDD1) LOG NO RESUME NO                                00010000
+      INTO TABLE DJY00.STOCK                                            00020000
+     (S_I_ID          POSITION(1:8)      DECIMAL EXTERNAL,                      
+      S_W_ID          POSITION(9:16)     DECIMAL EXTERNAL,                      
+      S_QUANTITY      POSITION(17:24)    DECIMAL EXTERNAL,                      
+      S_DIST_01       POSITION(25:48)    CHAR(24),                              
+      S_DIST_02       POSITION(49:72)    CHAR(24),                              
+      S_DIST_03       POSITION(73:96)    CHAR(24),                              
+      S_DIST_04       POSITION(97:120)   CHAR(24),                              
+      S_DIST_05       POSITION(121:144)   CHAR(24),                             
+      S_DIST_06       POSITION(145:168)   CHAR(24),                             
+      S_DIST_07       POSITION(169:192)   CHAR(24),                             
+      S_DIST_08       POSITION(193:216)   CHAR(24),                             
+      S_DIST_09       POSITION(217:240)   CHAR(24),                             
+      S_DIST_10       POSITION(241:264)   CHAR(24),                             
+      S_YTD           POSITION(265:270)  FLOAT EXTERNAL,                        
+      S_ORDER_CNT     POSITION(271:278)  DECIMAL EXTERNAL,                      
+      S_REMOTE_CNT    POSITION(279:286)  DECIMAL EXTERNAL,                      
+      S_DATA          POSITION(287:336)  CHAR(50))                              
+/*                                                                              
+/*                                                                              
+//DSNTIAS EXEC PGM=IKJEFT01,DYNAMNBR=20,COND=(4,LT)                     00650000
+//SYSTSPRT DD  SYSOUT=*                                                 00660000
+//SYSPRINT DD  SYSOUT=*                                                 00670000
+//SYSUDUMP DD  SYSOUT=*                                                 00680000
+//SYSTSIN  DD  *                                                        00690000
+  DSN SYSTEM(DB1G)                                                      00700000
+  RUN PROGRAM(DSNTIAD)  PLAN(DSNTIA41) PARM('RC0')  -                   00740000
+       LIB('DSN410.RUNLIB.LOAD')                                        00750000
+  END                                                                   00760000
+//SYSIN    DD  *                                                        00770000
+ CREATE UNIQUE INDEX DJY00.STIN01                                               
+        ON DJY00.STOCK(S_W_ID,S_I_ID)                                           
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 1                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              
+ ALTER TABLE DJY00.STOCK                                                        
+      PRIMARY KEY (S_W_ID,S_I_ID);                                              
+ ALTER TABLE DJY00.STOCK                                                        
+      FOREIGN KEY STFK1 (S_W_ID)                                                
+          REFERENCES DJY00.WAREHOUSE ON DELETE RESTRICT;                        
+ ALTER TABLE DJY00.STOCK                                                        
+      FOREIGN KEY STFK2 (S_I_ID)                                                
+          REFERENCES DJY00.ITEM ON DELETE RESTRICT;                             

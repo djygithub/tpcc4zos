@@ -1,0 +1,349 @@
+//CREATEI  JOB (A),'D J YOUNG',MSGCLASS=Y,NOTIFY=DJY00                  00010000
+//VTAMDEF  EXEC  PGM=DFHCSDUP                                           00020000
+//STEPLIB  DD  DSN=CICS410.SDFHLOAD,DISP=SHR                            00030000
+//DFHCSD  DD  DSN=CICS.CICBPT01.DFHCSD,DISP=SHR                         00040000
+//SYSPRINT  DD  SYSOUT=*                                                00050000
+//SYSIN  DD  *                                                          00060000
+DELETE GROUP(DB2GRP)                                                    00070004
+DELETE GROUP(COBOL2)                                                    00070104
+DELETE GROUP(CRTS)                                                      00070204
+DELETE LIST(TLIST)                                                      00070304
+DEFINE TYPETERM(3180S)     GROUP(CRTS)          DEVICE(3270)            00070404
+       DEFSCREEN(24,80)    ALTSCREEN(32,80)     BUILDCHAIN(NO)          00070504
+       BRACKET(YES)        SENDSIZE(1920)       AUDIBLEALARM(YES)       00070604
+       DUALCASEKYBD(YES)   UCTRAN(YES)          COLOR(NO)               00070704
+       EXTENDEDDS(NO)      HILIGHT(NO)          LIGHTPEN(NO)            00070804
+       ERRLASTLINE(NO)     ERRINTENSIFY(NO)     ERRCOLOR(NO)            00070904
+       ERRHILIGHT(NO)      AUTOCONNECT(YES)     ATI(YES)                00071004
+       TTI(YES)            LOGONMSG(YES)        RELREQ(YES)             00071104
+       SIGNOFF(YES)        RECEIVESIZE(1920)    IOAREALEN(2000,4000)    00071204
+       TERMMODEL(2)        DESCRIPTION(ATTRIBUTES FOR 3278 MODEL 2)     00072000
+       SHIPPABLE(YES)                                                   00073000
+*                                                                       00074000
+DEFINE TYPETERM(LU2)       GROUP(CRTS)          DEVICE(LUTYPE2)         00075000
+       DEFSCREEN(24,80)    ALTSCREEN(32,80)     BUILDCHAIN(NO)          00076000
+       BRACKET(YES)        SENDSIZE(1536)       AUDIBLEALARM(YES)       00077000
+       DUALCASEKYBD(YES)   UCTRAN(YES)          COLOR(NO)               00078000
+       EXTENDEDDS(NO)      HILIGHT(NO)          LIGHTPEN(NO)            00079000
+       ERRLASTLINE(NO)     ERRINTENSIFY(NO)     ERRCOLOR(NO)            00080000
+       ERRHILIGHT(NO)      AUTOCONNECT(YES)     ATI(YES)                00090000
+       TTI(YES)            LOGONMSG(YES)        RELREQ(YES)             00100000
+       SIGNOFF(YES)        RECEIVESIZE(256)    IOAREALEN(256,4000)      00110000
+       TERMMODEL(2)        DESCRIPTION(ATTRIBUTES FOR 3278 MODEL 2)     00120000
+       SHIPPABLE(YES)                                                   00130000
+*                                                                       00140000
+DEFINE TERMINAL(C020)    NETNAME(HM31T020)      GROUP(CRTS)             00150000
+       TYPETERM(3180S)   AUTINSTMODEL(NO) INSERVICE(NO)                 00160000
+*                                                                       00170000
+DEFINE TERMINAL(C021)    NETNAME(TCP00001)      GROUP(CRTS)             00180000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00190000
+*                                                                       00200000
+DEFINE TERMINAL(C022)    NETNAME(TCP00002)      GROUP(CRTS)             00210000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00220000
+*                                                                       00230000
+DEFINE TERMINAL(C023)    NETNAME(TCP00003)      GROUP(CRTS)             00240000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00250000
+*                                                                       00260000
+DEFINE TERMINAL(C024)    NETNAME(TCP00004)      GROUP(CRTS)             00270000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00271000
+*                                                                       00272000
+DEFINE TERMINAL(C025)    NETNAME(TCP00005)      GROUP(CRTS)             00273000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00274000
+*                                                                       00275000
+DEFINE TERMINAL(C026)    NETNAME(TCP00006)      GROUP(CRTS)             00276000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00277000
+*                                                                       00278000
+DEFINE TERMINAL(C027)    NETNAME(TCP00007)      GROUP(CRTS)             00279000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00279100
+*                                                                       00279200
+DEFINE TERMINAL(C028)    NETNAME(TCP00008)      GROUP(CRTS)             00279300
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00279400
+*                                                                       00279500
+DEFINE TERMINAL(C029)    NETNAME(TCP00009)      GROUP(CRTS)             00279600
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00279700
+*                                                                       00279800
+DEFINE TERMINAL(C030)    NETNAME(TCP00010)      GROUP(CRTS)             00279900
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00280000
+*                                                                       00280100
+DEFINE TERMINAL(C031)    NETNAME(TCP00011)      GROUP(CRTS)             00280200
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00280300
+*                                                                       00280400
+DEFINE TERMINAL(C032)    NETNAME(TCP00012)      GROUP(CRTS)             00280500
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00280600
+*                                                                       00280700
+DEFINE TERMINAL(C033)    NETNAME(TCP00013)      GROUP(CRTS)             00280800
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00280900
+*                                                                       00281000
+DEFINE TERMINAL(C034)    NETNAME(TCP00014)      GROUP(CRTS)             00281100
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00281200
+*                                                                       00281300
+DEFINE TERMINAL(C035)    NETNAME(TCP00015)      GROUP(CRTS)             00281400
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00281500
+*                                                                       00281600
+DEFINE TERMINAL(C036)    NETNAME(TCP00016)      GROUP(CRTS)             00281700
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00281800
+*                                                                       00281900
+DEFINE TERMINAL(C037)    NETNAME(TCP00017)      GROUP(CRTS)             00282000
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00282100
+*                                                                       00282200
+DEFINE TERMINAL(C038)    NETNAME(TCP00018)      GROUP(CRTS)             00282300
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00282400
+*                                                                       00282500
+DEFINE TERMINAL(C039)    NETNAME(TCP00019)      GROUP(CRTS)             00282600
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00282700
+*                                                                       00282800
+DEFINE TERMINAL(C040)    NETNAME(TCP00020)      GROUP(CRTS)             00282900
+       TYPETERM(LU2)   AUTINSTMODEL(YES) INSERVICE(YES)                 00283000
+*                                                                       00284000
+DEFINE TERMINAL(CSYS)    GROUP(CRTS)     TYPETERM(DFHCONS)              00285000
+       CONSNAME(SYSLOG)                                                 00286000
+*                                                                       00287000
+DEFINE TERMINAL(CDJY)    GROUP(CRTS)     TYPETERM(DFHCONS)              00288000
+       CONSNAME(DJY00)                                                  00289000
+*                                                                       00290000
+DEFINE TERMINAL(C001)    GROUP(CRTS)     TYPETERM(DFHCONS)              00300000
+       CONSNAME(EC20220)                                                00310000
+*                                                                       00310100
+DEFINE TERMINAL(C002)    GROUP(CRTS)     TYPETERM(DFHCONS)              00310200
+       CONSNAME(EC20221)                                                00310300
+*                                                                       00310400
+DEFINE TERMINAL(C022)    NETNAME(HM31T022)      GROUP(CRTS)             00310500
+       TYPETERM(3180S)   AUTINSTMODEL(YES) INSERVICE(YES)               00310600
+*                                                                       00310700
+DEFINE PROGRAM(CIFORMAT)   GROUP(DB2GRP)     LANGUAGE(COBOL)            00310800
+DEFINE TRANSACTION(CFMT) PROGRAM(CIFORMAT) GROUP(DB2GRP)                00310900
+DEFINE PROGRAM(CI2UIT0)    GROUP(DB2GRP)     LANGUAGE(COBOL)            00311000
+DEFINE TRANSACTION(UIT0) PROGRAM(CI2UIT0) GROUP(DB2GRP)                 00311100
+DEFINE PROGRAM(CI2SL00)    GROUP(DB2GRP)     LANGUAGE(COBOL)            00311211
+DEFINE TRANSACTION(SL00) PROGRAM(CI2SL00) GROUP(DB2GRP)                 00311311
+*****************************************************************       00328710
+*                                                                       00328810
+*                                                                       00328910
+* VS COBOL II - CICS CSD DEFINITIONS FOR THE PPT                        00329010
+*                                                                       00329110
+*                                                                       00329210
+* NOTE: THE GROUP THAT CONTAINS THE VS COBOL II RUN TIME ROUTINES       00329310
+*       MUST BE IN THE GROUP LIST USED DURING CICS STARTUP.             00329410
+*                                                                       00329510
+*****************************************************************       00329610
+*                                                                       00329710
+*        VS COBOL II COBPACKS                                           00329810
+*                                                                       00329910
+*****************************************************************       00330010
+  DEFINE PROGRAM(IGZCPAC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00330110
+  DEFINE PROGRAM(IGZCPCC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00330210
+*****************************************************************       00330310
+*                                                                       00330410
+*        ANY OF THE FOLLOWING MODULES WHICH ARE IN                      00330510
+*        IGZCPAC OR IGZCPCC NEED NOT APPEAR AS A                        00330610
+*        SEPARATE ENTRY IN THE PROCESSING PROGRAM TABLE                 00330710
+*                                                                       00330810
+*****************************************************************       00330910
+*****************************************************************       00331010
+*                                                               *       00331110
+*        VS COBOL II LIBRARY MODULES - NON ESM                  *       00331210
+*                                                               *       00331310
+*****************************************************************       00331410
+  DEFINE PROGRAM(IGZCACS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00331510
+  DEFINE PROGRAM(IGZCANE)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00331610
+  DEFINE PROGRAM(IGZCANF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00331710
+  DEFINE PROGRAM(IGZCBID)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00331810
+  DEFINE PROGRAM(IGZCBUG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00331910
+  DEFINE PROGRAM(IGZCCLS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00332010
+  DEFINE PROGRAM(IGZCCTL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00332110
+  DEFINE PROGRAM(IGZCCVB)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00332210
+  DEFINE PROGRAM(IGZCDIF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00332310
+  DEFINE PROGRAM(IGZCD2A)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00332410
+  DEFINE PROGRAM(IGZCA2D)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00332510
+  DEFINE PROGRAM(IGZCFDP)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00332610
+  DEFINE PROGRAM(IGZCFDW)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00332710
+  DEFINE PROGRAM(IGZCFPW)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00332810
+  DEFINE PROGRAM(IGZCIDB)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00332910
+  DEFINE PROGRAM(IGZCINS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00333010
+  DEFINE PROGRAM(IGZCIN1)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00333110
+  DEFINE PROGRAM(IGZCIN2)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00333210
+  DEFINE PROGRAM(IGZCIPS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00333310
+  DEFINE PROGRAM(IGZCIVL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00333410
+  DEFINE PROGRAM(IGZCLDR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00333510
+  DEFINE PROGRAM(IGZCLLM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00333610
+  DEFINE PROGRAM(IGZCLNK)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00333710
+  DEFINE PROGRAM(IGZCMSF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00333810
+  DEFINE PROGRAM(IGZCMST)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00333910
+  DEFINE PROGRAM(IGZCONV)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00334010
+  DEFINE PROGRAM(IGZCPRC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00334110
+  DEFINE PROGRAM(IGZCPRS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00334210
+  DEFINE PROGRAM(IGZCRCL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00334310
+  DEFINE PROGRAM(IGZCRSU)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00334410
+  DEFINE PROGRAM(IGZCSCH)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00334510
+  DEFINE PROGRAM(IGZCSFT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00334610
+  DEFINE PROGRAM(IGZCSMV)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00334710
+  DEFINE PROGRAM(IGZCSPC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00334810
+  DEFINE PROGRAM(IGZCSSN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00334910
+  DEFINE PROGRAM(IGZCSSR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00335010
+  DEFINE PROGRAM(IGZCSTG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00335110
+  DEFINE PROGRAM(IGZCXPR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00335210
+  DEFINE PROGRAM(IGZETRM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00335310
+  DEFINE PROGRAM(IGZCUST)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00335410
+  DEFINE PROGRAM(IGZCVLD)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00335510
+  DEFINE PROGRAM(IGZCVMO)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00335610
+  DEFINE PROGRAM(IGZCXDI)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00335710
+  DEFINE PROGRAM(IGZCXMU)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00335810
+*****************************************************************       00335910
+*                                                               *       00336010
+*  VS COBOL II LIBRARY MODULES - ENVIRONMENT SPECIFIC FOR CICS  *       00336110
+*                                                               *       00336210
+*****************************************************************       00336310
+  DEFINE PROGRAM(IGZEABN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00336410
+  DEFINE PROGRAM(IGZEABX)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00336510
+  DEFINE PROGRAM(IGZEAFT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00336610
+  DEFINE PROGRAM(IGZEBEF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00336710
+  DEFINE PROGRAM(IGZEDBG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00336810
+  DEFINE PROGRAM(IGZEDBR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00336910
+  DEFINE PROGRAM(IGZEDBW)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00337010
+  DEFINE PROGRAM(IGZEDCM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00337110
+  DEFINE PROGRAM(IGZEDXT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00337210
+  DEFINE PROGRAM(IGZEGOB)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00337310
+  DEFINE PROGRAM(IGZEINI)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00337410
+  DEFINE PROGRAM(IGZELDL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00337510
+  DEFINE PROGRAM(IGZEMSG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00337610
+  DEFINE PROGRAM(IGZEOPD)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00337710
+  DEFINE PROGRAM(IGZERID)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00337810
+  DEFINE PROGRAM(IGZESAT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00337910
+  DEFINE PROGRAM(IGZESNP)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00338010
+  DEFINE PROGRAM(IGZESPM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00338110
+  DEFINE PROGRAM(IGZESMG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00338210
+  DEFINE PROGRAM(IGZETCL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00338310
+  DEFINE PROGRAM(IGZETID)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00338410
+  DEFINE PROGRAM(IGZETSU)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00338510
+  DEFINE PROGRAM(IGZETUN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00338610
+  DEFINE PROGRAM(IGZEWTO)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00338710
+*****************************************************************       00338810
+*                                                               *       00338910
+*  VS COBOL II LIBRARY MODULES - COBTEST                        *       00339010
+*                                                               *       00339110
+*****************************************************************       00339210
+  DEFINE PROGRAM(COBTEST)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00339310
+  DEFINE PROGRAM(COBDBG)   GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00339410
+  DEFINE PROGRAM(IGZTBGT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00339510
+  DEFINE PROGRAM(IGZTBMN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00339610
+  DEFINE PROGRAM(IGZTTCL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00339710
+*                                                                       00339801
+APPEND LIST(DFHLIST) TO(TLIST)                                          00339901
+ADD GROUP(DFHRMI) LIST(TLIST)                                           00340001
+ADD GROUP(CRTS) LIST(TLIST)                                             00340101
+ADD GROUP(DB2GRP) LIST(TLIST)                                           00340201
+ADD GROUP(COBOL2) LIST(TLIST)                                           00340302
+LIST LIST(TLIST) OBJECTS                                                00340401
+/*                                                                      00340501
+//                                                                      00340600
+*****************************************************************       00341007
+*                                                                       00350007
+*                                                                       00360007
+* VS COBOL II - CICS CSD DEFINITIONS FOR THE PPT                        00370007
+*                                                                       00380007
+*                                                                       00390007
+* NOTE: THE GROUP THAT CONTAINS THE VS COBOL II RUN TIME ROUTINES       00400007
+*       MUST BE IN THE GROUP LIST USED DURING CICS STARTUP.             00410007
+*                                                                       00420007
+*****************************************************************       00430007
+*                                                                       00440007
+*        VS COBOL II COBPACKS                                           00450007
+*                                                                       00460007
+*****************************************************************       00470007
+  DEFINE PROGRAM(IGZCPAC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00480007
+  DEFINE PROGRAM(IGZCPCC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00490007
+*****************************************************************       00500007
+*                                                                       00510007
+*        ANY OF THE FOLLOWING MODULES WHICH ARE IN                      00520007
+*        IGZCPAC OR IGZCPCC NEED NOT APPEAR AS A                        00530007
+*        SEPARATE ENTRY IN THE PROCESSING PROGRAM TABLE                 00540007
+*                                                                       00550007
+*****************************************************************       00560007
+*****************************************************************       00570007
+*                                                               *       00580007
+*        VS COBOL II LIBRARY MODULES - NON ESM                  *       00590007
+*                                                               *       00600007
+*****************************************************************       00610007
+  DEFINE PROGRAM(IGZCACS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00620007
+  DEFINE PROGRAM(IGZCANE)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00630007
+  DEFINE PROGRAM(IGZCANF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00640007
+  DEFINE PROGRAM(IGZCBID)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00650007
+  DEFINE PROGRAM(IGZCBUG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00660007
+  DEFINE PROGRAM(IGZCCLS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00670007
+  DEFINE PROGRAM(IGZCCTL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00680007
+  DEFINE PROGRAM(IGZCCVB)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00690007
+  DEFINE PROGRAM(IGZCDIF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00700007
+  DEFINE PROGRAM(IGZCD2A)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00710007
+  DEFINE PROGRAM(IGZCA2D)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00720007
+  DEFINE PROGRAM(IGZCFDP)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00730007
+  DEFINE PROGRAM(IGZCFDW)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00740007
+  DEFINE PROGRAM(IGZCFPW)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00750007
+  DEFINE PROGRAM(IGZCIDB)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00760007
+  DEFINE PROGRAM(IGZCINS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00770007
+  DEFINE PROGRAM(IGZCIN1)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00780007
+  DEFINE PROGRAM(IGZCIN2)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00790007
+  DEFINE PROGRAM(IGZCIPS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00800007
+  DEFINE PROGRAM(IGZCIVL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00810007
+  DEFINE PROGRAM(IGZCLDR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00820007
+  DEFINE PROGRAM(IGZCLLM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00830007
+  DEFINE PROGRAM(IGZCLNK)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00840007
+  DEFINE PROGRAM(IGZCMSF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00850007
+  DEFINE PROGRAM(IGZCMST)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00860007
+  DEFINE PROGRAM(IGZCONV)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00870007
+  DEFINE PROGRAM(IGZCPRC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00880007
+  DEFINE PROGRAM(IGZCPRS)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00890007
+  DEFINE PROGRAM(IGZCRCL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00900007
+  DEFINE PROGRAM(IGZCRSU)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00910007
+  DEFINE PROGRAM(IGZCSCH)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00920007
+  DEFINE PROGRAM(IGZCSFT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00930007
+  DEFINE PROGRAM(IGZCSMV)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00940007
+  DEFINE PROGRAM(IGZCSPC)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00950007
+  DEFINE PROGRAM(IGZCSSN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00960007
+  DEFINE PROGRAM(IGZCSSR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00970007
+  DEFINE PROGRAM(IGZCSTG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00980007
+  DEFINE PROGRAM(IGZCXPR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            00990007
+  DEFINE PROGRAM(IGZETRM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01000007
+  DEFINE PROGRAM(IGZCUST)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01010007
+  DEFINE PROGRAM(IGZCVLD)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01020007
+  DEFINE PROGRAM(IGZCVMO)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01030007
+  DEFINE PROGRAM(IGZCXDI)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01040007
+  DEFINE PROGRAM(IGZCXMU)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01050007
+*****************************************************************       01060007
+*                                                               *       01070007
+*  VS COBOL II LIBRARY MODULES - ENVIRONMENT SPECIFIC FOR CICS  *       01080007
+*                                                               *       01090007
+*****************************************************************       01100007
+  DEFINE PROGRAM(IGZEABN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01110007
+  DEFINE PROGRAM(IGZEABX)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01120007
+  DEFINE PROGRAM(IGZEAFT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01130007
+  DEFINE PROGRAM(IGZEBEF)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01140007
+  DEFINE PROGRAM(IGZEDBG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01150007
+  DEFINE PROGRAM(IGZEDBR)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01160007
+  DEFINE PROGRAM(IGZEDBW)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01170007
+  DEFINE PROGRAM(IGZEDCM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01180007
+  DEFINE PROGRAM(IGZEDXT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01190007
+  DEFINE PROGRAM(IGZEGOB)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01200007
+  DEFINE PROGRAM(IGZEINI)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01210007
+  DEFINE PROGRAM(IGZELDL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01220007
+  DEFINE PROGRAM(IGZEMSG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01230007
+  DEFINE PROGRAM(IGZEOPD)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01240007
+  DEFINE PROGRAM(IGZERID)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01250007
+  DEFINE PROGRAM(IGZESAT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01260007
+  DEFINE PROGRAM(IGZESNP)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01270007
+  DEFINE PROGRAM(IGZESPM)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01280007
+  DEFINE PROGRAM(IGZESMG)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01290007
+  DEFINE PROGRAM(IGZETCL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01300007
+  DEFINE PROGRAM(IGZETID)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01310007
+  DEFINE PROGRAM(IGZETSU)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01320007
+  DEFINE PROGRAM(IGZETUN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01330007
+  DEFINE PROGRAM(IGZEWTO)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01340007
+*****************************************************************       01350007
+*                                                               *       01360007
+*  VS COBOL II LIBRARY MODULES - COBTEST                        *       01370007
+*                                                               *       01380007
+*****************************************************************       01390007
+  DEFINE PROGRAM(COBTEST)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01400007
+  DEFINE PROGRAM(COBDBG)   GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01410007
+  DEFINE PROGRAM(IGZTBGT)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01420007
+  DEFINE PROGRAM(IGZTBMN)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01430007
+  DEFINE PROGRAM(IGZTTCL)  GROUP(COBOL2) LANGUAGE(ASSEMBLER)            01440007

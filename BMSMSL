@@ -1,0 +1,24 @@
+BMSMSL   DFHMSD TYPE=MAP,                                              X        
+               MODE=INOUT,                                             X        
+               LANG=C,MAPATTS=(COLOR,HILIGHT,PS,VALIDN),               X        
+               CTRL=(FREEKB,FRSET),                                    X        
+               STORAGE=AUTO,                                           X        
+               TIOAPFX=YES                                                      
+*                                                                               
+BMSMSL   DFHMDI SIZE=(24,80)                                                    
+*                                                                               
+         DFHMDF POS=(1,35),LENGTH=11,INITIAL='Stock-Level'                      
+         DFHMDF POS=(1,55),LENGTH=9,INITIAL='Trancode:'                         
+INFLD1   DFHMDF POS=(1,65),ATTRB=IC,LENGTH=4                                    
+         DFHMDF POS=(2,1),LENGTH=10,INITIAL='Warehouse:'                        
+INFLD2   DFHMDF POS=(2,12),ATTRB=NUM,LENGTH=4                                   
+         DFHMDF POS=(2,19),LENGTH=9,INITIAL='District:'                         
+INFLD3   DFHMDF POS=(2,29),ATTRB=NUM,LENGTH=2                                   
+         DFHMDF POS=(4,1),LENGTH=22,INITIAL='Stock Level Threshold:'            
+INFLD4   DFHMDF POS=(4,24),ATTRB=NUM,LENGTH=2                                   
+         DFHMDF POS=(6,1),LENGTH=10,INITIAL='Low Stock:'                        
+INFLD5   DFHMDF POS=(6,12),ATTRB=NUM,LENGTH=6                                   
+*                                                                               
+*                                                                               
+         DFHMSD TYPE=FINAL                                                      
+         END                                                                    

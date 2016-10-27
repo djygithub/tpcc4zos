@@ -1,0 +1,6 @@
+//CCPREP   JOB (D3330RWM,ROOM),'D J YOUNG',MSGCLASS=R,USER= DAVID       00010000
+//COMPIT EXEC DSNHCC,LOADMOD=FRMTSL,MEM=FRMTSL                          00020001
+//PC.SYSIN DD DSN=DAVID.TPCC.WORKLOAD(FRMTSL),DISP=SHR                  00030001
+//LKED.SYSIN DD *                                                       00040000
+  INCLUDE SYSLIB(DSNCLI)                                                00050000
+//*                                                                     00060000

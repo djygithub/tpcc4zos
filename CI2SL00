@@ -1,0 +1,98 @@
+       IDENTIFICATION DIVISION.                                                 
+       PROGRAM-ID.  CI2SL00.                                                    
+       ENVIRONMENT DIVISION.                                                    
+       DATA DIVISION.                                                           
+       WORKING-STORAGE SECTION.                                                 
+           EXEC SQL INCLUDE SQLCA END-EXEC.                                     
+       77  SQLCALEN               PIC S9(4) COMP VALUE +200.                    
+       77  SQLVALUE               PIC S9(9) COMP.                               
+       77  WH                     PIC S9(9) COMP.                               
+       77  DI                     PIC S9(9) COMP.                               
+       77  O-ID                   PIC S9(9) COMP.                               
+       77  STOCK-COUNT            PIC S9(9) COMP.                               
+       77  THRESHOLD              PIC S9(9) COMP.                               
+       01  COMMAREA               PIC X(1).                                     
+           EXEC SQL INCLUDE DJYMSQLA END-EXEC.                                  
+       01  MFINPUT REDEFINES DJYSQLAI.                                          
+           03  FILLER             PIC X(15).                                    
+           03  TR-CODE            PIC X(4).                                     
+           03  WH-IN              PIC 9(9).                                     
+           03  DI-IN              PIC 9(9).                                     
+           03  THRESHOLD-IN       PIC 9(9).                                     
+       01  DB2-RETURN-CODE.                                                     
+           03  FILLER   PIC X(8) VALUE 'HEREITIS'.                              
+           03  SQLCODE-OUT        PIC S9(9).                                    
+       01  WORKSPOT.                                                            
+           03  TRAN-CODE          PIC X(4).                                     
+           03  NUMBER1            PIC 9(9).                                     
+           03  NUMBER2            PIC 9(9).                                     
+           03  FILLER             PIC X(58).                                    
+       01  OUTSPOT.                                                             
+           03  NUMBER-2           PIC 9(9).                                     
+           03  NUMBER-1           PIC 9(9).                                     
+           03  TRANS-CODE         PIC X(4).                                     
+           03  FILLER             PIC X(18) VALUE SPACES.                       
+                                                                                
+       PROCEDURE DIVISION.                                                      
+      *(1A)                                                                     
+      *                                                                         
+      *    EXEC SQL WHENEVER SQLERROR CONTINUE END-EXEC.                        
+      *                                                                         
+           EXEC CICS HANDLE CONDITION MAPFAIL (FAILMAP) END-EXEC.               
+      *                                                                         
+      *    MOVE 'TRY AGAIN' TO INFLD1O.                                         
+      *                                                                         
+           EXEC CICS RECEIVE MAP('DJYSQLA')                                     
+                             MAPSET('DJYSQLA')                                  
+                             END-EXEC.                                          
+      *                                                                         
+       FAILMAP.                                                                 
+      *                                                                         
+           DISPLAY 'WH-IN', WH-IN.                                              
+           DISPLAY 'DI-IN', DI-IN.                                              
+           DISPLAY 'THRESHOLD-IN', THRESHOLD-IN.                                
+           MOVE WH-IN TO WH.                                                    
+           MOVE DI-IN TO DI.                                                    
+           MOVE THRESHOLD-IN TO THRESHOLD.                                      
+           PERFORM STOCK-LEVEL-SQL.                                             
+           DISPLAY 'HERE0001'.                                                  
+           MOVE TR-CODE TO TRANS-CODE.                                          
+           MOVE STOCK-COUNT TO NUMBER-1.                                        
+           MOVE SQLCODE TO NUMBER-2.                                            
+           MOVE OUTSPOT TO INFLD1O.                                             
+      *                                                                         
+           EXEC CICS SEND MAP('DJYSQLA')                                        
+                          MAPSET('DJYSQLA')                                     
+                          ERASEAUP                                              
+                          CURSOR(1)                                             
+                          LAST                                                  
+                          END-EXEC.                                             
+      *                                                                         
+           EXEC CICS RETURN  END-EXEC.                                          
+           GOBACK.                                                              
+       STOCK-LEVEL-SQL.                                                         
+                                                                                
+                                                                                
+           EXEC SQL SELECT D_NEXT_O_ID INTO :O-ID                               
+           FROM DJY00.DISTRICT                                                  
+           WHERE D_W_ID = :WH                                                   
+           AND D_ID = :DI                                                       
+           END-EXEC.                                                            
+                                                                                
+           DISPLAY 'SQL0001', SQLCODE.                                          
+           EXEC SQL SELECT COUNT(DISTINCT (S_I_ID)) INTO :STOCK-COUNT           
+           FROM DJY00.ORDERLINE, DJY00.STOCK                                    
+           WHERE OL_W_ID = :WH                                                  
+             AND OL_D_ID = :DI                                                  
+             AND OL_O_ID < :O-ID                                                
+             AND OL_O_ID >= :O-ID - 21                                          
+             AND S_W_ID = :WH                                                   
+             AND S_I_ID = OL_I_ID                                               
+             AND S_QUANTITY < :THRESHOLD                                        
+           END-EXEC.                                                            
+           DISPLAY 'SQL0002', SQLCODE.                                          
+       SQL-ERROR.                                                               
+           IF  SQLCODE NOT = 100                                                
+           DISPLAY  SQLCAID, SQLCABC, SQLCODE, SQLERRM,                         
+           SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),                    
+           SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6).                      

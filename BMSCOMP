@@ -1,0 +1,73 @@
+//BMSMAP   JOB   0,YOUNG,MSGLEVEL=(1,1),                                00001000
+//         MSGCLASS=Y,NOTIFY=DJY00                                      00002004
+//**********************************************************************00003000
+//*  NAME = DSNTEJ5C                                                   *00004000
+//*                                                                    *00005000
+//*  DESCRIPTIVE NAME = DB2 SAMPLE APPLICATION                         *00006000
+//*                     PHASE 5                                        *00007000
+//*                     COBOL, CICS                                    *00008000
+//*                                                                    *00009000
+//*    COPYRIGHT = 5665-DB2 (C) COPYRIGHT IBM CORP 1982, 1989          *00010000
+//*    REFER TO COPYRIGHT INSTRUCTIONS FORM NUMBER G120-2083           *00020000
+//*                                                                    *00021000
+//*    STATUS = VERSION 2 RELEASE 2, LEVEL 0                           *00022000
+//*                                                                    *00023000
+//*  FUNCTION = THIS JCL PERFORMS THE PHASE 5 SETUP FOR THE SAMPLE     *00024000
+//*             APPLICATIONS AT SITES WITH COBOL.  IT PREPARES THE     *00025000
+//*             COBOL CICS PROGRAM.                                    *00026000
+//*                                                                    *00027000
+//*             RUN THIS JOB ANYTIME AFTER PHASE 2.                    *00028000
+//**********************************************************************00029000
+//*                                                                     00030000
+//JOBLIB  DD  DISP=SHR,                                                 00030104
+//            DSN=DSN410.SDSNLOAD                                       00030204
+//        DD  DISP=SHR,                                                 00030304
+//            DSN=CICS410.SDFHLOAD                                      00030404
+//DFHASMVS PROC ASMBLR=ASMA90,     ASSEMBLER PROGRAM NAME               00031004
+// LIST='LIST,XREF(FULL),ALIGN',   ASSEMBLER OPTIONS                    00032004
+// INDEX='CICS410',                HIGH-LEVEL-QUALIFIER(S)              00033004
+// DISTTRG=S,                      DISTRIBUTION (A) OR TARGET (S) LIBS  00034004
+// OUTC=A,                         PRINT OUTPUT CLASS                   00035004
+// REG=2M,                         REGION SIZE                          00036004
+// WORK=3390                       WORK DISK UNIT TYPE                  00037004
+//*                                                                     00038004
+//ASSEM    EXEC PGM=&ASMBLR,                                            00039004
+// REGION=&REG,                                                         00039104
+// PARM='DECK,NOOBJECT,&LIST'                                           00039204
+//SYSLIB DD DSN=&INDEX..&DISTTRG.DFHMAC,DISP=SHR                        00039304
+//       DD DSN=&INDEX..&DISTTRG.DFHSRC,DISP=SHR                        00039404
+//       DD DSN=SYS1.MACLIB,DISP=SHR                                    00039504
+//       DD DSN=SYS1.MODGEN,DISP=SHR                                    00039604
+//SYSUT1 DD UNIT=&WORK,SPACE=(1700,(400,400))                           00039704
+//SYSUT2 DD UNIT=&WORK,SPACE=(1700,(400,400))                           00039804
+//SYSUT3 DD UNIT=&WORK,SPACE=(1700,(400,400))                           00039904
+//SYSPRINT DD SYSOUT=&OUTC                                              00040004
+// PEND                                                                 00040104
+//*       STEP  1: CREATE CICS LOGICAL MAP                              00080000
+//MAPG    EXEC DFHASMVS,PARM='DECK,NOOBJECT,SYSPARM(DSECT)',            00090000
+//             OUTC='*'                                                 00100000
+//*            OUTC='*',MOD=TEMP                                        00101000
+//SYSIN    DD  DISP=SHR,                                                00102000
+//             DSN=DJY00.TPCC.WORKLOAD(BMSMSL)  <====                   00103002
+//SYSPUNCH DD  DISP=OLD,                                                00104000
+//             DSN=DSN410.SRCLIB.DATA(BMSMSL)   <====                   00105002
+//*                                                                     00106000
+//*        STEP  5: CREATE THE CICS BMS PHYSICAL MAP                    00107000
+//*APGP    EXEC DFHASMVS,COND=(4,LT),OUTC='*',MOD=TEMP                  00108000
+//MAPGP    EXEC DFHASMVS,COND=(4,LT),OUTC='*'                           00109000
+//SYSPUNCH DD DSN=&&TEMP,UNIT=3390,DISP=(,PASS),                        00110000
+//         DCB=(RECFM=F,BLKSIZE=80),SPACE=(1024,(100,10))               00120000
+//SYSIN    DD DISP=SHR,                                                 00130000
+//            DSN=DJY00.TPCC.WORKLOAD(BMSMSL)   <====                   00140004
+//*                                                                     00150000
+//*        STEP  6: LINKEDIT THE CICS BMS PHYSICAL MAP                  00160000
+//MAPGL    EXEC PGM=IEWL,PARM='LIST,LET,XREF',COND=(4,LT)               00170000
+//SYSUT1   DD UNIT=3390,SPACE=(1024,(100,10))                           00180000
+//SYSLMOD  DD DISP=SHR,                                                 00190000
+//            DSN=DSN410.RUNLIB.LOAD                                    00200003
+//SYSPRINT DD SYSOUT=*                                                  00210000
+//SYSUDUMP DD SYSOUT=*                                                  00220000
+//SYSLIN   DD DSN=&&TEMP,DISP=(OLD,DELETE)                              00230000
+//         DD *                                                         00240000
+ NAME BMSMSL(R)                                                         00250001
+//*                                             <====                   00260000

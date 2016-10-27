@@ -1,0 +1,1 @@
+ALTER TABLESPACE TPCCDB.OLTS LOCKSIZE PAGE;                             00010000

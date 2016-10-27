@@ -1,0 +1,20 @@
+//CCD2PREP JOB (D3330RWM,ROOM),'D J YOUNG',MSGCLASS=R,USER= DAVID       00010000
+//COMPIT EXEC DSNHCC,LOADMOD=TRSLPR,MEM=TRSLPR                          00020001
+//PC.SYSIN DD DSN=DAVID.TPCC.WORKLOAD(TRSLPR),DISP=SHR                  00030001
+//LKED.SYSIN DD *                                                       00040000
+  INCLUDE SYSLIB(DSNCLI)                                                00050000
+//*                                                                     00060000
+//*        STEP  4: BIND THE PROGRAM                                    00070000
+//BIND     EXEC PGM=IKJEFT01,DYNAMNBR=20,COND=(4,LT)                    00080000
+//STEPLIB  DD DSN=SYS1.DSN310.SDSNLOAD,DISP=SHR                         00090000
+//DBRMLIB  DD DISP=SHR,                                                 00100000
+//            DSN=DSN310.DBRMLIB.DATA                                   00110000
+//SYSUDUMP DD SYSOUT=*                                                  00120000
+//SYSTSPRT DD SYSOUT=*                                                  00130000
+//SYSPRINT DD SYSOUT=*                                                  00140000
+//SYSTSIN  DD *                                                         00150000
+DSN SYSTEM(DB3)                                                         00160000
+BIND PLAN(TRSLPR) MEMBER(TRSLPR) ACT(REP) ISO(CS) EXPLAIN(YES) -        00170001
+ VALIDATE(BIND)                                                         00180000
+END                                                                     00190000
+//*                                                                     00200000

@@ -1,0 +1,93 @@
+//RANDAS09 JOB (330RWM00,),'D J YOUNG',MSGCLASS=Y,REGION=4096K,                 
+//       USER=DJY00,NOTIFY=DJY00                                                
+//*                                                                             
+//ASMCL PROC                                                                    
+//ASS2  EXEC PGM=ASMA90,PARM='OBJECT,NODECK',REGION=4096K                       
+//SYSLIB   DD  DISP=SHR,                                                        
+//         DSN=SYS1.MACLIB                                                      
+//SYSLIN   DD  DSN=&&LOADSET,DISP=(MOD,PASS),                                   
+//             UNIT=3390,                                                       
+//             SPACE=(TRK,(3,3))                                                
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSUDUMP DD  SYSOUT=*                                                         
+//SYSUT1   DD  UNIT=3390,SPACE=(800,(50,50),,,ROUND)                            
+//SYSUT2   DD  UNIT=3390,SPACE=(800,(50,50),,,ROUND)                            
+//SYSUT3   DD  UNIT=3390,SPACE=(800,(50,50),,,ROUND)                            
+//LKED     EXEC  PGM=IEWL,PARM='LIST,XREF,NCAL,MAP',COND=(5,LT,ASS2),           
+//             REGION=1024K                                                     
+//SYSLIN   DD  DSNAME=&&LOADSET,DISP=(OLD,DELETE)                               
+//         DD  DDNAME=SYSIN                                                     
+//SYSLMOD  DD  DSNAME=DJY00.RAND.SRCLIB(&LODMOD),DISP=SHR                       
+//SYSUT1   DD  UNIT=3390,SPACE=(CYL,(1,1))                                      
+//SYSPRINT DD  SYSOUT=*                                                         
+// PEND                                                                         
+//SURF2SQL EXEC PROC=ASMCL,LODMOD=RANDAS09                                      
+//ASS2.SYSIN DD *                                                               
+R0       EQU   0                                                                
+R1       EQU   1                                                                
+R2       EQU   2                                                                
+R3       EQU   3                                                                
+R4       EQU   4                                                                
+R5       EQU   5                                                                
+R6       EQU   6                                                                
+R7       EQU   7                                                                
+R8       EQU   8                                                                
+R9       EQU   9                                                                
+R10      EQU   10                                                               
+R11      EQU   11                                                               
+R12      EQU   12                                                               
+R13      EQU   13                                                               
+R14      EQU   14                                                               
+R15      EQU   15                                                               
+**********************************************************************          
+*                                                                               
+*                                                                               
+**********************************************************************          
+RANDAS09  CSECT                                                                 
+          STM   R14,R12,12(R13)                                                 
+          BAL   R14,80(R15)                                                     
+          DC    18F'-1'                                                         
+          ST    R13,4(R14)                                                      
+          ST    R14,8(R13)                                                      
+          LR    R13,R14                                                         
+          USING RANDAS09+8,R13                                                  
+*(1)                                                                            
+          LM    R2,R3,0(R1)          R2 --> FLAG, R3 --> RETURN F               
+          CLI   0(R2),C'Y'           FIRST TIME THROUGH?                        
+          BNE   SKIP                 SKIP AROUND IF NOT                         
+          LM    R4,R7,8(R1)          GET OTHER PARMS                            
+          L     R4,0(R4)             GET SEED                                   
+          ST    R4,XVALUE            STORE IT                                   
+          L     R5,0(R5)             GET LOWER BOUND                            
+          ST    R5,LOWER             SAVE IT                                    
+          L     R6,0(R6)             GET UPPER BOUND                            
+          ST    R6,UPPER             SAVE IT                                    
+          L     R7,0(R7)             GET RANGE2                                 
+          ST    R7,RANGE2            SAVE IT                                    
+*(2)                                                                            
+SKIP      L     1,=F'16807'                                                     
+          SR    0,0                                                             
+          SPM   0                                                               
+          M     0,XVALUE                                                        
+          SLDA  0,1                                                             
+          SRL   1,1                                                             
+          AR    1,0                                                             
+          BNO   NOVERFLW                                                        
+OVERFLOW  SL    1,=X'7FFFFFFF'                                                  
+NOVERFLW  ST    1,XVALUE                                                        
+          M     0,RANGE2                                                        
+          A     0,LOWER                                                         
+          SPM   10                                                              
+*(3)                                                                            
+          ST    R0,0(R3)            SAVE RANDOM NUMBER                          
+*         DC    X'00'                                                           
+          L     R13,4(R13)          RESTORE POINTER                             
+          LM    R14,R12,12(R13)     RESTORE SAVEAREA                            
+          BR    R14                                                             
+          LTORG                                                                 
+          DC    C'HERE IT IS'                                                   
+XVALUE    DC    F'8'                                                            
+LOWER     DC    F'1'                                                            
+UPPER     DC    F'40000000'                                                     
+RANGE2    DC    F'80000000'                                                     
+          END                                                                   

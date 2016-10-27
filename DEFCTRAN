@@ -1,0 +1,36 @@
+//DEFCTRAN JOB 'CHAO     ',CHAO,MSGCLASS=X,NOTIFY=CHAO,MSGLEVEL=(1,1)   00010000
+//DEFCTRAN EXEC  PGM=DFHCSDUP                                           00020000
+//STEPLIB  DD  DSN=CICS330.SDFHLOAD,DISP=SHR                            00030000
+//DFHCSD  DD  DSN=IICS330.DFHCSD,DISP=SHR                               00040000
+//SYSPRINT  DD  SYSOUT=*                                                00050000
+//SYSIN  DD  *                                                          00060000
+*/********************************************************************/ 00070000
+*/*                                                                  */ 00080000
+*/*  LICENSED MATERIALS - PROPERTY OF IBM                            */ 00090000
+*/*                                                                  */ 00100000
+*/*    5688-198  (C) COPYRIGHT IBM CORP. 1991, 1993.                 */ 00110000
+*/*    ALL RIGHTS RESERVED.                                          */ 00120000
+*/*                                                                  */ 00130000
+*/*  SEE COPYRIGHT INSTRUCTIONS.                                     */ 00140000
+*/*                                                                  */ 00150000
+*/********************************************************************/ 00160000
+                                                                        00170000
+DELETE GROUP(CEEAPPS)                                                   00180000
+DEFINE TRANSACTION(CCFM) GROUP(CEEAPPS) PROGRAM(DFHDMU)                 00190000
+DEFINE TRANSACTION(C101) GROUP(CEEAPPS) PROGRAM(DFHCC2)                 00191000
+DEFINE TRANSACTION(FMSL) GROUP(CEEAPPS) PROGRAM(FRMTSL)                 00191101
+DEFINE TRANSACTION(TRSL) GROUP(CEEAPPS) PROGRAM(TRSLPR)                 00191203
+DEFINE PROGRAM(DFHDMU) GROUP(CEEAPPS) LANG(LE370) CEDF(YES)             00192000
+ EXECKEY(USER)                                                          00193000
+DEFINE PROGRAM(DFHCC2) GROUP(CEEAPPS) LANG(LE370) CEDF(YES)             00194000
+ EXECKEY(USER)                                                          00195000
+DEFINE PROGRAM(FRMTSL) GROUP(CEEAPPS) LANG(LE370) CEDF(YES)             00195101
+ EXECKEY(USER)                                                          00195200
+DEFINE PROGRAM(TRSLPR) GROUP(CEEAPPS) LANG(LE370) CEDF(YES)             00195303
+ EXECKEY(USER)                                                          00195403
+DEFINE MAPSET(DFHCD2) GROUP(CEEAPPS)                                    00195500
+DEFINE MAPSET(BMSMSL) GROUP(CEEAPPS)                                    00195602
+ADD GROUP(CEEAPPS) LIST(TLIST)                                          00195700
+LIST LIST(TLIST) OBJECTS                                                00195800
+/*                                                                      00195900
+//                                                                      00196000

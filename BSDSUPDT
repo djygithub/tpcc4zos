@@ -1,0 +1,20 @@
+//BSDSUPDT JOB (AAA),'D J YOUNG',MSGCLASS=Y,TIME=1440,USER=DJY00,               
+//  NOTIFY=DJY00                                                                
+//BSDSDDF  EXEC PGM=DSNJU003                                                    
+//STEPLIB DD DSN=DSN410.SDSNLOAD,DISP=SHR                                       
+//SYSUT1 DD DSN=DSN2.DB1G.BSDS01,DISP=SHR                                       
+//SYSUT2 DD DSN=DSN2.DB1G.BSDS02,DISP=SHR                                       
+//SYSPRINT DD SYSOUT=*                                                          
+//SYSIN    DD *                                                                 
+  DELETE DSNAME=DSN2.DB1G.LOGCOPY1.DS01                                         
+  DELETE DSNAME=DSN2.DB1G.LOGCOPY1.DS02                                         
+  DELETE DSNAME=DSN2.DB1G.LOGCOPY1.DS03                                         
+//BSDSDDF  EXEC PGM=DSNJU003                                                    
+//STEPLIB DD DSN=DSN410.SDSNLOAD,DISP=SHR                                       
+//SYSUT1 DD DSN=DSN2.DB2G.BSDS01,DISP=SHR                                       
+//SYSUT2 DD DSN=DSN2.DB2G.BSDS02,DISP=SHR                                       
+//SYSPRINT DD SYSOUT=*                                                          
+//SYSIN    DD *                                                                 
+  DELETE DSNAME=DSN2.DB2G.LOGCOPY1.DS01                                         
+  DELETE DSNAME=DSN2.DB2G.LOGCOPY1.DS02                                         
+  DELETE DSNAME=DSN2.DB2G.LOGCOPY1.DS03                                         

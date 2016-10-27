@@ -1,0 +1,438 @@
+//DSNTEJ1  JOB (330RWM00,),'D J YOUNG',MSGCLASS=Y,REGION=4096K,                 
+//       USER=DJY00,NOTIFY=DJY00                                                
+//**********************************************************************00010000
+//*  NAME = DSNTEJ1                                                    *00020000
+//*                                                                    *00030000
+//*  DESCRIPTIVE NAME = DB2 SAMPLE APPLICATION                         *00040000
+//*                     PHASE 1 (LOCAL SITE ONLY)                      *00050000
+//*                                                                    *00060000
+//*    LICENSED MATERIALS - PROPERTY OF IBM                            *00070000
+//*    5695-DB2                                                        *00080000
+//*    (C) COPYRIGHT 1982, 1995 IBM CORP.  ALL RIGHTS RESERVED.        *00090000
+//*                                                                    *00100000
+//*    STATUS = VERSION 4                                              *00110000
+//*                                                                    *00120000
+//*  FUNCTION = THIS JCL PERFORMS THE PHASE 1 SETUP FOR THE SAMPLE     *00130000
+//*             APPLICATIONS ON A LOCAL DB2 SYSTEM (A SYSTEM WHICH     *00140000
+//*             WILL CONTAIN THE ACTUAL SAMPLE TABLES).                *00150000
+//*                                                                   */00160000
+//* CHANGE ACTIVITY =                                                 */00170000
+//**********************************************************************00180000
+//*                                                                     00190000
+//*       ASMCL PROC  - ASSEMBLE AND LINKEDIT AN ASM PROGRAM            00200000
+//*                                                                     00210000
+//JOBLIB  DD  DSN=DSN410.SDSNLOAD,DISP=SHR                              00220000
+//*                                                                     00230000
+//ASMCL  PROC WSPC=500,MEM=TEMPNAME                                     00240000
+//*                                                                     00250000
+//*            ASSEMBLE                                                 00260000
+//*                                                                     00270000
+//ASM     EXEC PGM=ASMA90,PARM='OBJECT,NODECK'                          00280000
+//SYSIN    DD  DSN=DSN410.SDSNSAMP(&MEM),                               00290000
+//             DISP=SHR                                                 00300000
+//SYSLIB   DD  DSN=SYS1.MACLIB,DISP=SHR                                 00310000
+//         DD  DSN=DSN410.SDSNMACS,DISP=SHR                             00320000
+//         DD  DSN=DSN410.SDSNSAMP,DISP=SHR                             00330000
+//SYSLIN   DD  DSN=&&LOADSET,DISP=(MOD,PASS),UNIT=3390,                 00340000
+//             SPACE=(800,(&WSPC,&WSPC)),DCB=(BLKSIZE=800)              00350000
+//SYSPRINT DD  SYSOUT=*                                                 00360000
+//SYSUDUMP DD  SYSOUT=*                                                 00370000
+//SYSUT1   DD  UNIT=3390,SPACE=(800,(&WSPC,&WSPC),,,ROUND)              00380000
+//SYSUT2   DD  UNIT=3390,SPACE=(800,(&WSPC,&WSPC),,,ROUND)              00390000
+//SYSUT3   DD  UNIT=3390,SPACE=(800,(&WSPC,&WSPC),,,ROUND)              00400000
+//*                                                                     00410000
+//*            LINKEDIT IF THE ASSEMBLER                                00420000
+//*            RETURN CODE IS 4 OR LESS                                 00430000
+//*                                                                     00440000
+//LKED    EXEC PGM=IEWL,PARM='LIST,XREF,NCAL',                          00450000
+//             COND=(4,LT,ASM)                                          00460000
+//SYSLIN   DD  DSN=&&LOADSET,DISP=(OLD,DELETE)                          00470000
+//SYSLMOD  DD  DSN=DSN410.SDSNEXIT(&MEM),DISP=SHR                       00480000
+//SYSPRINT DD  SYSOUT=*                                                 00490000
+//SYSUDUMP DD  SYSOUT=*                                                 00500000
+//SYSUT1   DD  UNIT=3390,SPACE=(1024,(50,50))                           00510000
+//ASMCL  PEND                                                           00520000
+//*                                                                     00530000
+//*        STEP 10: LOAD DATA INTO SAMPLE PROGRAM TABLES                09290000
+//PH01S10 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  09300000
+//SORTLIB  DD  DSN=SYS1.ICELIB,DISP=SHR                                 09310000
+//SORTOUT  DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09320000
+//SORTWK01 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09330000
+//SORTWK02 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09340000
+//SORTWK03 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09350000
+//SORTWK04 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09360000
+//DSNTRACE DD  SYSOUT=*                                                 09370000
+//SYSRECDT DD  DSN=DSN410.SDSNSAMP(DSN8LDT),                            09380000
+//             DISP=SHR                                                 09390000
+//SYSRECOV DD  DSN=DSN410.SDSNSAMP(DSN8LOV),                            09400000
+//             DISP=SHR                                                 09410000
+//SYSUT1   DD  UNIT=3390,SPACE=(4000,(50,50),,,ROUND)                   09420000
+//SYSIN    DD  *                                                        09430000
+                                                                        09440000
+ LOAD DATA INDDN(SYSRECOV) CONTINUEIF(72:72)='X'                        09450000
+      INTO TABLE DSN8410.TOPTVAL                                        09460000
+           (MAJSYS   POSITION(  2) CHAR(1),                             09470000
+            ACTION   POSITION(  4) CHAR(1),                             09480000
+            OBJECT   POSITION(  6) CHAR(2),                             09490000
+            SRCHCRIT POSITION(  9) CHAR(2),                             09500000
+            SCRTYPE  POSITION( 12) CHAR(1),                             09510000
+            HEADTXT  POSITION( 80) CHAR(50),                            09520000
+            SELTXT   POSITION(159) CHAR(50),                            09530000
+            INFOTXT  POSITION(238) CHAR(71),                            09540000
+            HELPTXT  POSITION(317) CHAR(71),                            09550000
+            PFKTXT   POSITION(396) CHAR(71),                            09560000
+            DSPINDEX POSITION(475) CHAR(2))                             09570000
+                                                                        09580000
+ LOAD DATA INDDN(SYSRECDT) CONTINUEIF(72:72)='X' RESUME(YES)            09590000
+      INTO TABLE DSN8410.TDSPTXT                                        09600000
+           (DSPINDEX POSITION( 2) CHAR(2),                              09610000
+            LINENO   POSITION( 6) CHAR(2),                              09620000
+            DSPLINE  POSITION(80) CHAR(71))                             09630000
+                                                                        09640000
+//*        STEP 11: LOAD DATA INTO SAMPLE APPLICATION TABLES            09650000
+//PH01S11 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  09660000
+//SYSUT1   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09670000
+//SORTLIB  DD  DSN=SYS1.ICELIB,DISP=SHR                                 09680000
+//SORTOUT  DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09690000
+//SORTWK01 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09700000
+//SORTWK02 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09710000
+//SORTWK03 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09720000
+//SORTWK04 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09730000
+//DSNTRACE DD  SYSOUT=*                                                 09740000
+//SYSRECAC DD  DSN=DSN410.SDSNSAMP(DSN8LAC),                            09750000
+//             DISP=SHR                                                 09760000
+//SYSRECDP DD  DSN=DSN410.SDSNSAMP(DSN8LDP),                            09770000
+//             DISP=SHR                                                 09780000
+//SYSRECEM DD  DSN=DSN410.SDSNSAMP(DSN8LEM),                            09790000
+//             DISP=SHR                                                 09800000
+//SYSRECEP DD  DSN=DSN410.SDSNSAMP(DSN8LEP),                            09810000
+//             DISP=SHR                                                 09820000
+//SYSRECPA DD  DSN=DSN410.SDSNSAMP(DSN8LPA),                            09830000
+//             DISP=SHR                                                 09840000
+//SYSRECPJ DD DSN=DSN410.SDSNSAMP(DSN8LPJ),                             09850000
+//             DISP=SHR                                                 09860000
+//SYSERR   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09870000
+//SYSDISC  DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09880000
+//SYSMAP   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   09890000
+//SYSIN    DD  *                                                        09900000
+                                                                        09910000
+ LOAD DATA INDDN(SYSRECDP)                                              09920000
+      INTO TABLE DSN8410.DEPT                                           09930000
+           (DEPTNO   POSITION( 1) CHAR(3),                              09940000
+            DEPTNAME POSITION( 5) VARCHAR,                              09950000
+            MGRNO    POSITION(37) CHAR(6) NULLIF(MGRNO='      '),       09960000
+            ADMRDEPT POSITION(44) CHAR(3),                              09970000
+            LOCATION POSITION(48) CHAR(16))                             09980000
+      ENFORCE NO                                                        09990000
+                                                                        10000000
+ LOAD DATA INDDN(SYSRECEM) CONTINUEIF(72:72)='X'                        10010000
+      INTO TABLE DSN8410.EMP                                            10020000
+           (EMPNO     POSITION( 1)  CHAR(6),                            10030000
+            FIRSTNME  POSITION( 8)  VARCHAR,                            10040000
+            MIDINIT   POSITION(21)  CHAR(1),                            10050000
+            LASTNAME  POSITION(23)  VARCHAR,                            10060000
+            WORKDEPT  POSITION(36)  CHAR(3),                            10070000
+            PHONENO   POSITION(40)  CHAR(4),                            10080000
+            HIREDATE  POSITION(45)  DATE EXTERNAL,                      10090000
+            JOB       POSITION(56)  CHAR(8),                            10100000
+            EDLEVEL   POSITION(65)  INTEGER EXTERNAL(2),                10110000
+            SEX       POSITION(68)  CHAR(1),                            10120000
+            BIRTHDATE POSITION(80)  DATE EXTERNAL,                      10130000
+            SALARY    POSITION(91)  INTEGER EXTERNAL(5),                10140000
+            BONUS     POSITION(97)  INTEGER EXTERNAL(5),                10150000
+            COMM      POSITION(103) INTEGER EXTERNAL(5))                10160000
+      ENFORCE CONSTRAINTS MAPDDN SYSMAP                                 10170000
+                                                                        10180000
+ LOAD DATA INDDN(SYSRECPJ) RESUME YES CONTINUEIF(72:72)='X'             10190000
+      INTO TABLE DSN8410.PROJ                                           10200000
+           (PROJNO   POSITION( 1) CHAR(6),                              10210000
+            PROJNAME POSITION( 8) VARCHAR,                              10220000
+            DEPTNO   POSITION(33) CHAR(3),                              10230000
+            RESPEMP  POSITION(37) CHAR(6),                              10240000
+            PRSTAFF  POSITION(44) DECIMAL EXTERNAL(5),                  10250000
+            PRSTDATE POSITION(50) DATE EXTERNAL,                        10260000
+            PRENDATE POSITION(61) DATE EXTERNAL,                        10270000
+            MAJPROJ  POSITION(80) CHAR(6) NULLIF(MAJPROJ='      '))     10280000
+      ENFORCE NO                                                        10290000
+                                                                        10300000
+ LOAD DATA INDDN(SYSRECAC) RESUME YES                                   10310000
+      INTO TABLE DSN8410.ACT                                            10320000
+           (ACTNO    POSITION( 1) INTEGER EXTERNAL(3),                  10330000
+            ACTKWD   POSITION( 5) CHAR(6),                              10340000
+            ACTDESC  POSITION(13) VARCHAR)                              10350000
+      ENFORCE NO                                                        10360000
+                                                                        10370000
+ LOAD DATA INDDN(SYSRECPA) RESUME YES                                   10380000
+      INTO TABLE DSN8410.PROJACT                                        10390000
+           (PROJNO   POSITION( 1) CHAR(6),                              10400000
+            ACTNO    POSITION( 8) INTEGER EXTERNAL(3),                  10410000
+            ACSTAFF  POSITION(12) DECIMAL EXTERNAL(5),                  10420000
+            ACSTDATE POSITION(18) DATE EXTERNAL,                        10430000
+            ACENDATE POSITION(29) DATE EXTERNAL)                        10440000
+      ENFORCE NO                                                        10450000
+                                                                        10460000
+ LOAD DATA INDDN(SYSRECEP) RESUME YES                                   10470000
+      INTO TABLE DSN8410.EMPPROJACT                                     10480000
+           (EMPNO    POSITION( 1) CHAR(6),                              10490000
+            PROJNO   POSITION( 8) CHAR(6),                              10500000
+            ACTNO    POSITION(16) INTEGER EXTERNAL(3),                  10510000
+            EMPTIME  POSITION(20) DECIMAL EXTERNAL(5),                  10520000
+            EMSTDATE POSITION(26) DATE EXTERNAL,                        10530000
+            EMENDATE POSITION(37) DATE EXTERNAL)                        10540000
+      ENFORCE NO                                                        10550000
+                                                                        10560000
+//*        STEP 12: CHECK DATA FOR REFERENTIAL INTEGRITY                10570000
+//PH01S12 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  10580000
+//SYSUT1   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   10590000
+//SORTLIB  DD  DSN=SYS1.ICELIB,DISP=SHR                                 10600000
+//SORTOUT  DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   10610000
+//SORTWK01 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   10620000
+//SORTWK02 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   10630000
+//SORTWK03 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   10640000
+//SORTWK04 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   10650000
+//DSNTRACE DD  SYSOUT=*                                                 10660000
+//SYSERR   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   10670000
+//SYSIN    DD  *                                                        10680000
+                                                                        10690000
+ CHECK DATA TABLESPACE DSN8D41A.DSN8S41D                                10700000
+            TABLESPACE DSN8D41A.DSN8S41E                                10710000
+            TABLESPACE DSN8D41A.DSN8S41P                                10720000
+       SCOPE ALL                                                        10730000
+       DELETE YES                                                       10740000
+       FOR EXCEPTION IN DSN8410.DEPT       USE DSN8410.EDEPT            10750000
+                     IN DSN8410.EMP        USE DSN8410.EEMP             10760000
+                     IN DSN8410.PROJ       USE DSN8410.EPROJ            10770000
+                     IN DSN8410.ACT        USE DSN8410.EACT             10780000
+                     IN DSN8410.PROJACT    USE DSN8410.EPROJACT         10790000
+                     IN DSN8410.EMPPROJACT USE DSN8410.EEPA             10800000
+       EXCEPTIONS 50                                                    10810000
+       SORTDEVT SYSDA                                                   10820000
+                                                                        10830000
+//*        STEP 13: ESTABLISH A QUIESCE POINT                           10840000
+//PH01S13 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  10850000
+//* NOTE: CONDITION CODE 4 INDICATES AN IMAGE COPY CANNOT BE TAKEN      10860000
+//SYSUT1   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   10870000
+//SYSIN    DD  *                                                        10880000
+                                                                        10890000
+ QUIESCE TABLESPACE DSN8D41A.DSN8S41D                                   10900000
+         TABLESPACE DSN8D41A.DSN8S41E                                   10910000
+         TABLESPACE DSN8D41A.DSN8S41P                                   10920000
+                                                                        10930000
+//*        STEP 14: TAKE IMAGE COPY OF SAMPLE TABLES                    10940000
+//PH01S14 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  10950000
+//DSNTRACE DD  SYSOUT=*                                                 10960000
+//SYSCOPY  DD  DSN=DSN410.SYSCOPY.DSN8D41A.DSN8S41D,                    10970000
+//             UNIT=3390,DISP=(NEW,CATLG),SPACE=(4000,(20,20)),         10980000
+//             VOL=SER=DB22SY                                           10990000
+//SYSCOPY2 DD  DSN=DSN410.SYSCOPY.DSN8D41A.DSN8S41E,                    11000000
+//             UNIT=3390,DISP=(NEW,CATLG),SPACE=(4000,(20,20)),         11010000
+//             VOL=SER=DB22SY                                           11020000
+//SYSCOPY3 DD  DSN=DSN410.SYSCOPY.DSN8D41P.DSN8S41C,                    11030000
+//             UNIT=3390,DISP=(NEW,CATLG),SPACE=(4000,(20,20)),         11040000
+//             VOL=SER=DB22SY                                           11050000
+//SYSCOPY4 DD  DSN=DSN410.SYSCOPY.DSN8D41A.DSN8S41P,                    11060000
+//             UNIT=3390,DISP=(NEW,CATLG),SPACE=(4000,(20,20)),         11070000
+//             VOL=SER=DB22SY                                           11080000
+//SYSIN    DD  *                                                        11090000
+                                                                        11100000
+ COPY TABLESPACE DSN8D41A.DSN8S41D                                      11110000
+                                                                        11120000
+ COPY TABLESPACE DSN8D41A.DSN8S41E COPYDDN SYSCOPY2                     11130000
+                                                                        11140000
+ COPY TABLESPACE DSN8D41P.DSN8S41C COPYDDN SYSCOPY3                     11150000
+                                                                        11160000
+ COPY TABLESPACE DSN8D41A.DSN8S41P COPYDDN SYSCOPY4                     11170000
+                                                                        11180000
+//*        STEP 15: ESTABLISH A QUIESCE POINT USING ONLY IMAGE COPIES   11190000
+//PH01S15 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  11200000
+//SYSUT1   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11210000
+//SYSIN    DD  *                                                        11220000
+                                                                        11230000
+ QUIESCE TABLESPACE DSN8D41A.DSN8S41D                                   11240000
+         TABLESPACE DSN8D41A.DSN8S41E                                   11250000
+         TABLESPACE DSN8D41A.DSN8S41P                                   11260000
+                                                                        11270000
+//*                                                                     11280000
+//*        STEP 16: REORGANIZE TABLESPACES, PRODUCE STATISTICS          11290000
+//PH01S16 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  11300000
+//SORTLIB  DD  DSN=SYS1.ICELIB,DISP=SHR                                 11310000
+//SORTOUT  DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11320000
+//SORTWK01 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11330000
+//SORTWK02 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11340000
+//SORTWK03 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11350000
+//SORTWK04 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11360000
+//DSNTRACE DD  SYSOUT=*                                                 11370000
+//SYSUT1   DD  UNIT=3390,SPACE=(4000,(50,50),,,ROUND)                   11380000
+//SYSREC   DD  UNIT=3390,SPACE=(4000,(200,200),,,ROUND)                 11390000
+//SYSIN    DD  *                                                        11400000
+                                                                        11410000
+ REORG TABLESPACE DSN8D41A.DSN8S41D SORTDEVT(SYSDA)                     11420000
+                                                                        11430000
+ RUNSTATS TABLESPACE DSN8D41A.DSN8S41D                                  11440000
+         INDEX(ALL)                                                     11450000
+                                                                        11460000
+ RUNSTATS TABLESPACE DSN8D41A.DSN8S41E                                  11470000
+         INDEX(ALL)                                                     11480000
+                                                                        11490000
+ RUNSTATS TABLESPACE DSN8D41A.DSN8S41P                                  11500000
+         INDEX(ALL)                                                     11510000
+                                                                        11520000
+                                                                        11530000
+ RUNSTATS TABLESPACE DSN8D41P.DSN8S41C                                  11540000
+         INDEX(ALL)                                                     11550000
+                                                                        11560000
+//*        STEP 17: LOAD DATA INTO PART 3 OF DSN8D41A.DSN8S41E          11570000
+//PH01S17 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  11580000
+//SYSUT1   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11590000
+//SORTLIB  DD  DSN=SYS1.ICELIB,DISP=SHR                                 11600000
+//SORTOUT  DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11610000
+//SORTWK01 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11620000
+//SORTWK02 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11630000
+//SORTWK03 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11640000
+//SORTWK04 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11650000
+//DSNTRACE DD  SYSOUT=*                                                 11660000
+//SYSRECE3 DD  DSN=DSN410.SDSNSAMP(DSN8LE3),                            11670000
+//             DISP=SHR                                                 11680000
+//SYSERR   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11690000
+//SYSDISC  DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11700000
+//SYSMAP   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   11710000
+//SYSIN    DD  *                                                        11720000
+                                                                        11730000
+ LOAD DATA INDDN(SYSRECE3) CONTINUEIF(72:72)='X'                        11740000
+      RESUME YES                                                        11750000
+      INTO TABLE DSN8410.EMP                                            11760000
+           PART 3                                                       11770000
+           REPLACE                                                      11780000
+           (EMPNO     POSITION( 1)  CHAR(6),                            11790000
+            FIRSTNME  POSITION( 8)  VARCHAR,                            11800000
+            MIDINIT   POSITION(21)  CHAR(1),                            11810000
+            LASTNAME  POSITION(23)  VARCHAR,                            11820000
+            WORKDEPT  POSITION(36)  CHAR(3),                            11830000
+            PHONENO   POSITION(40)  CHAR(4),                            11840000
+            HIREDATE  POSITION(45)  DATE EXTERNAL,                      11850000
+            JOB       POSITION(56)  CHAR(8),                            11860000
+            EDLEVEL   POSITION(65)  INTEGER EXTERNAL(2),                11870000
+            SEX       POSITION(68)  CHAR(1),                            11880000
+            BIRTHDATE POSITION(80)  DATE EXTERNAL,                      11890000
+            SALARY    POSITION(91)  INTEGER EXTERNAL(5),                11900000
+            BONUS     POSITION(97)  INTEGER EXTERNAL(5),                11910000
+            COMM      POSITION(103) INTEGER EXTERNAL(5))                11920000
+      ENFORCE CONSTRAINTS MAPDDN SYSMAP                                 11930000
+                                                                        11940000
+//*        STEP 18: SET CURRENT RULES THEN ALTER TABLE                  11950000
+//PH01S18 EXEC PGM=IKJEFT01,DYNAMNBR=20,COND=(4,LT)                     11960000
+//SYSTSPRT DD  SYSOUT=*                                                 11970000
+//SYSTSIN  DD  *                                                        11980000
+ DSN SYSTEM(DB1G)                                                       11990000
+ RUN  PROGRAM(DSNTIAD) PLAN(DSNTIA41) -                                 12000000
+      LIB('DSN410.RUNLIB.LOAD')                                         12010000
+//SYSPRINT DD  SYSOUT=*                                                 12020000
+//SYSUDUMP DD  SYSOUT=*                                                 12030000
+//SYSIN    DD  *                                                        12040000
+  SET CURRENT RULES = 'DB2';                                            12050000
+  COMMIT;                                                               12060000
+  ALTER TABLE EMP ADD CONSTRAINT PERSON                                 12070000
+    CHECK (SEX = 'M' OR SEX = 'F');                                     12080000
+  COMMIT;                                                               12090000
+                                                                        12100000
+//*        STEP 19: CHECK DATA IN PART 3 OF DSN8D41A.DSN8S41E           12110000
+//*                 FOR REFERENTIAL INTEGRITY                           12120000
+//PH01S19 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  12130000
+//SYSUT1   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12140000
+//SORTLIB  DD  DSN=SYS1.ICELIB,DISP=SHR                                 12150000
+//SORTOUT  DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12160000
+//SORTWK01 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12170000
+//SORTWK02 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12180000
+//SORTWK03 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12190000
+//SORTWK04 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12200000
+//DSNTRACE DD  SYSOUT=*                                                 12210000
+//SYSERR   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12220000
+//SYSDISC  DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12230000
+//SYSIN    DD  *                                                        12240000
+                                                                        12250000
+ CHECK DATA TABLESPACE DSN8D41A.DSN8S41D                                12260000
+            TABLESPACE DSN8D41A.DSN8S41E                                12270000
+            TABLESPACE DSN8D41A.DSN8S41P                                12280000
+       SCOPE ALL                                                        12290000
+       DELETE YES                                                       12300000
+       FOR EXCEPTION IN DSN8410.DEPT       USE DSN8410.EDEPT            12310000
+                     IN DSN8410.EMP        USE DSN8410.EEMP             12320000
+                     IN DSN8410.PROJ       USE DSN8410.EPROJ            12330000
+                     IN DSN8410.ACT        USE DSN8410.EACT             12340000
+                     IN DSN8410.PROJACT    USE DSN8410.EPROJACT         12350000
+                     IN DSN8410.EMPPROJACT USE DSN8410.EEPA             12360000
+       EXCEPTIONS 50                                                    12370000
+       SORTDEVT SYSDA                                                   12380000
+                                                                        12390000
+//*        STEP 20: ATTEMPT INSERT INTO THE EMP TABLE                   12400000
+//PH01S20 EXEC PGM=IKJEFT01,DYNAMNBR=20,COND=(4,LT)                     12410000
+//SYSTSPRT DD  SYSOUT=*                                                 12420000
+//SYSTSIN  DD  *                                                        12430000
+ DSN SYSTEM(DB1G)                                                       12440000
+ RUN  PROGRAM(DSNTIAD) PLAN(DSNTIA41) PARM('RC0') -                     12450000
+      LIB('DSN410.RUNLIB.LOAD')                                         12460000
+//SYSPRINT DD  SYSOUT=*                                                 12470000
+//SYSUDUMP DD  SYSOUT=*                                                 12480000
+//SYSIN    DD  *                                                        12490000
+  INSERT INTO EMP                                                       12500000
+    VALUES ('000011','CHRISTINE','I','HAAS','A00','A1A1',               12510000
+            '1965-01-01','PRES',18,'F','1933-08-14',                    12520000
+            52750,1000,4220);                                           12530000
+  COMMIT;                                                               12540000
+                                                                        12550000
+  INSERT INTO EMP                                                       12560000
+    VALUES ('200011','DIANE','J','HEMMINGER','A00','3978',              12570000
+            '1965-01-01','SALESREP',18,'U','1933-08-14',                12580000
+            46500,1000,4220);                                           12590000
+  COMMIT;                                                               12600000
+                                                                        12610000
+//*        STEP 21: ESTABLISH A QUIESCE POINT FOR PART 3                12620000
+//*                 OF DSN8D41A.DSN8S41E                                12630000
+//PH01S21 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  12640000
+//* NOTE: CONDITION CODE 4 INDICATES AN IMAGE COPY CANNOT BE TAKEN      12650000
+//SYSUT1   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12660000
+//SYSIN    DD  *                                                        12670000
+                                                                        12680000
+ QUIESCE TABLESPACE DSN8D41A.DSN8S41E                                   12690000
+         PART 3                                                         12700000
+                                                                        12710000
+//*        STEP 22: TAKE IMAGE COPY OF PART 3 OF DSN8D41A.DSN8S41E      12720000
+//PH01S22 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  12730000
+//DSNTRACE DD  SYSOUT=*                                                 12740000
+//SYSCOPY  DD  DSN=DSN410.DSN8D41A.DSN8S41E.PART3,                      12750000
+//             UNIT=3390,DISP=(NEW,CATLG),SPACE=(4000,(20,20)),         12760000
+//             VOL=SER=DB22SY                                           12770000
+//SYSIN    DD  *                                                        12780000
+                                                                        12790000
+ COPY TABLESPACE DSN8D41A.DSN8S41E                                      12800000
+      DSNUM 3 COPYDDN SYSCOPY                                           12810000
+                                                                        12820000
+//*        STEP 23: ESTABLISH A QUIESCE POINT FOR PART 3                12830000
+//*                 OF DSN8D41A.DSN8S41E USING ONLY IMAGE COPY          12840000
+//PH01S23 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  12850000
+//* NOTE: CONDITION CODE 4 INDICATES AN IMAGE COPY CANNOT BE TAKEN      12860000
+//SYSUT1   DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12870000
+//SYSIN    DD  *                                                        12880000
+                                                                        12890000
+ QUIESCE TABLESPACE DSN8D41A.DSN8S41E                                   12900000
+         PART 3                                                         12910000
+                                                                        12920000
+//*                                                                     12930000
+//*        STEP 24: PRODUCE STATISTICS FOR PART 3 OF                    12940000
+//*                 OF DSN8D41A.DSN8S41E                                12950000
+//PH01S24 EXEC DSNUPROC,PARM='DB1G,DSNTEX',COND=(4,LT)                  12960000
+//SORTLIB  DD  DSN=SYS1.ICELIB,DISP=SHR                                 12970000
+//SORTOUT  DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12980000
+//SORTWK01 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   12990000
+//SORTWK02 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   13000000
+//SORTWK03 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   13010000
+//SORTWK04 DD  UNIT=3390,SPACE=(4000,(20,20),,,ROUND)                   13020000
+//DSNTRACE DD  SYSOUT=*                                                 13030000
+//SYSUT1   DD  UNIT=3390,SPACE=(4000,(50,50),,,ROUND)                   13040000
+//SYSREC   DD  UNIT=3390,SPACE=(4000,(200,200),,,ROUND)                 13050000
+//SYSIN    DD  *                                                        13060000
+                                                                        13070000
+ RUNSTATS TABLESPACE DSN8D41A.DSN8S41E                                  13080000
+         PART 3                                                         13090000
+         INDEX(ALL)                                                     13100000
+//*                                                                     13110000

@@ -1,0 +1,78 @@
+//DSNTEJ0  JOB (330RWM00,),'D J YOUNG',MSGCLASS=Y,REGION=4096K,         00001000
+//       USER=DJY00,NOTIFY=DJY00                                        00002000
+//**********************************************************************00132600
+//*  NAME = DSNTEJ0                                                    *00132700
+//*                                                                    *00132800
+//*  DESCRIPTIVE NAME = DB2 SAMPLE APPLICATION                         *00132900
+//*                     PHASE 0 (LOCAL SYSTEM)                         *00133000
+//*                                                                    *00133100
+//*    LICENSED MATERIALS - PROPERTY OF IBM                            *00133200
+//*    5695-DB2                                                        *00133300
+//*    (C) COPYRIGHT 1982, 1995 IBM CORP.  ALL RIGHTS RESERVED.        *00133400
+//*                                                                    *00133500
+//*    STATUS = VERSION 4                                              *00133600
+//*                                                                    *00133700
+//*  FUNCTION = THIS JCL PERFORMS THE PHASE 0 CLEANUP FOR THE SAMPLE   *00133800
+//*             APPLICATIONS ON A LOCAL DB2 SYSTEM (A DB2 SYSTEM       *00134000
+//*             WHICH CONTAINS THE ACTUAL SAMPLE TABLES).              *00140000
+//*                                                                   */00142000
+//* CHANGE ACTIVITY =                                                 */00144000
+//**********************************************************************00150000
+//JOBLIB   DD  DSN=DSN410.SDSNLOAD,DISP=SHR                             00160000
+//*       STEP 1 - FREE THE PLANS                                       00190000
+//PH00S01 EXEC PGM=IKJEFT01,DYNAMNBR=20                                 00200000
+//SYSTSPRT DD SYSOUT=*                                                  00210000
+//SYSPRINT DD SYSOUT=*                                                  00220000
+//SYSUDUMP DD SYSOUT=*                                                  00230000
+//SYSTSIN  DD *                                                         00240000
+DSN SYSTEM(DB1G)                                                        00250000
+FREE PLAN(DSNTEP41)                                                     00260000
+FREE PLAN(DSNTIB41)                                                     00270000
+FREE PLAN(DSN8BD41)                                                     00280000
+FREE PLAN(DSN8BH41)                                                     00290000
+FREE PLAN(DSN8BF41)                                                     00300000
+FREE PLAN(DSN8BP41)                                                     00310000
+FREE PLAN(DSN8IC0)                                                      00320000
+FREE PLAN(DSN8IP0)                                                      00330000
+FREE PLAN(DSN8IQ0)                                                      00340000
+FREE PLAN(DSN8IH0)                                                      00350000
+FREE PLAN(DSN8CC0)                                                      00360000
+FREE PLAN(DSN8CP0)                                                      00370000
+FREE PLAN(DSN8CQ0)                                                      00380000
+FREE PLAN(DSN8CH0)                                                      00390000
+FREE PLAN(DSN8SC41)                                                     00400000
+FREE PLAN(DSN8HC41)                                                     00405000
+FREE PLAN(DSN8SP41)                                                     00410000
+END                                                                     00420000
+//*                                                                     00430000
+//*       STEP 2 - DROP EVERYTHING                                      00440000
+//PH00S02 EXEC PGM=IKJEFT01,DYNAMNBR=20                                 00450000
+//SYSTSPRT DD SYSOUT=*                                                  00460000
+//SYSPRINT DD SYSOUT=*                                                  00470000
+//SYSUDUMP DD SYSOUT=*                                                  00480000
+//SYSIN    DD *                                                         00490000
+                                                                        00492000
+    DROP DATABASE DSN8D41A;                                             00500000
+    COMMIT;                                                             00510000
+    DROP DATABASE DSN8D41P;                                             00520000
+    COMMIT;                                                             00530000
+    DROP DATABASE DSN8D41U;                                             00540000
+    COMMIT;                                                             00550000
+    DROP STOGROUP DSN8G410;                                             00560000
+    COMMIT;                                                             00570000
+    DROP STOGROUP DSN8G41U;                                             00580000
+    COMMIT;                                                             00590000
+//SYSTSIN  DD *                                                         00600000
+ DELETE 'DSN410.SYSCOPY.DSN8D41A.DSN8S41D'                              00610000
+ DELETE 'DSN410.SYSCOPY.DSN8D41A.DSN8S41E'                              00620000
+ DELETE 'DSN410.DSN8D41A.DSN8S41E.PART3'                                00625000
+ DELETE 'DSN410.SYSCOPY.DSN8D41P.DSN8S41C'                              00630000
+ DELETE 'DSN410.SYSCOPY.DSN8D41A.DSN8S41P'                              00640000
+ DELETE 'DSN410.DSN8UNLD.SYSPUNCH'                                      00680000
+ DELETE 'DSN410.DSN8UNLD.SYSREC00'                                      00690000
+ DELETE 'DSN410.DSN8UNLD.SYSREC01'                                      00700000
+ DSN SYSTEM(DB1G)                                                       00710001
+ RUN  PROGRAM(DSNTIAD) PLAN(DSNTIA41) -                                 00720000
+      LIB('DSN410.RUNLIB.LOAD')                                         00730000
+ END                                                                    00740000
+//*                                                                     00750000

@@ -1,0 +1,27 @@
+ CREATE STOGROUP DSNDB07A VOLUMES (DB22SY) VCAT DSN2;                           
+ CREATE STOGROUP DSNDB07B VOLUMES (DB23SY) VCAT DSN2;                           
+ CREATE STOGROUP DSNDB07C VOLUMES (SPARE2) VCAT DSN2;                           
+ CREATE TABLESPACE DSNTMP01                                                     
+        IN DB1GWORK                                                             
+        BUFFERPOOL BP0                                                          
+        USING STOGROUP DSNDB07A                                                 
+        PRIQTY 472916                                                           
+        SECQTY 10000                                                            
+        ERASE NO                                                                
+        CLOSE NO;                                                               
+ CREATE TABLESPACE DSNTMP02                                                     
+        IN DB1GWORK                                                             
+        BUFFERPOOL BP0                                                          
+        USING STOGROUP DSNDB07B                                                 
+        PRIQTY 472916                                                           
+        SECQTY 10000                                                            
+        ERASE NO                                                                
+        CLOSE NO;                                                               
+ CREATE TABLESPACE DSNTMP03                                                     
+        IN DB1GWORK                                                             
+        BUFFERPOOL BP0                                                          
+        USING STOGROUP DSNDB07C                                                 
+        PRIQTY 472916                                                           
+        SECQTY 10000                                                            
+        ERASE NO                                                                
+        CLOSE NO;                                                               

@@ -1,0 +1,57 @@
+-- ****************************************************************** --        
+--                                                                    --        
+--  DATABASE TPCCDB                                                   --        
+--  TABLE  CUSTOMER                                                   --        
+--  TABLESPACE CUTS                                                   --        
+--  STORAGEGROUP TPCCSG01                                             --        
+--                                                                    --        
+-- ****************************************************************** --        
+ CREATE TABLESPACE CUTS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 1000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS YES;                                                              
+ CREATE TABLE DAVID.CUSTOMER                                                    
+     (C_ID              INTEGER  NOT NULL,                                      
+      C_D_ID            INTEGER  NOT NULL,                                      
+      C_W_ID            INTEGER  NOT NULL,                                      
+      C_FIRST           CHAR(16) NOT NULL,                                      
+      C_MIDDLE          CHAR(2)  NOT NULL,                                      
+      C_LAST            CHAR(16) NOT NULL,                                      
+      C_STREET_1        CHAR(20) NOT NULL,                                      
+      C_STREET_2        CHAR(20) NOT NULL,                                      
+      C_CITY            CHAR(20) NOT NULL,                                      
+      C_STATE           CHAR(2)  NOT NULL,                                      
+      C_ZIP             CHAR(9)  NOT NULL,                                      
+      C_PHONE           CHAR(16) NOT NULL,                                      
+      C_SINCE           TIMESTAMP NOT NULL WITH DEFAULT,                        
+      C_CREDIT          CHAR(2)  NOT NULL,                                      
+      C_CREDIT_LIM      FLOAT    NOT NULL,                                      
+      C_DISCOUNT        FLOAT    NOT NULL,                                      
+      C_BALANCE         FLOAT    NOT NULL,                                      
+      C_YTD_PAYMENT     FLOAT    NOT NULL,                                      
+      C_PAYMENT_CNT     FLOAT    NOT NULL,                                      
+      C_DELIVERY_CNT    FLOAT    NOT NULL,                                      
+      C_DATA1           CHAR(250) NOT NULL WITH DEFAULT,                        
+      C_DATA2           CHAR(250) NOT NULL WITH DEFAULT,                        
+      PRIMARY KEY (C_W_ID,C_D_ID,C_ID),                                         
+      FOREIGN KEY CUFK1 (C_W_ID,C_D_ID)                                         
+          REFERENCES DAVID.DISTRICT ON DELETE RESTRICT)                         
+      IN  TPCCDB.CUTS;                                                          
+-- **************************************************************** --   --     
+--                                                                  --   --     
+--                                                                  --          
+-- **************************************************************** --          
+ CREATE UNIQUE INDEX DAVID.CUIN01                                               
+        ON DAVID.CUSTOMER(C_W_ID,C_D_ID,C_ID)                                   
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 8                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              

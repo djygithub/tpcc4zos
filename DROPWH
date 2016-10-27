@@ -1,0 +1,3 @@
+ DROP TABLESPACE TPCCDB.WHTS;                                                   
+ DROP DATABASE TPCCDB;                                                          
+ DROP STOGROUP TPCCSG01;                                                        

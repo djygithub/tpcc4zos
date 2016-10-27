@@ -1,0 +1,24 @@
+//DEFALIA3 JOB (1),'D J YOUNG',CLASS=A,MSGCLASS=Y,NOTIFY=DJY00          00001000
+//*********************************************************************/00002000
+//* JOB NAME = DSNTIJCA                                               */00003000
+//*                                                                   */00004000
+//* DESCRIPTIVE NAME = INSTALLATION JOB STREAM                        */00005000
+//*                                                                   */00006000
+//*    LICENSED MATERIALS - PROPERTY OF IBM                           */00007000
+//*    5695-DB2                                                       */00008000
+//*    (C) COPYRIGHT 1982, 1995 IBM CORP.  ALL RIGHTS RESERVED.       */00009000
+//*                                                                   */00010000
+//*    STATUS = VERSION 4                                             */00020000
+//*                                                                   */00030000
+//* FUNCTION = DEFINE THE ICF CATALOG                                 */00040000
+//*********************************************************************/00050000
+//DSNTCAT EXEC PGM=IDCAMS                                               00060000
+//SYSPRINT DD  SYSOUT=*                                                 00070000
+//SYSUDUMP DD  SYSOUT=*                                                 00080000
+//CAT      DD  UNIT=3390,DISP=OLD,VOL=SER=DB22SY                        00090000
+//SYSIN    DD  *                                                        00100000
+                                                                        00210000
+   DEFINE ALIAS                               -                         00220000
+         ( NAME(CICS)                      -                            00230000
+           RELATE(CICS1.USER.CATALOG)  )                                00240000
+                                                                        00250000

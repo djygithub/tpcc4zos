@@ -1,0 +1,116 @@
+//BUPDTG2C JOB (AMW,000),'DEFINE UCAT',MSGCLASS=Y,                              
+//             TIME=(1440),USER=SRD50,NOTIFY=SRD50                              
+//*        GETDBID TEST                            */                           
+//*                                                                 */          
+//* *************************************************************** */          
+//JOBLIB  DD  DISP=SHR,                                                         
+//            DSN=DSN410.SDSNLOAD                                               
+//        DD  DSN=DSN410.RUNLIB.LOAD,DISP=SHR                                   
+//STEP1   EXEC PGM=IKJEFT01,DYNAMNBR=20                                         
+//SYSTSPRT DD  SYSOUT=*                                                         
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSUDUMP DD  SYSOUT=*                                                         
+//SYSABOUT DD  SYSOUT=*                                                         
+//SYSOUT   DD  DUMMY                                                            
+//OUTPUT   DD  SYSOUT=*                                                         
+//SNAPOUT DD  SYSOUT=*                                                          
+//SYSTSIN  DD  *                                                                
+  DSN SYSTEM(DB2G)                                                              
+  RUN PROGRAM(BTBLUPDT) PLAN(BTBLUPDT) -                                        
+       LIB('DSN410.RUNLIB.LOAD')                                                
+  END                                                                           
+/*                                                                              
+//INPUT DD *                                                                    
+000000001000000001000000002000000002000001001000001500                          
+//COMMIT DD *                                                                   
+000000050ABCDEFCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+//STEP2   EXEC PGM=IKJEFT01,DYNAMNBR=20                                         
+//SYSTSPRT DD  SYSOUT=*                                                         
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSUDUMP DD  SYSOUT=*                                                         
+//SYSABOUT DD  SYSOUT=*                                                         
+//SYSOUT   DD  DUMMY                                                            
+//OUTPUT   DD  SYSOUT=*                                                         
+//SNAPOUT DD  SYSOUT=*                                                          
+//SYSTSIN  DD  *                                                                
+  DSN SYSTEM(DB2G)                                                              
+  RUN PROGRAM(BTBLUPDT) PLAN(BTBLUPDT) -                                        
+       LIB('DSN410.RUNLIB.LOAD')                                                
+  END                                                                           
+/*                                                                              
+//INPUT DD *                                                                    
+000000001000000001000000002000000002000001001000001500                          
+//COMMIT DD *                                                                   
+000000050ABCDEFCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+//STEP3   EXEC PGM=IKJEFT01,DYNAMNBR=20                                         
+//SYSTSPRT DD  SYSOUT=*                                                         
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSUDUMP DD  SYSOUT=*                                                         
+//SYSABOUT DD  SYSOUT=*                                                         
+//SYSOUT   DD  DUMMY                                                            
+//OUTPUT   DD  SYSOUT=*                                                         
+//SNAPOUT DD  SYSOUT=*                                                          
+//SYSTSIN  DD  *                                                                
+  DSN SYSTEM(DB2G)                                                              
+  RUN PROGRAM(BTBLUPDT) PLAN(BTBLUPDT) -                                        
+       LIB('DSN410.RUNLIB.LOAD')                                                
+  END                                                                           
+/*                                                                              
+//INPUT DD *                                                                    
+000000001000000001000000002000000002000001001000001500                          
+//COMMIT DD *                                                                   
+000000050ABCDEFCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+//STEP4   EXEC PGM=IKJEFT01,DYNAMNBR=20                                         
+//SYSTSPRT DD  SYSOUT=*                                                         
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSUDUMP DD  SYSOUT=*                                                         
+//SYSABOUT DD  SYSOUT=*                                                         
+//SYSOUT   DD  DUMMY                                                            
+//OUTPUT   DD  SYSOUT=*                                                         
+//SNAPOUT DD  SYSOUT=*                                                          
+//SYSTSIN  DD  *                                                                
+  DSN SYSTEM(DB2G)                                                              
+  RUN PROGRAM(BTBLUPDT) PLAN(BTBLUPDT) -                                        
+       LIB('DSN410.RUNLIB.LOAD')                                                
+  END                                                                           
+/*                                                                              
+//INPUT DD *                                                                    
+000000001000000001000000002000000002000001001000001500                          
+//COMMIT DD *                                                                   
+000000050ABCDEFCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+//STEP5   EXEC PGM=IKJEFT01,DYNAMNBR=20                                         
+//SYSTSPRT DD  SYSOUT=*                                                         
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSUDUMP DD  SYSOUT=*                                                         
+//SYSABOUT DD  SYSOUT=*                                                         
+//SYSOUT   DD  DUMMY                                                            
+//OUTPUT   DD  SYSOUT=*                                                         
+//SNAPOUT DD  SYSOUT=*                                                          
+//SYSTSIN  DD  *                                                                
+  DSN SYSTEM(DB2G)                                                              
+  RUN PROGRAM(BTBLUPDT) PLAN(BTBLUPDT) -                                        
+       LIB('DSN410.RUNLIB.LOAD')                                                
+  END                                                                           
+/*                                                                              
+//INPUT DD *                                                                    
+000000001000000001000000002000000002000001001000001500                          
+//COMMIT DD *                                                                   
+000000050ABCDEFCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        
+//STEP6   EXEC PGM=IKJEFT01,DYNAMNBR=20                                         
+//SYSTSPRT DD  SYSOUT=*                                                         
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSUDUMP DD  SYSOUT=*                                                         
+//SYSABOUT DD  SYSOUT=*                                                         
+//SYSOUT   DD  DUMMY                                                            
+//OUTPUT   DD  SYSOUT=*                                                         
+//SNAPOUT DD  SYSOUT=*                                                          
+//SYSTSIN  DD  *                                                                
+  DSN SYSTEM(DB2G)                                                              
+  RUN PROGRAM(BTBLUPDT) PLAN(BTBLUPDT) -                                        
+       LIB('DSN410.RUNLIB.LOAD')                                                
+  END                                                                           
+/*                                                                              
+//INPUT DD *                                                                    
+000000001000000001000000002000000002000001001000001500                          
+//COMMIT DD *                                                                   
+000000050ABCDEFCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC        

@@ -1,0 +1,14 @@
+//CHKST    JOB (1),'D J YOUNG',CLASS=A,MSGCLASS=Y,NOTIFY=DJY00                  
+//JOBLIB  DD  DISP=SHR,                                                 00290000
+//            DSN=DSN410.SDSNLOAD                                       00300000
+//DSNTIAS EXEC PGM=DSNUTILB,PARM='DB1G,DSNTEX'                          00650000
+//SYSUT1 DD UNIT=3390,SPACE=(CYL,(20,20))                               00660000
+//SORTOUT DD UNIT=3390,SPACE=(CYL,(20,20))                              00660000
+//SYSERR DD UNIT=3390,SPACE=(CYL,(20,20))                               00660000
+//SYSTSPRT DD  SYSOUT=*                                                 00660000
+//SYSPRINT DD  SYSOUT=*                                                 00670000
+//SYSUDUMP DD  SYSOUT=*                                                 00680000
+//SYSOUT   DD  SYSOUT=*                                                 00680000
+//SYSIN  DD  *                                                          00690000
+  CHECK DATA TABLESPACE TPCCDB.STOCKTS                                  00700000
+/*                                                                      00770000

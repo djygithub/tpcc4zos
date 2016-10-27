@@ -1,0 +1,118 @@
+//CNETSTL  JOB (330DJY00),'D J YOUNG ',MSGCLASS=O,NOTIFY=DJY00                  
+//*     TRANSLATE STL PROGRAM                                                   
+//*                                                                             
+//STEP1   EXEC PGM=ITPSTL,PARM='NOSEQOUT',REGION=0K                             
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(LOGON1)                         
+//SYSUT1 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//*SGDD     DD DSN=DJY00.TPNS.MSGDD,UNIT=3390,                                  
+//*         DISP=(,CATLG),SPACE=(CYL,(20,20,100)),VOL=SER=SPARE2,               
+//*         DCB=(LRECL=80,BLKSIZE=6400,RECFM=FB)                                
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//STEP2   EXEC PGM=ITPSTL,PARM='NOSEQOUT',REGION=0K                             
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(UIT0R)                          
+//SYSUT1 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//STEP2   EXEC PGM=ITPSTL,PARM='NOSEQOUT',REGION=0K                             
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(SL00R)                          
+//SYSUT1 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//STEP9   EXEC PGM=ITPENTER,PARM='REPL,SUMMARY,PREP',COND=(0,LT),               
+// REGION=0K                                                                    
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(CNET0100)                       
+//SYSUT2 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//SYSUT3 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//INITDD    DD DISP=SHR,DSN=DJY00.TPNS.INITDD                                   
+//*NITDD    DD DSN=DJY00.TPNS.INITDD,                                           
+//*         UNIT=3390,                                                          
+//*         DISP=(,CATLG),SPACE=(CYL,(20,20,100)),VOL=SER=SPARE2,               
+//*         DCB=(LRECL=80,BLKSIZE=6400,RECFM=FB)                                
+//STEP10  EXEC PGM=ITPENTER,PARM='REPL,SUMMARY,PREP',COND=(0,LT),               
+// REGION=0K                                                                    
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(CNET0200)                       
+//SYSUT2 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//SYSUT3 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//INITDD    DD DISP=SHR,DSN=DJY00.TPNS.INITDD                                   
+//STEP11  EXEC PGM=ITPENTER,PARM='REPL,SUMMARY,PREP',COND=(0,LT),               
+// REGION=0K                                                                    
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(CNET0300)                       
+//SYSUT2 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//SYSUT3 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//INITDD    DD DISP=SHR,DSN=DJY00.TPNS.INITDD                                   
+//STEP12  EXEC PGM=ITPENTER,PARM='REPL,SUMMARY,PREP',COND=(0,LT),               
+// REGION=0K                                                                    
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(CNET0400)                       
+//SYSUT2 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//SYSUT3 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//INITDD    DD DISP=SHR,DSN=DJY00.TPNS.INITDD                                   
+//STEP13  EXEC PGM=ITPENTER,PARM='REPL,SUMMARY,PREP',COND=(0,LT),               
+// REGION=0K                                                                    
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(CNET0500)                       
+//SYSUT2 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//SYSUT3 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//INITDD    DD DISP=SHR,DSN=DJY00.TPNS.INITDD                                   
+//STEP14  EXEC PGM=ITPENTER,PARM='REPL,SUMMARY,PREP',COND=(0,LT),               
+// REGION=0K                                                                    
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(CNET0600)                       
+//SYSUT2 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//SYSUT3 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//INITDD    DD DISP=SHR,DSN=DJY00.TPNS.INITDD                                   
+//STEP15  EXEC PGM=ITPENTER,PARM='REPL,SUMMARY,PREP',COND=(0,LT),               
+// REGION=0K                                                                    
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(CNET0700)                       
+//SYSUT2 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//SYSUT3 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//INITDD    DD DISP=SHR,DSN=DJY00.TPNS.INITDD                                   
+//STEP16  EXEC PGM=ITPENTER,PARM='REPL,SUMMARY,PREP',COND=(0,LT),               
+// REGION=0K                                                                    
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(CNET0800)                       
+//SYSUT2 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//SYSUT3 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//INITDD    DD DISP=SHR,DSN=DJY00.TPNS.INITDD                                   
+//STEP17  EXEC PGM=ITPENTER,PARM='REPL,SUMMARY,PREP',COND=(0,LT),               
+// REGION=0K                                                                    
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(CNET0900)                       
+//SYSUT2 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//SYSUT3 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//INITDD    DD DISP=SHR,DSN=DJY00.TPNS.INITDD                                   
+//STEP18  EXEC PGM=ITPENTER,PARM='REPL,SUMMARY,PREP',COND=(0,LT),               
+// REGION=0K                                                                    
+//STEPLIB DD DSN=TPNS34.LOAD,DISP=SHR                                           
+//SYSPRINT  DD SYSOUT=*                                                         
+//SYSIN     DD DISP=SHR,DSN=DJY00.TPCC.WORKLOAD(CNET1000)                       
+//SYSUT2 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//SYSUT3 DD UNIT=3390,SPACE=(CYL,(1,1,10))                                      
+//MSGDD     DD DISP=SHR,DSN=DJY00.TPNS.MSGDD                                    
+//INITDD    DD DISP=SHR,DSN=DJY00.TPNS.INITDD                                   

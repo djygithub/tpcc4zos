@@ -1,0 +1,12 @@
+//DELLOGS JOB (1),'D J YOUNG',CLASS=A,MSGCLASS=Y,NOTIFY=DJY00                   
+//DSNTLOG EXEC PGM=DSNJU003                                             00320000
+//STEPLIB DD DSN=DSN410.SDSNLOAD,DISP=SHR                                       
+//SYSUT1   DD  DISP=OLD,DSN=DSN2.DB1G.BSDS01                            00330000
+//SYSUT2   DD  DISP=OLD,DSN=DSN2.DB1G.BSDS02                            00340000
+//SYSPRINT DD  SYSOUT=*                                                 00350000
+//SYSUDUMP DD SYSOUT=*                                                  00360000
+//SYSIN    DD  *                                                        00370000
+NEWLOG DSNAME=DSN2.DB1G.LOGCOPY1.DS04,COPY1                                     
+NEWLOG DSNAME=DSN2.DB1G.LOGCOPY1.DS05,COPY1                                     
+NEWLOG DSNAME=DSN2.DB1G.LOGCOPY1.DS06,COPY1                                     
+                                                                                

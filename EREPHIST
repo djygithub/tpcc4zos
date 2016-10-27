@@ -1,0 +1,41 @@
+//EREPHIST JOB (330RWM00,),'D J YOUNG',MSGCLASS=Y,REGION=4096K,                 
+//       USER=DJY00,NOTIFY=DJY00                                                
+//IEFPROC EXEC PGM=IFCEREP1,REGION=1024K,COND=(0,NE),                   0       
+// PARM=('ACC=Y','MERGE','PRINT=NO','TABSIZE=512K',                             
+//       'ZERO=N')                                                              
+//SERLOG  DD DISP=SHR,DSN=SYS1.EC20.LOGREC                                      
+//TOURIST DD SYSOUT=Y                                                           
+//EREPPT  DD DUMMY,DCB=BLKSIZE=133                                              
+//DIRECTWK DD UNIT=SYSDA,SPACE=(CYL,40,,CONTIG)                         00280000
+//SYSIN   DD DUMMY                                                              
+//IEFRDER DD DUMMY                                                              
+//ACCIN   DD DUMMY,                                                     00051027
+//        DCB=(RECFM=VB,LRECL=2000,BLKSIZE=4000)                        00614000
+//ACCDEV  DD DISP=(,CATLG,DELETE),                                              
+//        DSN=DJY00.EREPHIST.DEC16965,                                          
+//        UNIT=3390,VOL=SER=SPARE2,                                     00781011
+//        SPACE=(TRK,(75,75),RLSE),                                     00614000
+//        DCB=(RECFM=VB,LRECL=2000,BLKSIZE=4000)                        00614000
+//*                                                                     00614000
+//SYSEXN  EXEC PGM=IFCEREP1,REGION=3048K,                               0       
+// PARM=('ACC=N,HIST=Y,SYSEXN,ZERO=N,TABSIZE=512K',                             
+//       'PRINT=AL,DEV=(3380,3390)')                                            
+//TOURIST DD SYSOUT=Y,DCB=BLKSIZE=133                                           
+//EREPPT  DD SYSOUT=Y,DCB=BLKSIZE=133                                           
+//ACCDEV  DD DDNAME=IEFRDER                                                     
+//ACCIN   DD DISP=SHR,DSN=DJY00.EREPHIST.DEC16965,DCB=RECFM=VB                  
+//DIRECTWK DD UNIT=SYSDA,SPACE=(CYL,10,,CONTIG)                                 
+//SYSIN   DD DUMMY                                                              
+//IEFRDER DD DUMMY                                                              
+//*                                                                     00614000
+//EVENTS  EXEC PGM=IFCEREP1,REGION=3048K,                               0       
+// PARM=('ACC=N,HIST=Y,EVENT,ZERO=N,TABSIZE=512K',                              
+//       'PRINT=AL,DEV=(3380,3390)')                                            
+//TOURIST DD SYSOUT=Y,DCB=BLKSIZE=133                                           
+//EREPPT  DD SYSOUT=Y,DCB=BLKSIZE=133                                           
+//ACCDEV  DD DDNAME=IEFRDER                                                     
+//ACCIN   DD DISP=SHR,DSN=DJY00.EREPHIST.DEC16965,DCB=RECFM=VB                  
+//DIRECTWK DD UNIT=SYSDA,SPACE=(CYL,10,,CONTIG)                                 
+//SYSIN   DD DUMMY                                                              
+//IEFRDER DD DUMMY                                                              
+//*                                                                             

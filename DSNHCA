@@ -1,0 +1,105 @@
+//**********************************************************************        
+//*       DSNHC - COMPILE AND LINKEDIT A C LANGUAGE PROGRAM                     
+//*                                                                             
+//DSNHCC PROC WSPC=500,MEM=TEMPNAME,USER=USER                                   
+//*                                                                             
+//*            PRECOMPILE THE C PROGRAM                                         
+//**********************************************************************        
+//PC      EXEC PGM=DSNHPC,PARM='HOST(C)',REGION=4096K                           
+//DBRMLIB DD DSN=&USER..DBRMLIB.DATA(&MEM),                                     
+//         DISP=SHR                                                             
+//STEPLIB  DD  DISP=SHR,DSN=DSN410.SDSNEXIT                                     
+//         DD  DISP=SHR,DSN=DSN410.SDSNLOAD                                     
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSTERM  DD  SYSOUT=*                                                         
+//SYSUDUMP DD  SYSOUT=*                                                         
+//SYSCIN   DD  DSN=&&SYSCIN,DISP=(MOD,PASS),UNIT=3390,                          
+//             SPACE=(800,(&WSPC,&WSPC))                                        
+//SYSLIB DD DSN=&USER..SRCLIB.DATA,                                             
+//        DISP=SHR                                                              
+//SYSUT1   DD  SPACE=(800,(&WSPC,&WSPC),,,ROUND),UNIT=3390                      
+//SYSUT2   DD  SPACE=(800,(&WSPC,&WSPC),,,ROUND),UNIT=3390                      
+//*                                                                             
+//*            COMPILE THE C PROGRAM IF THE PRECOMPILE                          
+//*            RETURN CODE IS 4 OR LESS                                         
+//*                                                                             
+//CICSTRAN EXEC PGM=DFHEDP1$,REGION=4M                                          
+//STEPLIB  DD DSN=CICS410.SDFHLOAD,DISP=SHR                                     
+//SYSPRINT DD SYSOUT=*                                                          
+//SYSPUNCH DD DSN=&&DSNHOUT,DISP=(,PASS),UNIT=3390,                             
+//  DCB=BLKSIZE=400,SPACE=(400,(400,100))                                       
+//SYSIN DD DSN=&&SYSCIN,DISP=(OLD,PASS)                                         
+//C       EXEC PGM=EDCCOMP,COND=(4,LT,PC),REGION=4096K,PARM=('RENT')            
+//STEPLIB  DD  DSN=EDC.V2R1M1.SEDCCOMP,DISP=SHR                                 
+//         DD  DSN=EDC.V2R1M1.SEDCLINK,DISP=SHR                                 
+//         DD  DSN=PLI.V2R2M1.SIBMLINK,DISP=SHR                                 
+//SYSMSGS  DD  DSN=EDC.V2R1M1.SEDCMSGS(EDCMSGE),DISP=SHR                        
+//SYSLIB   DD  DSN=EDC.V2R1M1.SEDCHDRS,DISP=SHR                                 
+//SYSLIN   DD  DSN=&&LOADSET,DISP=(MOD,PASS),UNIT=3390,                         
+//             SPACE=(32000,(30,30)),                                           
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=3200)                             
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSCPRT  DD  SYSOUT=*                                                         
+//SYSTERM  DD  DUMMY                                                            
+//SYSIN    DD  DSN=&&DSNHOUT,DISP=(OLD,DELETE)                                  
+//SYSUT1   DD  UNIT=SYSDA,DISP=(NEW,PASS),                                      
+//             SPACE=(32000,(30,30)),                                           
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=3200)                             
+//SYSUT2   DD  UNIT=SYSDA,DISP=(NEW,PASS),                                      
+//             SPACE=(32000,(30,30)),                                           
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=3200)                             
+//SYSUT3   DD  UNIT=SYSDA,DISP=(NEW,PASS),                                      
+//             SPACE=(32000,(30,30)),                                           
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=3200)                             
+//SYSUT4   DD  UNIT=SYSDA,DISP=(NEW,PASS),                                      
+//             SPACE=(32000,(30,30)),                                           
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=3200)                             
+//SYSUT5   DD  UNIT=SYSDA,DISP=(NEW,PASS),                                      
+//             SPACE=(32000,(30,30)),                                           
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=3200)                             
+//SYSUT6   DD  UNIT=SYSDA,DISP=(NEW,PASS),                                      
+//             SPACE=(32000,(30,30)),                                           
+//             DCB=(RECFM=FB,LRECL=3200,BLKSIZE=12800)                          
+//SYSUT7   DD  UNIT=SYSDA,DISP=(NEW,PASS),                                      
+//             SPACE=(32000,(30,30)),                                           
+//             DCB=(RECFM=FB,LRECL=3200,BLKSIZE=12800)                          
+//SYSUT8   DD  UNIT=SYSDA,DISP=(NEW,PASS),                                      
+//             SPACE=(32000,(30,30)),                                           
+//             DCB=(RECFM=FB,LRECL=3200,BLKSIZE=12800)                          
+//SYSUT9   DD  UNIT=SYSDA,DISP=(NEW,PASS),                                      
+//             SPACE=(32000,(30,30)),                                           
+//             DCB=(RECFM=VB,LRECL=137,BLKSIZE=882)                             
+//SYSUT10  DD  DUMMY                                                            
+//*                                                                             
+//*            PRE-LINKEDIT                                                     
+//*                                                                             
+//PLKED   EXEC PGM=EDCPRLK,REGION=2048K,COND=((4,LT,PC),(4,LT,C))               
+//STEPLIB  DD  DSN=EDC.V2R1M1.SEDCLINK,DISP=SHR                                 
+//         DD  DSN=PLI.V2R2M1.SIBMLINK,DISP=SHR                                 
+//         DD  DSN=EDC.V2R1M1.SEDCCOMP,DISP=SHR                                 
+//SYSMSGS  DD  DSN=EDC.V2R1M1.SEDCMSGS(EDCMSGE),DISP=SHR                        
+//SYSLIB   DD  DUMMY                                                            
+//SYSIN    DD  DSN=&&LOADSET,DISP=(OLD,DELETE)                                  
+//SYSMOD   DD  DSN=&&PLKSET,UNIT=SYSDA,DISP=(MOD,PASS),                         
+//             SPACE=(32000,(30,30)),                                           
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=3200)                             
+//SYSOUT   DD  SYSOUT=*                                                         
+//SYSPRINT DD  SYSOUT=*                                                         
+//*                                                                             
+//*            LINKEDIT IF THE PRECOMPILE AND COMPILE                           
+//*            RETURN CODES ARE 4 OR LESS                                       
+//*                                                                             
+//LKED    EXEC PGM=IEWL,PARM='MAP',                                             
+//             COND=((4,LT,PC),(4,LT,C),(4,LT,PLKED))                           
+//SYSLIB   DD  DSN=EDC.V2R1M1.SEDCBASE,DISP=SHR                                 
+//         DD  DSN=PLI.V2R2M1.SIBMBASE,DISP=SHR                                 
+//         DD  DISP=SHR,DSN=DSN410.SDSNLOAD                                     
+//*        DD  DISP=SHR,DSN=IMSVS.RESLIB                                        
+//         DD  DISP=SHR,DSN=ISP.V3R5M0.ISPLOAD                                  
+//SYSLIN   DD  DSN=&&PLKSET,DISP=(OLD,DELETE)                                   
+//         DD  DDNAME=SYSIN                                                     
+//SYSLMOD DD DSN=&USER..RUNLIB.LOAD(&MEM),                                      
+//        DISP=SHR                                                              
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSUT1   DD  SPACE=(32000,(30,30)),UNIT=3390                                  
+//*DSNHC   PEND         REMOVE * FOR USE AS INSTREAM PROCEDURE                  

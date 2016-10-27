@@ -1,0 +1,42 @@
+//CICTRACE JOB (USER,ACCT,NUMBER),'D J YOUNG',                                  
+// CLASS=A,MSGCLASS=Y,REGION=0M,NOTIFY=DJY00                                    
+//PRTDMPA  EXEC  PGM=DFHDU410,PARM=SINGLE,                                      
+// REGION=0M                                                                    
+//STEPLIB  DD DSN=CICS410.SDFHLOAD,DISP=SHR                                     
+//DFHTINDX DD SYSOUT=*                                                          
+//SYSPRINT DD SYSOUT=*                                                          
+//DFHPRINT DD SYSOUT=*                                                          
+//DFHDMPDS DD DISP=SHR,                                                         
+// DSN=CICS.CICBPT01.CICS.DFHDMPA                                               
+//SYSIN    DD DUMMY                                                             
+//*        EXECUTE DUMP UTILITY PROGRAM TO PRINT THE                            
+//*        CONTENTS OF THE DUMP DATASET B                                       
+//PRTDMPB  EXEC  PGM=DFHDU410,PARM=SINGLE,                                      
+// REGION=0M                                                                    
+//STEPLIB  DD DSN=CICS410.SDFHLOAD,DISP=SHR                                     
+//DFHTINDX DD SYSOUT=*                                                          
+//SYSPRINT DD SYSOUT=*                                                          
+//DFHPRINT DD SYSOUT=*                                                          
+//DFHDMPDS DD DISP=SHR,                                                         
+// DSN=CICS.CICBPT01.CICS.DFHDMPB                                               
+//SYSIN    DD DUMMY                                                             
+//*        EXECUTE TRACE UTILITY PROGRAM TO PRINT THE                           
+//*        CONTENTS OF THE AUXILIARY TRACE DATASET 'A'.                         
+//*        THIS DATASET WILL BE EMPTY UNLESS SIT                                
+//*        PARAMETER AUXTR IS SET TO ON.                                        
+//PRTAUXT  EXEC PGM=DFHTU410,REGION=0M                                          
+//STEPLIB  DD DSN=CICS410.SDFHLOAD,DISP=SHR                                     
+//DFHAUXT  DD DISP=OLD,                                                         
+// DSN=DJY00.CICBPT01.CICS.DFHBUXT                                              
+//DFHAXPRT DD SYSOUT=*                                                          
+//DFHAXPRM DD DUMMY                                                             
+//**        EXECUTE TRACE UTILITY PROGRAM TO PRINT THE                          
+//**        CONTENTS OF THE AUXILIARY TRACE DATASET 'B'.                        
+//**        THIS DATASET WILL BE EMPTY UNLESS SIT                               
+//**        PARAMETER AUXTR IS SET TO ON.                                       
+//PRTBUXT  EXEC PGM=DFHTU410,REGION=0M,COND=                                    
+//STEPLIB  DD DSN=CICS410.SDFHLOAD,DISP=SHR                                     
+//DFHAUXT  DD DISP=SHR,                                                         
+// DSN=DJY00.CICBPT01.CICS.DFHAUXT                                              
+//DFHAXPRT DD SYSOUT=*                                                          
+//DFHAXPRM DD DUMMY                                                             

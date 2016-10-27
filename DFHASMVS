@@ -1,0 +1,19 @@
+//DFHASMVS PROC ASMBLR=ASMA90,     ASSEMBLER PROGRAM NAME               00010000
+// LIST='LIST,XREF(FULL),ALIGN',   ASSEMBLER OPTIONS                    00020000
+// INDEX='CICS410',                HIGH-LEVEL-QUALIFIER(S)              00030000
+// DISTTRG=S,                      DISTRIBUTION (A) OR TARGET (S) LIBS  00040000
+// OUTC=A,                         PRINT OUTPUT CLASS                   00050000
+// REG=2M,                         REGION SIZE                          00060000
+// WORK=SYSDA                      WORK DISK UNIT TYPE                  00070000
+//*                                                                     00080000
+//ASSEM    EXEC PGM=&ASMBLR,                                            00090000
+// REGION=&REG,                                                         00100000
+// PARM='DECK,NOOBJECT,&LIST'                                           00110000
+//SYSLIB DD DSN=&INDEX..&DISTTRG.DFHMAC,DISP=SHR                        00120000
+//       DD DSN=&INDEX..&DISTTRG.DFHSRC,DISP=SHR                        00130000
+//       DD DSN=SYS1.MACLIB,DISP=SHR                                    00140000
+//       DD DSN=SYS1.MODGEN,DISP=SHR                                    00150000
+//SYSUT1 DD UNIT=&WORK,SPACE=(1700,(400,400))                           00160000
+//SYSUT2 DD UNIT=&WORK,SPACE=(1700,(400,400))                           00170000
+//SYSUT3 DD UNIT=&WORK,SPACE=(1700,(400,400))                           00180000
+//SYSPRINT DD SYSOUT=&OUTC                                              00190000

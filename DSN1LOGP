@@ -1,0 +1,13 @@
+//DSN1LOGP JOB (AAA),'D J YOUNG',MSGCLASS=Y,TIME=1440,USER=DJY00,               
+//         REGION=8M,NOTIFY=DJY00                                               
+//DOIT EXEC PGM=DSN1LOGP                                                        
+//STEPLIB  DD DSN=DSN410.SDSNLOAD,DISP=SHR                                      
+//*        DD DSN=SYS1.ICELIB,DISP=SHR                                          
+//SYSPRINT DD SYSOUT=*                                                          
+//SYSSUMRY DD SYSOUT=*                                                          
+//SYSABEND DD SYSOUT=*                                                          
+//M01BSDS  DD DSN=DSN2.DB1G.BSDS01,DISP=SHR                                     
+//SYSIN DD *                                                                    
+ RBASTART (D87FD000)  RBAEND ( EF600000)                                        
+ SUMMARY(YES)                                                                   
+/*                                                                              

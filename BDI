@@ -1,0 +1,99 @@
+//BDI      JOB (1),'D J YOUNG',CLASS=A,MSGCLASS=Y,NOTIFY=DJY00                  
+//JOBLIB  DD  DISP=SHR,                                                 00290000
+//            DSN=DSN410.SDSNLOAD                                       00300000
+//DSNTIAS EXEC PGM=IKJEFT01,DYNAMNBR=20,COND=(4,LT)                     00650000
+//SYSTSPRT DD  SYSOUT=*                                                 00660000
+//SYSPRINT DD  SYSOUT=*                                                 00670000
+//SYSUDUMP DD  SYSOUT=*                                                 00680000
+//SYSTSIN  DD  *                                                        00690000
+  DSN SYSTEM(DB1G)                                                      00700000
+  RUN PROGRAM(DSNTIAD)  PLAN(DSNTIA41) PARM('RC0')  -                   00740000
+       LIB('DSN410.RUNLIB.LOAD')                                        00750000
+  END                                                                   00760000
+//SYSIN    DD  *                                                        00770000
+ CREATE TABLESPACE DITS                                                         
+     IN TPCCDB                                                                  
+     BUFFERPOOL BP0                                                             
+     USING STOGROUP TPCCSG01                                                    
+     PRIQTY 1000                                                                
+     SECQTY 1000                                                                
+     ERASE NO                                                                   
+     LOCKSIZE PAGE                                                              
+     CLOSE NO                                                                   
+     COMPRESS NO;                                                               
+ CREATE TABLE DJY00.DISTRICT                                                    
+     (D_ID              INTEGER  NOT NULL,                                      
+      D_W_ID            INTEGER  NOT NULL,                                      
+      D_NAME            CHAR(10) NOT NULL,                                      
+      D_STREET_1        CHAR(20) NOT NULL,                                      
+      D_STREET_2        CHAR(20) NOT NULL,                                      
+      D_CITY            CHAR(20) NOT NULL,                                      
+      D_STATE           CHAR(2)  NOT NULL,                                      
+      D_ZIP             CHAR(9)  NOT NULL,                                      
+      D_TAX             FLOAT    NOT NULL,                                      
+      D_YTD             FLOAT    NOT NULL,                                      
+      D_NEXT_O_ID       INTEGER  NOT NULL)                                      
+      IN  TPCCDB.DITS;                                                          
+/*                                                                              
+//DSNUPROC PROC LIB='DSN410.SDSNLOAD',                                          
+//         SYSTEM=DB1G,                                                         
+//         SIZE=8M,UID='',UTPROC=''                                             
+//*        SIZE=1024K,UID='',UTPROC='RESTART'                                   
+//*        COMPRESS = YES                                                       
+//DSNUPROC EXEC PGM=DSNUTILB,REGION=&SIZE,                                      
+//         PARM=(&SYSTEM,'&UID','&UTPROC')                                      
+//STEPLIB  DD DSN=&LIB,DISP=SHR                                                 
+//*        DD DSN=SYS1.ICELIB,DISP=SHR                                          
+//SYSPRINT DD SYSOUT=*                                                          
+//UTPRINT  DD SYSOUT=*                                                          
+//SYSUDUMP DD SYSOUT=*                                                          
+//    PEND                                                                      
+//UTIL EXEC DSNUPROC,SYSTEM=DB1G,UID='LDWH',UTPROC=''                           
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//*  GENERATING JCL FOR THE LOAD UTILITY                                        
+//*  DATE:  11/04/87          TIME:  05:03:15                                   
+//*                                                                             
+//**********************************************                                
+//*                                                                             
+//DSNUPROC.MYDD1 DD DSN=DJY00.DISTRICT.INPUT,                                   
+//        UNIT=3390,VOL=SER=SPARE2,DISP=SHR                                     
+//DSNUPROC.SYSIN    DD  *                                                       
+ LOAD DATA INDDN(MYDD1) LOG NO RESUME NO                                00010000
+      INTO TABLE DJY00.DISTRICT                                         00020000
+     (D_ID            POSITION(1:8)      DECIMAL EXTERNAL,                      
+      D_W_ID          POSITION(9:16)     DECIMAL EXTERNAL,                      
+      D_NAME          POSITION(17:26)    CHAR(10),                              
+      D_STREET_1      POSITION(27:46)    CHAR(20),                              
+      D_STREET_2      POSITION(47:66)    CHAR(20),                              
+      D_CITY          POSITION(67:86)    CHAR(20),                              
+      D_STATE         POSITION(87:88)    CHAR(2),                               
+      D_ZIP           POSITION(89:97)    CHAR(9),                               
+      D_TAX           POSITION(98:103)   FLOAT EXTERNAL,                        
+      D_YTD           POSITION(104:109)  FLOAT EXTERNAL,                        
+      D_NEXT_O_ID     POSITION(110:115)  DECIMAL EXTERNAL)                      
+/*                                                                              
+//DSNTIAS EXEC PGM=IKJEFT01,DYNAMNBR=20,COND=(4,LT)                     00650000
+//SYSTSPRT DD  SYSOUT=*                                                 00660000
+//SYSPRINT DD  SYSOUT=*                                                 00670000
+//SYSUDUMP DD  SYSOUT=*                                                 00680000
+//SYSTSIN  DD  *                                                        00690000
+  DSN SYSTEM(DB1G)                                                      00700000
+  RUN PROGRAM(DSNTIAD)  PLAN(DSNTIA41) PARM('RC0')  -                   00740000
+       LIB('DSN410.RUNLIB.LOAD')                                        00750000
+  END                                                                   00760000
+//SYSIN    DD  *                                                        00770000
+ CREATE UNIQUE INDEX DJY00.DIIN01                                               
+        ON DJY00.DISTRICT(D_W_ID,D_ID)                                          
+         USING STOGROUP TPCCSG01                                                
+         PRIQTY 500                                                             
+         SECQTY 200                                                             
+         SUBPAGES 1                                                             
+         CLUSTER                                                                
+         CLOSE NO;                                                              
+ ALTER TABLE DJY00.DISTRICT                                                     
+      PRIMARY KEY (D_W_ID,D_ID);                                                
+ ALTER TABLE DJY00.DISTRICT                                                     
+      FOREIGN KEY DIFK1 (D_W_ID)                                                
+            REFERENCES DJY00.WAREHOUSE ON DELETE RESTRICT;                      

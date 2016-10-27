@@ -1,0 +1,46 @@
+       IDENTIFICATION DIVISION.                                                 
+       PROGRAM-ID.  CIFORMAT.                                                   
+       ENVIRONMENT DIVISION.                                                    
+       DATA DIVISION.                                                           
+       WORKING-STORAGE SECTION.                                                 
+           EXEC SQL INCLUDE SQLCA END-EXEC.                                     
+       77  SQLCALEN               PIC S9(4) COMP VALUE +200.                    
+       77  SQLVALUE               PIC S9(9) COMP.                               
+       77  LOWNUM                 PIC S9(9) COMP.                               
+       77  HIGHNUM                PIC S9(9) COMP.                               
+       77  SOC7                   PIC S9(7) COMP-3.                             
+       01  COMMAREA               PIC X(1).                                     
+           EXEC SQL INCLUDE DJYMSQLA END-EXEC.                                  
+       01  MFINPUT REDEFINES DJYSQLAI.                                          
+           03  FILLER             PIC X(12).                                    
+           03  TR-CODE            PIC X(4).                                     
+           03  LOW-IN             PIC 9(9).                                     
+           03  HIGH-IN            PIC 9(9).                                     
+           03  FILLER             PIC X(60).                                    
+       01  DB2-RETURN-CODE.                                                     
+           03  FILLER   PIC X(8) VALUE 'HEREITIS'.                              
+           03  SQLCODE-OUT        PIC S9(9).                                    
+       01  WORKSPOT.                                                            
+           03  TRAN-CODE          PIC X(4).                                     
+           03  NUMBER1            PIC 9(9).                                     
+           03  NUMBER2            PIC 9(9).                                     
+           03  FILLER             PIC X(58).                                    
+       01  OUTSPOT.                                                             
+           03  NUMBER-2           PIC 9(9).                                     
+           03  NUMBER-1           PIC 9(9).                                     
+           03  TRANS-CODE         PIC X(4).                                     
+           03  FILLER             PIC X(58) VALUE SPACES.                       
+                                                                                
+       PROCEDURE DIVISION.                                                      
+           EXEC CICS HANDLE CONDITION MAPFAIL (FAILMAP) END-EXEC.               
+      *                                                                         
+       FAILMAP.                                                                 
+           EXEC CICS SEND MAP('DJYSQLA')                                        
+                          MAPSET('DJYSQLA')                                     
+                          ERASEAUP                                              
+                          CURSOR(1)                                             
+                          LAST                                                  
+                          END-EXEC.                                             
+      *                                                                         
+           EXEC CICS RETURN  END-EXEC.                                          
+           GOBACK.                                                              

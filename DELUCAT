@@ -1,0 +1,10 @@
+//DELALIAS JOB (1),'1',NOTIFY=DJY00,MSGCLASS=Y                                  
+//*SYSAFF=EC30                                                                  
+//IDCAMS EXEC PGM=IDCAMS                                                        
+//SYSPRINT DD SYSOUT=*                                                          
+//CAT DD UNIT=3390,VOL=SER=DB22SY,DISP=SHR                                      
+//SYSIN DD *                                                                    
+  DELETE (CICS.USER.CATALOG) USERCATALOG FILE(CAT)                              
+         CAT(ICFCAT.VEC2001/EC20)                                               
+/*                                                                              
+//                                                                              
