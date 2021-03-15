@@ -1,0 +1,2063 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID.  IM2OU10.
+       ENVIRONMENT DIVISION.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01  WS-START               PIC X(15) VALUE
+           'WORKING STORAGE'.
+           EXEC SQL INCLUDE SQLCA END-EXEC.
+       77  SQLCALEN               PIC S9(4) COMP VALUE +200.
+       77  SQLVALUE               PIC S9(9) COMP.
+       77  WH                     PIC S9(9) COMP.
+       77  DI                     PIC S9(9) COMP.
+       77  CUSTID                 PIC S9(9) COMP.
+       77  OID                    PIC S9(9) COMP.
+       77  OL-NUMBER              PIC S9(9) COMP.
+       77  NUM-UPDATES            PIC S9(9) COMP.
+       77  UPDATE-COUNTER         PIC S9(9) COMP.
+       77  SOC7                   PIC S9(7) COMP-3.
+       77  UPDATE-VALUE           PIC X(24).
+       77  ARRAY-DEPTH            PIC S9(9) COMP.
+       77  GET-UNIQUE             PIC X(4) VALUE 'GU'.
+       77  INSRT                  PIC X(4) VALUE 'ISRT'.
+       77  ROLL                   PIC X(4) VALUE 'ROLL'.
+      * FROM DB2SMF6C START
+       77  ABEND-CODE           PIC S9(4) COMP.
+       77  TIMER-CONSTANT       PIC S9(10) COMP VALUE +4096000000.
+       77  EOF-FLAG             PIC X(3) VALUE 'NO'.
+       77  SMF-FLAG             PIC X(8) VALUE SPACES.
+       77  CONTROL-FLAG         PIC X(3) VALUE 'NO'.
+       77  SEARCH-FLAG          PIC X(3) VALUE 'NO'.
+       77  S-SUB                PIC S9(9) COMP.
+       77  S-SUB-SAVE           PIC S9(9) COMP.
+      * FROM DB2SMF6C END
+       01  ROW-UPDATE-VALUES.
+           05  DEEDATE            PIC 9(6).
+           05  DEETIME            PIC 9(8).
+       01  DB2-RETURN-CODE.
+           03  FILLER   PIC X(8) VALUE 'HEREITIS'.
+           03  SQLCODE-OUT        PIC S9(9).
+       01  ORDER-LINE-DATA.
+           05  RET1                    PIC S9(9) COMP.
+           05  RET2                    PIC S9(9) COMP.
+           05  RET3                    PIC S9(9) COMP.
+           05  RET4                    PIC S9(9) COMP.
+           05  RET5                    PIC S9(9) COMP.
+           05  RET6                    PIC S9(9) COMP.
+           05  RET7                    PIC X(26).
+           05  RET8                    PIC S9(9) COMP.
+           05  RET9                    COMP-1.
+           05  RET10                   PIC X(24).
+       01  INPUT-MESSAGE.
+           03  LENGTH-1                PIC S9(3) COMP.
+           03  FILLER                  PIC XX.
+           03  INPUT-TEXT.
+               05  TRAN-CODE           PIC X(9).
+               05  WH-IN               PIC 9(9).
+               05  DI-IN               PIC 9(9).
+               05  CUSTID-IN           PIC 9(9).
+               05  ARRAY-DEPTH-IN      PIC 9(9).
+       01  OUTPUT-MESSAGE.
+           03  LENGTH-2                PIC S9(3) COMP VALUE +49.
+           03  FILLER                  PIC S9(3) COMP VALUE +0.
+           03  OUTPUT-TEXT.
+               05  TRANS-CODE          PIC X(9).
+               05  NUMBER-1            PIC X(9).
+               05  NUMBER-2            PIC X(9).
+               05  FILLER              PIC X(18) VALUE ALL 'Z'.
+      * FROM DB2SMF6C START
+       01  TRAN-WORK.
+           03  APPL-ELAPSED-WORK    PIC S9(9)V9999 COMP.
+           03  APPL-TCB-WORK        PIC S9(9)V9999 COMP.
+           03  APPL-SRB-WORK        PIC S9(9)V9999 COMP.
+           03  APPL-LOCKWAIT-WORK   PIC S9(9)V9999 COMP.
+           03  APPL-IOWAIT-WORK     PIC S9(9)V9999 COMP.
+           03  APPL-READWT-WORK     PIC S9(9)V9999 COMP.
+           03  APPL-WRITEWT-WORK    PIC S9(9)V9999 COMP.
+           03  APPL-SWITCHWT-WORK   PIC S9(9)V9999 COMP.
+           03  APPL-ARCHWT-WORK   PIC S9(9)V9999 COMP.
+           03  ORANGE-ELAPSED-WORK  PIC S9(9)V9999 COMP.
+           03  ORANGE-TCB-WORK      PIC S9(9)V9999 COMP.
+           03  ORANGE-SRB-WORK      PIC S9(9)V9999 COMP.
+       01  TRAN-LOCATE.
+           03  NUM-PLANS        PIC S9(9) COMP.
+           03  PLANS OCCURS  100 TIMES
+               INDEXED BY PLAN-INDEX.
+               05  PLAN-NAME    PIC X(4).
+               05  PLAN-NUM     PIC 9(3).
+       01  TRAN-SUMMARY.
+           02  NUM-TRANS        PIC S9(9) COMP VALUE 0.
+           02  TRANS OCCURS  1000 TIMES.
+                   05  PLAN-OUT     PIC X(12) VALUE 'VALUE'.
+                   05  NUMT PIC S9(18) COMP.
+                   05  ELAPSED-C2   PIC S9(9)V9999 COMP.
+                   05  TCB-C2       PIC S9(9)V9999 COMP.
+                   05  SRB-C2       PIC S9(9)V9999 COMP.
+                   05  LOCKWAIT     PIC S9(9)V9999 COMP.
+                   05  IOWAIT       PIC S9(9)V9999 COMP.
+                   05  ELAPSED-C1   PIC S9(9)V9999 COMP.
+                   05  TCB-C1       PIC S9(9)V9999 COMP.
+                   05  SRB-C1       PIC S9(9)V9999 COMP.
+                   05  READWT       PIC S9(9)V9999 COMP.
+                   05  WRITEWT      PIC S9(9)V9999 COMP.
+                   05  SWITCHWT     PIC S9(9)V9999 COMP.
+                   05  ARCHWT       PIC S9(9)V9999 COMP.
+                   05  WACN1       PIC S9(18) COMP.
+                   05  WACN2       PIC S9(18) COMP.
+                   05  WACN3       PIC S9(18) COMP.
+                   05  WACN4       PIC S9(18) COMP.
+                   05  WACN5       PIC S9(18) COMP.
+                   05  WACN6       PIC S9(18) COMP.
+                   05  WACN7       PIC S9(18) COMP.
+                   05  WACN12      PIC S9(18) COMP.
+                   05  WACN13      PIC S9(18) COMP.
+                   05  WACN14      PIC S9(18) COMP.
+                   05  WACN15      PIC S9(18) COMP.
+                   05  XSTN1       PIC S9(18) COMP.
+                   05  XSTN2       PIC S9(18) COMP.
+                   05  XSTN3       PIC S9(18) COMP.
+                   05  XSTN4       PIC S9(18) COMP.
+                   05  XSTN5       PIC S9(18) COMP.
+                   05  XSTN6       PIC S9(18) COMP.
+                   05  XSTN7       PIC S9(18) COMP.
+                   05  XSTN8       PIC S9(18) COMP.
+                   05  XSTN9       PIC S9(18) COMP.
+                   05  XSTN10      PIC S9(18) COMP.
+                   05  XSTN11      PIC S9(18) COMP.
+                   05  XSTN12      PIC S9(18) COMP.
+                   05  XSTN13      PIC S9(18) COMP.
+                   05  XSTN14      PIC S9(18) COMP.
+                   05  XSTN15      PIC S9(18) COMP.
+                   05  XSTN16      PIC S9(18) COMP.
+                   05  XSTN17      PIC S9(18) COMP.
+                   05  XSTN18      PIC S9(18) COMP.
+                   05  XSTN19      PIC S9(18) COMP.
+                   05  XSTN20      PIC S9(18) COMP.
+                   05  XSTN21      PIC S9(18) COMP.
+                   05  XSTN22      PIC S9(18) COMP.
+                   05  XSTN23      PIC S9(18) COMP.
+                   05  XSTN24      PIC S9(18) COMP.
+                   05  XSTN25      PIC S9(18) COMP.
+                   05  XSTN26      PIC S9(18) COMP.
+                   05  XSTN27      PIC S9(18) COMP.
+                   05  XSTN28      PIC S9(18) COMP.
+                   05  XSTN29      PIC S9(18) COMP.
+                   05  XSTN30      PIC S9(18) COMP.
+                   05  XSTN31      PIC S9(18) COMP.
+                   05  XSTN32      PIC S9(18) COMP.
+                   05  XSTN33      PIC S9(18) COMP.
+                   05  XSTN34      PIC S9(18) COMP.
+                   05  BAC1N1      PIC S9(18) COMP.
+                   05  BAC1N2      PIC S9(18) COMP.
+                   05  BAC1N3      PIC S9(18) COMP.
+                   05  BAC1N4      PIC S9(18) COMP.
+                   05  BAC1N5      PIC S9(18) COMP.
+                   05  BAC1N6      PIC S9(18) COMP.
+                   05  BAC1N7      PIC S9(18) COMP.
+                   05  BAC1N8      PIC S9(18) COMP.
+                   05  BAC2N1      PIC S9(18) COMP.
+                   05  BAC2N2      PIC S9(18) COMP.
+                   05  BAC2N3      PIC S9(18) COMP.
+                   05  BAC2N4      PIC S9(18) COMP.
+                   05  BAC2N5      PIC S9(18) COMP.
+                   05  BAC2N6      PIC S9(18) COMP.
+                   05  BAC2N7      PIC S9(18) COMP.
+                   05  BAC2N8      PIC S9(18) COMP.
+                   05  BAC3N1      PIC S9(18) COMP.
+                   05  BAC3N2      PIC S9(18) COMP.
+                   05  BAC3N3      PIC S9(18) COMP.
+                   05  BAC3N4      PIC S9(18) COMP.
+                   05  BAC3N5      PIC S9(18) COMP.
+                   05  BAC3N6      PIC S9(18) COMP.
+                   05  BAC3N7      PIC S9(18) COMP.
+                   05  BAC3N8      PIC S9(18) COMP.
+                   05  BAC4N1      PIC S9(18) COMP.
+                   05  BAC4N2      PIC S9(18) COMP.
+                   05  BAC4N3      PIC S9(18) COMP.
+                   05  BAC4N4      PIC S9(18) COMP.
+                   05  BAC4N5      PIC S9(18) COMP.
+                   05  BAC4N6      PIC S9(18) COMP.
+                   05  BAC4N7      PIC S9(18) COMP.
+                   05  BAC4N8      PIC S9(18) COMP.
+                   05  TXAN1       PIC S9(18) COMP.
+                   05  TXAN2       PIC S9(18) COMP.
+                   05  TXAN3       PIC S9(18) COMP.
+                   05  TXAN4       PIC S9(18) COMP.
+                   05  TXAN5       PIC S9(18) COMP.
+                   05  TXAN6       PIC S9(18) COMP.
+                   05  TXAN7       PIC X(2).
+                   05  TXAN9       PIC X(2).
+                   05  TXAN10      PIC S9(18) COMP.
+                   05  TXAN11      PIC S9(18) COMP.
+                   05  TXAN12      PIC S9(18) COMP.
+                   05  TXAN13      PIC S9(18) COMP.
+                   05  TXAN14      PIC S9(18) COMP.
+                   05  TXAN15      PIC S9(18) COMP.
+                   05  TXAN16      PIC S9(18) COMP.
+                   05  TXAN17      PIC S9(18) COMP.
+                   05  TXAN18      PIC S9(18) COMP.
+                   05  TXAN19      PIC S9(18) COMP.
+                   05  TXAN20      PIC S9(18) COMP.
+
+      *****************************************************************
+      * DATA AREA TO BE FILLED IN BY SYSSTATS SUBROUTINE
+      *****************************************************************
+       01  SYSTEM-STATS-WORKAREA.
+           03  FILLER           PIC X(8) VALUE 'WORKAREA'.
+           03  QWSA.
+               05  QWSAPRC1     PIC X(4).
+               05  QWSATCB1     PIC S9(18) COMP.
+               05  QWSASRB1     PIC S9(18) COMP.
+               05  QWSAASN1     PIC S9(4) COMP.
+               05  QWSAPRC2     PIC X(4).
+               05  QWSATCB2     PIC S9(18) COMP.
+               05  QWSASRB2     PIC S9(18) COMP.
+               05  QWSAASN2     PIC S9(4) COMP.
+               05  QWSAPRC3     PIC X(4).
+               05  QWSATCB3     PIC S9(18) COMP.
+               05  QWSASRB3     PIC S9(18) COMP.
+               05  QWSAASN3     PIC S9(4) COMP.
+               05  FILLER       PIC S9(4) COMP.
+           03  Q3ST.
+               05  Q3STN1       PIC S9(9) COMP.
+               05  Q3STN2       PIC S9(9) COMP.
+               05  Q3STN3       PIC S9(9) COMP.
+               05  Q3STN4       PIC S9(9) COMP.
+               05  Q3STN5       PIC S9(9) COMP.
+               05  Q3STN6       PIC S9(9) COMP.
+               05  Q3STN7       PIC S9(9) COMP.
+               05  Q3STN8       PIC S9(9) COMP.
+               05  Q3STN9       PIC S9(9) COMP.
+               05  Q3STN10      PIC S9(9) COMP.
+               05  Q3STN11      PIC S9(9) COMP.
+               05  Q3STN12      PIC S9(9) COMP.
+               05  Q3STN13      PIC S9(9) COMP.
+               05  Q3STN14      PIC S9(9) COMP.
+           03  Q9ST.
+               05  Q9STN1       PIC S9(9) COMP.
+               05  Q9STN2       PIC S9(9) COMP.
+               05  Q9STN3       PIC S9(9) COMP.
+               05  Q9STN4       PIC S9(9) COMP.
+               05  Q9STN5       PIC S9(9) COMP.
+               05  Q9STN6       PIC S9(9) COMP.
+               05  Q9STN7       PIC S9(9) COMP.
+               05  Q9STN8       PIC S9(9) COMP.
+               05  Q9STN9       PIC S9(9) COMP.
+               05  Q9STN10      PIC S9(9) COMP.
+               05  Q9STN11      PIC S9(9) COMP.
+               05  Q9STN12      PIC S9(9) COMP.
+               05  Q9STN13      PIC S9(9) COMP.
+               05  Q9STN14      PIC S9(9) COMP.
+               05  Q9STN15      PIC S9(9) COMP.
+               05  Q9STN16      PIC S9(9) COMP.
+               05  Q9STN17      PIC S9(9) COMP.
+               05  Q9STN18      PIC S9(9) COMP.
+               05  Q9STN19      PIC S9(9) COMP.
+           03  QWSD.
+               05  QWSDN1       PIC S9(9) COMP.
+               05  QWSDN2       PIC X(16).
+           03  QJST.
+               05  QJSTN1       PIC S9(9) COMP.
+               05  QJSTN2       PIC S9(9) COMP.
+               05  QJSTN3       PIC S9(9) COMP.
+               05  QJSTN4       PIC S9(9) COMP.
+               05  QJSTN5       PIC S9(9) COMP.
+               05  QJSTN6       PIC S9(9) COMP.
+               05  QJSTN7       PIC S9(9) COMP.
+               05  QJSTN8       PIC S9(9) COMP.
+               05  QJSTN9       PIC S9(9) COMP.
+               05  QJSTN10      PIC S9(9) COMP.
+               05  QJSTN11      PIC S9(9) COMP.
+               05  QJSTN12      PIC S9(9) COMP.
+               05  QJSTN13      PIC S9(9) COMP.
+               05  QJSTN14      PIC S9(9) COMP.
+           03  SYSTEM-STATS-TIMESTAMP PIC S9(18) COMP.
+           03  SYS-TIME-MOVE    PIC  9(7) COMP-3.
+           03  SYS-DATE-MOVE    PIC  9(7) COMP-3.
+           03  QVLS.
+               05  QVLSN1       PIC S9(9) COMP.
+               05  QVLSN2       PIC S9(9) COMP.
+               05  QVLSN3       PIC S9(9) COMP.
+               05  QVLSN4       PIC S9(9) COMP.
+               05  QVLSN5       PIC S9(9) COMP.
+               05  QVLSN6       PIC S9(9) COMP.
+               05  QVLSN7       PIC S9(9) COMP.
+               05  QVLSN8       PIC S9(9) COMP.
+               05  QVLSN9       PIC S9(9) COMP.
+               05  QVLSN10      PIC S9(9) COMP.
+               05  QVLSN11      PIC S9(9) COMP.
+               05  QVLSN12      PIC S9(9) COMP.
+               05  QVLSN13      PIC S9(9) COMP.
+               05  QVLSN14      PIC S9(9) COMP.
+               05  QVLSN15      PIC S9(9) COMP.
+               05  QVLSN16      PIC S9(9) COMP.
+               05  QVLSN17      PIC S9(9) COMP.
+               05  QVLSN18      PIC S9(9) COMP.
+               05  QVLSN19      PIC S9(9) COMP.
+               05  QVLSN20      PIC S9(9) COMP.
+               05  QVLSN21      PIC S9(9) COMP.
+               05  QVLSN22      PIC S9(9) COMP.
+               05  QVLSN23      PIC S9(9) COMP.
+               05  QVLSN24      PIC S9(9) COMP.
+               05  QVLSN25      PIC S9(9) COMP.
+               05  QVLSN26      PIC S9(9) COMP.
+               05  QVLSN27      PIC S9(9) COMP.
+               05  QVLSN28      PIC S9(9) COMP.
+               05  QVLSN29      PIC S9(9) COMP.
+               05  QVLSN30      PIC S9(9) COMP.
+               05  QVLSN31      PIC S9(9) COMP.
+               05  QVLSN32      PIC S9(9) COMP.
+           03  QVAS.
+               05  QVASN1       PIC S9(9) COMP.
+               05  QVASN2       PIC S9(9) COMP.
+               05  QVASN3       PIC S9(9) COMP.
+               05  QVASN4       PIC S9(9) COMP.
+               05  QVASN5       PIC S9(9) COMP.
+               05  QVASN6       PIC S9(9) COMP.
+               05  QVASN7       PIC S9(9) COMP.
+               05  QVASN8       PIC S9(9) COMP.
+               05  QVASN9       PIC S9(9) COMP.
+               05  QVASN10      PIC S9(9) COMP.
+      *****************************************************************
+      * DATA AREA TO BE FILLED IN BY DBTATS SUBROUTINE
+      *****************************************************************
+       01  DB-STATS-WORKAREA.
+           03  FILLER           PIC X(8) VALUE 'WORKAREA'.
+           03  QXST.
+               05  QXSTN1       PIC S9(9) COMP.
+               05  QXSTN2       PIC S9(9) COMP.
+               05  QXSTN3       PIC S9(9) COMP.
+               05  QXSTN4       PIC S9(9) COMP.
+               05  QXSTN5       PIC S9(9) COMP.
+               05  QXSTN6       PIC S9(9) COMP.
+               05  QXSTN7       PIC S9(9) COMP.
+               05  QXSTN8       PIC S9(9) COMP.
+               05  QXSTN9       PIC S9(9) COMP.
+               05  QXSTN10      PIC S9(9) COMP.
+               05  QXSTN11      PIC S9(9) COMP.
+               05  QXSTN12      PIC S9(9) COMP.
+               05  QXSTN13      PIC S9(9) COMP.
+               05  QXSTN14      PIC S9(9) COMP.
+               05  QXSTN15      PIC S9(9) COMP.
+               05  QXSTN16      PIC S9(9) COMP.
+               05  QXSTN17      PIC S9(9) COMP.
+               05  QXSTN18      PIC S9(9) COMP.
+               05  QXSTN19      PIC S9(9) COMP.
+               05  QXSTN20      PIC S9(9) COMP.
+               05  QXSTN21      PIC S9(9) COMP.
+               05  QXSTN22      PIC S9(9) COMP.
+               05  QXSTN23      PIC S9(9) COMP.
+               05  QXSTN24      PIC S9(9) COMP.
+               05  QXSTN25      PIC S9(9) COMP.
+               05  QXSTN26      PIC S9(9) COMP.
+               05  QXSTN27      PIC S9(9) COMP.
+               05  QXSTN28      PIC S9(9) COMP.
+               05  QXSTN29      PIC S9(9) COMP.
+               05  QXSTN30      PIC S9(9) COMP.
+               05  QXSTN31      PIC S9(9) COMP.
+               05  QXSTN32      PIC S9(9) COMP.
+               05  QXSTN33      PIC S9(9) COMP.
+               05  QXSTN34      PIC S9(9) COMP.
+           03  QTST.
+               05  QTSTN1       PIC S9(9) COMP.
+               05  QTSTN2       PIC S9(9) COMP.
+               05  QTSTN3       PIC S9(9) COMP.
+               05  QTSTN4       PIC S9(9) COMP.
+               05  QTSTN5       PIC S9(9) COMP.
+               05  QTSTN6       PIC S9(9) COMP.
+               05  QTSTN7       PIC S9(9) COMP.
+               05  QTSTN8       PIC S9(9) COMP.
+               05  QTSTN9       PIC S9(9) COMP.
+               05  QTSTN10      PIC S9(9) COMP.
+               05  QTSTN11      PIC S9(9) COMP.
+               05  QTSTN12      PIC S9(9) COMP.
+               05  QTSTN13      PIC S9(9) COMP.
+               05  QTSTN14      PIC S9(9) COMP.
+               05  QTSTN15      PIC S9(9) COMP.
+               05  QTSTN16      PIC S9(9) COMP.
+               05  QTSTN17      PIC S9(9) COMP.
+               05  QTSTN18      PIC S9(9) COMP.
+               05  QTSTN19      PIC S9(9) COMP.
+           03  QBST1.
+               05  QBST1N1      PIC S9(9) COMP VALUE -1.
+               05  QBST1N2      PIC S9(9) COMP.
+               05  QBST1N3      PIC S9(9) COMP.
+               05  QBST1N4      PIC S9(9) COMP.
+               05  QBST1N5      PIC S9(9) COMP.
+               05  QBST1N6      PIC S9(9) COMP.
+               05  QBST1N7      PIC S9(9) COMP.
+               05  QBST1N8      PIC S9(9) COMP.
+               05  QBST1N9      PIC S9(9) COMP.
+               05  QBST1N10     PIC S9(9) COMP.
+               05  QBST1N11     PIC S9(9) COMP.
+               05  QBST1N12     PIC S9(9) COMP.
+               05  QBST1N13     PIC S9(9) COMP.
+               05  QBST1N14     PIC S9(9) COMP.
+               05  QBST1N15     PIC S9(9) COMP.
+               05  QBST1N16     PIC S9(9) COMP.
+               05  QBST1N17     PIC S9(9) COMP.
+               05  QBST1N18     PIC S9(9) COMP.
+               05  QBST1N19     PIC S9(9) COMP.
+               05  QBST1N20     PIC S9(9) COMP.
+               05  QBST1N21     PIC S9(9) COMP.
+               05  QBST1N22     PIC S9(9) COMP.
+               05  QBST1N23     PIC S9(9) COMP.
+               05  QBST1N24     PIC S9(9) COMP.
+               05  QBST1N25     PIC S9(9) COMP.
+               05  QBST1N26     PIC S9(9) COMP.
+               05  QBST1N27     PIC S9(9) COMP.
+               05  QBST1N28     PIC S9(9) COMP.
+           03  QBST2.
+               05  QBST2N1      PIC S9(9) COMP VALUE -1.
+               05  QBST2N2      PIC S9(9) COMP.
+               05  QBST2N3      PIC S9(9) COMP.
+               05  QBST2N4      PIC S9(9) COMP.
+               05  QBST2N5      PIC S9(9) COMP.
+               05  QBST2N6      PIC S9(9) COMP.
+               05  QBST2N7      PIC S9(9) COMP.
+               05  QBST2N8      PIC S9(9) COMP.
+               05  QBST2N9      PIC S9(9) COMP.
+               05  QBST2N10     PIC S9(9) COMP.
+               05  QBST2N11     PIC S9(9) COMP.
+               05  QBST2N12     PIC S9(9) COMP.
+               05  QBST2N13     PIC S9(9) COMP.
+               05  QBST2N14     PIC S9(9) COMP.
+               05  QBST2N15     PIC S9(9) COMP.
+               05  QBST2N16     PIC S9(9) COMP.
+               05  QBST2N17     PIC S9(9) COMP.
+               05  QBST2N18     PIC S9(9) COMP.
+               05  QBST2N19     PIC S9(9) COMP.
+               05  QBST2N20     PIC S9(9) COMP.
+               05  QBST2N21     PIC S9(9) COMP.
+               05  QBST2N22     PIC S9(9) COMP.
+               05  QBST2N23     PIC S9(9) COMP.
+               05  QBST2N24     PIC S9(9) COMP.
+               05  QBST2N25     PIC S9(9) COMP.
+               05  QBST2N26     PIC S9(9) COMP.
+               05  QBST2N27     PIC S9(9) COMP.
+               05  QBST2N28     PIC S9(9) COMP.
+           03  QBST3.
+               05  QBST3N1      PIC S9(9) COMP VALUE -1.
+               05  QBST3N2      PIC S9(9) COMP.
+               05  QBST3N3      PIC S9(9) COMP.
+               05  QBST3N4      PIC S9(9) COMP.
+               05  QBST3N5      PIC S9(9) COMP.
+               05  QBST3N6      PIC S9(9) COMP.
+               05  QBST3N7      PIC S9(9) COMP.
+               05  QBST3N8      PIC S9(9) COMP.
+               05  QBST3N9      PIC S9(9) COMP.
+               05  QBST3N10     PIC S9(9) COMP.
+               05  QBST3N11     PIC S9(9) COMP.
+               05  QBST3N12     PIC S9(9) COMP.
+               05  QBST3N13     PIC S9(9) COMP.
+               05  QBST3N14     PIC S9(9) COMP.
+               05  QBST3N15     PIC S9(9) COMP.
+               05  QBST3N16     PIC S9(9) COMP.
+               05  QBST3N17     PIC S9(9) COMP.
+               05  QBST3N18     PIC S9(9) COMP.
+               05  QBST3N19     PIC S9(9) COMP.
+               05  QBST3N20     PIC S9(9) COMP.
+               05  QBST3N21     PIC S9(9) COMP.
+               05  QBST3N22     PIC S9(9) COMP.
+               05  QBST3N23     PIC S9(9) COMP.
+               05  QBST3N24     PIC S9(9) COMP.
+               05  QBST3N25     PIC S9(9) COMP.
+               05  QBST3N26     PIC S9(9) COMP.
+               05  QBST3N27     PIC S9(9) COMP.
+               05  QBST3N28     PIC S9(9) COMP.
+           03  QBST4.
+               05  QBST4N1      PIC S9(9) COMP VALUE -1.
+               05  QBST4N2      PIC S9(9) COMP.
+               05  QBST4N3      PIC S9(9) COMP.
+               05  QBST4N4      PIC S9(9) COMP.
+               05  QBST4N5      PIC S9(9) COMP.
+               05  QBST4N6      PIC S9(9) COMP.
+               05  QBST4N7      PIC S9(9) COMP.
+               05  QBST4N8      PIC S9(9) COMP.
+               05  QBST4N9      PIC S9(9) COMP.
+               05  QBST4N10     PIC S9(9) COMP.
+               05  QBST4N11     PIC S9(9) COMP.
+               05  QBST4N12     PIC S9(9) COMP.
+               05  QBST4N13     PIC S9(9) COMP.
+               05  QBST4N14     PIC S9(9) COMP.
+               05  QBST4N15     PIC S9(9) COMP.
+               05  QBST4N16     PIC S9(9) COMP.
+               05  QBST4N17     PIC S9(9) COMP.
+               05  QBST4N18     PIC S9(9) COMP.
+               05  QBST4N19     PIC S9(9) COMP.
+               05  QBST4N20     PIC S9(9) COMP.
+               05  QBST4N21     PIC S9(9) COMP.
+               05  QBST4N22     PIC S9(9) COMP.
+               05  QBST4N23     PIC S9(9) COMP.
+               05  QBST4N24     PIC S9(9) COMP.
+               05  QBST4N25     PIC S9(9) COMP.
+               05  QBST4N26     PIC S9(9) COMP.
+               05  QBST4N27     PIC S9(9) COMP.
+               05  QBST4N28     PIC S9(9) COMP.
+           03  QTXA.
+               05  QTXAN1       PIC S9(9) COMP.
+               05  QTXAN2       PIC S9(9) COMP.
+               05  QTXAN3       PIC S9(9) COMP.
+               05  QTXAN4       PIC S9(9) COMP.
+               05  QTXAN5       PIC S9(9) COMP.
+               05  QTXAN6       PIC S9(9) COMP.
+               05  QTXAN7       PIC S9(3) COMP.
+               05  QTXAN8       PIC S9(3) COMP.
+               05  QTXAN9       PIC S9(9) COMP.
+               05  QTXAN10      PIC S9(9) COMP.
+               05  QTXAN11      PIC S9(9) COMP.
+               05  QTXAN12      PIC S9(9) COMP.
+               05  QTXAN13      PIC S9(9) COMP.
+               05  QTXAN14      PIC S9(9) COMP.
+               05  QTXAN15      PIC S9(9) COMP.
+               05  QTXAN16      PIC S9(9) COMP.
+               05  QTXAN17      PIC S9(9) COMP.
+               05  QTXAN18      PIC S9(9) COMP.
+               05  QTXAN19      PIC S9(9) COMP.
+           03  QISE.
+               05  QISEN1       PIC S9(9) COMP.
+               05  QISEN2       PIC S9(9) COMP.
+               05  QISEN3       PIC S9(9) COMP.
+               05  QISEN4       PIC S9(9) COMP.
+               05  QISEN5       PIC S9(9) COMP.
+               05  QISEN6       PIC S9(9) COMP.
+               05  QISEN7       PIC S9(9) COMP.
+               05  QISEN8       PIC S9(9) COMP.
+               05  QISEN9       PIC S9(9) COMP.
+               05  QISEN10      PIC S9(9) COMP.
+           03  DB-STATS-TIMESTAMP PIC S9(18) COMP.
+      ******************************************************************
+      * DISPLAY THREAD OUTPUT
+      ******************************************************************
+       01  ACTIVE-THREADS.
+           03  FILLER           PIC X(8) VALUE 'WORKTHRD'.
+           03  NUM-THREADS      PIC S9(9) COMP.
+           03  THREADS OCCURS  256 TIMES.
+               05  CONNECTION-TYPE PIC X(8).
+               05  FILLER       PIC X.
+               05  STATUS-IND   PIC X(2).
+               05  FILLER       PIC X.
+               05  ACT-IND      PIC X.
+               05  FILLER       PIC X.
+               05  ACT-COUNTER  PIC X(5).
+               05  FILLER       PIC X.
+               05  CORR-ID      PIC X(12).
+               05  FILLER       PIC X.
+               05  AUTH-ID      PIC X(8).
+               05  FILLER       PIC X.
+               05  PLAN         PIC X(8).
+               05  FILLER       PIC X.
+               05  THRED-ASID   PIC X(4).
+               05  FILLER       PIC X.
+       01  THREAD-COUNTER       PIC S9(9) COMP.
+      ******************************************************************
+      * ACTIVE THREAD DETAIL STATISTICS
+      ******************************************************************
+       01  THREAD-DETAIL.
+           03  FILLER           PIC X(8) VALUE 'THREADS'.
+           03  TD-CORR-ID       PIC X(12).
+           03  TD-TIME-STAMP    PIC S9(18) COMP.
+           03  BEG-TIME-STAMP   PIC S9(18) COMP.
+           03  END-TIME-STAMP   PIC S9(18) COMP.
+           03  AWAC.
+               05  AWACN1       PIC S9(18) COMP.
+               05  AWACN2       PIC S9(18) COMP.
+               05  AWACN3       PIC S9(18) COMP.
+               05  AWACN4       PIC S9(18) COMP.
+               05  AWACN5       PIC S9(18) COMP.
+               05  AWACN6       PIC S9(9) COMP.
+               05  AWACN7       PIC S9(9) COMP.
+               05  AWACN8       PIC S9(18) COMP.
+               05  AWACN9       PIC S9(18) COMP.
+               05  AWACN10      PIC S9(18) COMP.
+               05  AWACN11      PIC S9(18) COMP.
+               05  AWACN12      PIC S9(9) COMP.
+               05  AWACN13      PIC S9(9) COMP.
+               05  AWACN14      PIC S9(9) COMP.
+               05  AWACN15      PIC S9(9) COMP.
+               05  AWACN16      PIC S9(18) COMP.
+               05  AWACN17      PIC S9(18) COMP.
+               05  AWACN18      PIC S9(18) COMP.
+               05  AWACN19      PIC S9(18) COMP.
+               05  AWACN20      PIC S9(18) COMP.
+               05  AWACN21      PIC S9(18) COMP.
+           03  AXST.
+               05  AXSTN1       PIC S9(9) COMP.
+               05  AXSTN2       PIC S9(9) COMP.
+               05  AXSTN3       PIC S9(9) COMP.
+               05  AXSTN4       PIC S9(9) COMP.
+               05  AXSTN5       PIC S9(9) COMP.
+               05  AXSTN6       PIC S9(9) COMP.
+               05  AXSTN7       PIC S9(9) COMP.
+               05  AXSTN8       PIC S9(9) COMP.
+               05  AXSTN9       PIC S9(9) COMP.
+               05  AXSTN10      PIC S9(9) COMP.
+               05  AXSTN11      PIC S9(9) COMP.
+               05  AXSTN12      PIC S9(9) COMP.
+               05  AXSTN13      PIC S9(9) COMP.
+               05  AXSTN14      PIC S9(9) COMP.
+               05  AXSTN15      PIC S9(9) COMP.
+               05  AXSTN16      PIC S9(9) COMP.
+               05  AXSTN17      PIC S9(9) COMP.
+               05  AXSTN18      PIC S9(9) COMP.
+               05  AXSTN19      PIC S9(9) COMP.
+               05  AXSTN20      PIC S9(9) COMP.
+               05  AXSTN21      PIC S9(9) COMP.
+               05  AXSTN22      PIC S9(9) COMP.
+               05  AXSTN23      PIC S9(9) COMP.
+               05  AXSTN24      PIC S9(9) COMP.
+               05  AXSTN25      PIC S9(9) COMP.
+               05  AXSTN26      PIC S9(9) COMP.
+               05  AXSTN27      PIC S9(9) COMP.
+               05  AXSTN28      PIC S9(9) COMP.
+               05  AXSTN29      PIC S9(9) COMP.
+               05  AXSTN30      PIC S9(9) COMP.
+               05  AXSTN31      PIC S9(9) COMP.
+               05  AXSTN32      PIC S9(9) COMP.
+               05  AXSTN33      PIC S9(9) COMP.
+               05  AXSTN34      PIC S9(9) COMP.
+           03  ABAC.
+               05  ABAC1N1      PIC S9(9) COMP.
+               05  ABAC1N2      PIC S9(9) COMP.
+               05  ABAC1N3      PIC S9(9) COMP.
+               05  ABAC1N4      PIC S9(9) COMP.
+               05  ABAC1N5      PIC S9(9) COMP.
+               05  ABAC1N6      PIC S9(9) COMP.
+               05  ABAC1N7      PIC S9(9) COMP.
+               05  ABAC1N8      PIC S9(9) COMP.
+               05  ABAC2N1      PIC S9(9) COMP.
+               05  ABAC2N2      PIC S9(9) COMP.
+               05  ABAC2N3      PIC S9(9) COMP.
+               05  ABAC2N4      PIC S9(9) COMP.
+               05  ABAC2N5      PIC S9(9) COMP.
+               05  ABAC2N6      PIC S9(9) COMP.
+               05  ABAC2N7      PIC S9(9) COMP.
+               05  ABAC2N8      PIC S9(9) COMP.
+               05  ABAC3N1      PIC S9(9) COMP.
+               05  ABAC3N2      PIC S9(9) COMP.
+               05  ABAC3N3      PIC S9(9) COMP.
+               05  ABAC3N4      PIC S9(9) COMP.
+               05  ABAC3N5      PIC S9(9) COMP.
+               05  ABAC3N6      PIC S9(9) COMP.
+               05  ABAC3N7      PIC S9(9) COMP.
+               05  ABAC3N8      PIC S9(9) COMP.
+               05  ABAC4N1      PIC S9(9) COMP.
+               05  ABAC4N2      PIC S9(9) COMP.
+               05  ABAC4N3      PIC S9(9) COMP.
+               05  ABAC4N4      PIC S9(9) COMP.
+               05  ABAC4N5      PIC S9(9) COMP.
+               05  ABAC4N6      PIC S9(9) COMP.
+               05  ABAC4N7      PIC S9(9) COMP.
+               05  ABAC4N8      PIC S9(9) COMP.
+           03  ATXA.
+               05  ATXAN1       PIC S9(9) COMP.
+               05  ATXAN2       PIC S9(9) COMP.
+               05  ATXAN3       PIC S9(9) COMP.
+               05  ATXAN4       PIC S9(9) COMP.
+               05  ATXAN5       PIC S9(9) COMP.
+               05  ATXAN6       PIC S9(9) COMP.
+               05  ATXAN7       PIC X(2).
+               05  ATXAN9       PIC X(2).
+               05  ATXAN10      PIC S9(9) COMP.
+               05  ATXAN11      PIC S9(9) COMP.
+               05  ATXAN12      PIC S9(9) COMP.
+               05  ATXAN13      PIC S9(9) COMP.
+               05  ATXAN14      PIC S9(9) COMP.
+               05  ATXAN15      PIC S9(9) COMP.
+               05  ATXAN16      PIC S9(9) COMP.
+               05  ATXAN17      PIC S9(9) COMP.
+               05  ATXAN18      PIC S9(9) COMP.
+               05  ATXAN19      PIC S9(9) COMP.
+               05  ATXAN20      PIC S9(9) COMP.
+           03  ACORR.
+               05  ACORRN1      PIC X(8).
+               05  ACORRN2.
+                   07  THREAD-ID PIC X(4).
+                   07  CTRANID PIC X(4).
+                   07  THREAD-ID PIC X(4).
+               05  ACORRN3      PIC X(8).
+               05  ACORRN4      PIC X(8).
+      ******************************************************************
+      * PRINT BUFFERS FOR DISPLAYING DB2 SYSTEM STATISTICS
+      ******************************************************************
+       01  OUTPUT-00.
+           03  FILLER           PIC X(28) VALUE ALL '*'.
+           03  FILLER           PIC X(3) VALUE '==>'.
+           03  FILLER           PIC X(18) VALUE 'SYSTEM STATISTICS'.
+           03  FILLER           PIC X(3) VALUE '<=='.
+           03  FILLER           PIC X(28) VALUE ALL '*'.
+       01  OUTPUT-01.
+           03  FILLER           PIC X(15) VALUE ALL '*'.
+           03  FILLER           PIC X(3) VALUE '==>'.
+           03  FILLER           PIC X(10) VALUE 'G.M.T. =='.
+           03  SYSTEM-STAT-TIME-OUT PIC X(12).
+           03  FILLER           PIC X(15) VALUE 'JULIAN DATE =='.
+           03  SYSTEM-STAT-DATE-OUT PIC 9(7).
+           03  FILLER           PIC X(3) VALUE '<=='.
+           03  FILLER           PIC X(15) VALUE ALL '*'.
+       01  OUTPUT-1.
+           03  FILLER           PIC X(16) VALUE 'PROC'.
+           03  QWSAPRC1         PIC X(4).
+           03  FILLER           PIC X(10) VALUE ' TCB'.
+           03  QWSATCB1-OUT     PIC Z(5).9999.
+           03  FILLER           PIC X(10) VALUE ' SRB'.
+           03  QWSASRB1-OUT     PIC Z(5).9999.
+           03  FILLER           PIC X(16) VALUE ' ASID'.
+           03  QWSAASN1         PIC 9(4).
+       01  OUTPUT-2.
+           03  FILLER           PIC X(16) VALUE 'PROC'.
+           03  QWSAPRC2         PIC X(4).
+           03  FILLER           PIC X(10) VALUE ' TCB'.
+           03  QWSATCB2-OUT     PIC Z(5).9999.
+           03  FILLER           PIC X(10) VALUE ' SRB'.
+           03  QWSASRB2-OUT     PIC Z(5).9999.
+           03  FILLER           PIC X(16) VALUE ' ASID'.
+           03  QWSAASN2         PIC X(4).
+       01  OUTPUT-3.
+           03  FILLER           PIC X(16) VALUE 'PROC'.
+           03  QWSAPRC3         PIC X(4).
+           03  FILLER           PIC X(10) VALUE ' TCB'.
+           03  QWSATCB3-OUT     PIC Z(5).9999.
+           03  FILLER           PIC X(10) VALUE ' SRB'.
+           03  QWSASRB3-OUT     PIC Z(5).9999.
+           03  FILLER           PIC X(16) VALUE ' ASID'.
+           03  QWSAASN3         PIC X(4).
+       01  OUTPUT-ASTERISKS.
+           03  FILLER           PIC X(80) VALUE ALL '*'.
+       01  OUTPUT-4.
+           03  FILLER           PIC X(12) VALUE 'IDENTIFY'.
+           03  Q3STN1           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SIGNON'.
+           03  Q3STN2           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CREA THRD'.
+           03  Q3STN3           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' TERM THRD'.
+           03  Q3STN4           PIC Z(7)9.
+       01  OUTPUT-5.
+           03  FILLER           PIC X(12) VALUE 'UOR RESLV'.
+           03  Q3STN5           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' COMM PH1'.
+           03  Q3STN6           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' COMM PH2'.
+           03  Q3STN7           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ABENDS'.
+           03  Q3STN8           PIC Z(7)9.
+       01  OUTPUT-6.
+           03  FILLER           PIC X(12) VALUE 'COMM SNGL'.
+           03  Q3STN9           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' UOR IND '.
+           03  Q3STN10          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SSAM EOT'.
+           03  Q3STN11          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SSAM EOM'.
+           03  Q3STN12          PIC Z(7)9.
+       01  OUTPUT-7.
+           03  FILLER           PIC X(12) VALUE 'TOTAL SSI'.
+           03  Q3STN13          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' QD THREADS'.
+           03  Q3STN14          PIC Z(7)9.
+       01  OUTPUT-8.
+           03  FILLER           PIC X(12) VALUE 'DIS DB   '.
+           03  Q9STN1           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DIS THRD'.
+           03  Q9STN2           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DIS UTIL'.
+           03  Q9STN3           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' REC BSDS'.
+           03  Q9STN4           PIC Z(7)9.
+       01  OUTPUT-9.
+           03  FILLER           PIC X(12) VALUE 'REC INDOUBT'.
+           03  Q9STN5           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' STA DB  '.
+           03  Q9STN6           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' STA TRACE'.
+           03  Q9STN7           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' STA SUBSYS'.
+           03  Q9STN8           PIC Z(7)9.
+       01  OUTPUT-10.
+           03  FILLER           PIC X(12) VALUE 'STOP DB    '.
+           03  Q9STN9           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' STOP TRACE'.
+           03  Q9STN10          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' STOP SS  '.
+           03  Q9STN11          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' TERM UTIL '.
+           03  Q9STN12          PIC Z(7)9.
+       01  OUTPUT-11.
+           03  FILLER           PIC X(12) VALUE 'DIS TRACE  '.
+           03  Q9STN13          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' RESERVED  '.
+           03  Q9STN14          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' UNRECOGNIZ'.
+           03  Q9STN15          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' STA RLIMIT'.
+           03  Q9STN16          PIC Z(7)9.
+       01  OUTPUT-12.
+           03  FILLER           PIC X(12) VALUE 'STOP RLIM  '.
+           03  Q9STN17          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DIS RLIM  '.
+           03  Q9STN18          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' MOD TRACE '.
+           03  Q9STN19          PIC Z(7)9.
+       01  OUTPUT-13.
+           03  FILLER           PIC X(17) VALUE 'CHECKPOINT COUNT '.
+           03  QWSDN1           PIC Z(7)9.
+           03  FILLER           PIC X(24) VALUE
+           'HIGH USED LOG RBA (HEX) '.
+           03  QWSDN2           PIC X(16).
+       01  OUTPUT-14.
+           03  FILLER           PIC X(12) VALUE 'WRITE WAIT '.
+           03  QJSTN1           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' WRT NOWAIT'.
+           03  QJSTN2           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' WRT FORCE '.
+           03  QJSTN3           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' WAIT ACBUF'.
+           03  QJSTN4           PIC Z(7)9.
+       01  OUTPUT-15.
+           03  FILLER           PIC X(12) VALUE 'READ BUFFER'.
+           03  QJSTN5           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' READ ACTIV'.
+           03  QJSTN6           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' READ ARCH '.
+           03  QJSTN7           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' READ DELAY'.
+           03  QJSTN8           PIC Z(7)9.
+       01  OUTPUT-16.
+           03  FILLER           PIC X(12) VALUE 'BSDS ACCESS'.
+           03  QJSTN9           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ARCH CISSS'.
+           03  QJSTN10          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' WRITE ACT '.
+           03  QJSTN11          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ARC RALLOC'.
+           03  QJSTN12          PIC Z(7)9.
+       01  OUTPUT-17.
+           03  FILLER           PIC X(12) VALUE 'ARC WALLOC '.
+           03  QJSTN13          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CI COUNT  '.
+           03  QJSTN14          PIC Z(7)9.
+       01  OUTPUT-1701.
+           03  FILLER           PIC X(12) VALUE 'LATCH LVL1 '.
+           03  QVLSN1           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LVL2'.
+           03  QVLSN2           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LVL3'.
+           03  QVLSN3           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LVL4'.
+           03  QVLSN4           PIC Z(7)9.
+       01  OUTPUT-1702.
+           03  FILLER           PIC X(12) VALUE 'LATCH LVL5 '.
+           03  QVLSN5           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LVL6'.
+           03  QVLSN6           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LVL7'.
+           03  QVLSN7           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LVL8'.
+           03  QVLSN8           PIC Z(7)9.
+       01  OUTPUT-1703.
+           03  FILLER           PIC X(12) VALUE 'LATCH LVL9 '.
+           03  QVLSN9           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV10'.
+           03  QVLSN10          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV11'.
+           03  QVLSN11          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV12'.
+           03  QVLSN12          PIC Z(7)9.
+       01  OUTPUT-1704.
+           03  FILLER           PIC X(12) VALUE 'LATCH LV13 '.
+           03  QVLSN13          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV14'.
+           03  QVLSN14          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV15'.
+           03  QVLSN15          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV16'.
+           03  QVLSN16          PIC Z(7)9.
+       01  OUTPUT-1705.
+           03  FILLER           PIC X(12) VALUE 'LATCH LV17 '.
+           03  QVLSN17          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV18'.
+           03  QVLSN18          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV19'.
+           03  QVLSN19          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV20'.
+           03  QVLSN20          PIC Z(7)9.
+       01  OUTPUT-1706.
+           03  FILLER           PIC X(12) VALUE 'LATCH LV21 '.
+           03  QVLSN21          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV22'.
+           03  QVLSN22          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV23'.
+           03  QVLSN23          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV24'.
+           03  QVLSN24          PIC Z(7)9.
+       01  OUTPUT-1707.
+           03  FILLER           PIC X(12) VALUE 'LATCH LV25 '.
+           03  QVLSN25          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV26'.
+           03  QVLSN26          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV27'.
+           03  QVLSN27          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV28'.
+           03  QVLSN28          PIC Z(7)9.
+       01  OUTPUT-1708.
+           03  FILLER           PIC X(12) VALUE 'LATCH LV29 '.
+           03  QVLSN29          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV30'.
+           03  QVLSN30          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV31'.
+           03  QVLSN31          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LATCH LV32'.
+           03  QVLSN32          PIC Z(7)9.
+       01  OUTPUT-1709.
+           03  FILLER           PIC X(12) VALUE 'PHY SUSPND '.
+           03  QVASN1           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' EUS SU SRB'.
+           03  QVASN2           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' EUS SU TCB'.
+           03  QVASN3           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' EUS AU SRB'.
+           03  QVASN4           PIC Z(7)9.
+       01  OUTPUT-1710.
+           03  FILLER           PIC X(12) VALUE 'EUS AU TCB '.
+           03  QVASN5           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' EUS SR SRB'.
+           03  QVASN6           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' EUS SR TCB'.
+           03  QVASN7           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ADC U RSRC'.
+           03  QVASN8           PIC Z(7)9.
+       01  OUTPUT-1711.
+           03  FILLER           PIC X(12) VALUE ' ADC A DDLK'.
+           03  QVASN9           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ADC I RSRC'.
+           03  QVASN10          PIC Z(7)9.
+      ******************************************************************
+      * PRINT BUFFERS FOR DATA BASE STATISTICS
+      ******************************************************************
+       01  OUTPUT-190.
+           03  FILLER           PIC X(27) VALUE ALL '*'.
+           03  FILLER           PIC X(3) VALUE '==>'.
+           03  FILLER           PIC X(20) VALUE 'DATA BASE STATISTICS'.
+           03  FILLER           PIC X(3) VALUE '<=='.
+           03  FILLER           PIC X(27) VALUE ALL '*'.
+       01  OUTPUT-191.
+           03  FILLER           PIC X(15) VALUE ALL '*'.
+           03  FILLER           PIC X(3) VALUE '==>'.
+           03  FILLER           PIC X(10) VALUE 'G.M.T. =='.
+           03  DB-STATS-TIME-OUT PIC X(12).
+           03  FILLER           PIC X(15) VALUE 'JULIAN DATE =='.
+           03  DB-STATS-DATE-OUT PIC 9(7).
+           03  FILLER           PIC X(3) VALUE '<=='.
+           03  FILLER           PIC X(15) VALUE ALL '*'.
+       01  OUTPUT-20.
+           03  FILLER           PIC X(12) VALUE 'SELECTS '.
+           03  QXSTN1           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' INSERTS'.
+           03  QXSTN2           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' UPDATES  '.
+           03  QXSTN3           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DELETES  '.
+           03  QXSTN4           PIC Z(7)9.
+       01  OUTPUT-21.
+           03  FILLER           PIC X(12) VALUE 'DESCRIBES  '.
+           03  QXSTN5           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PREPARES  '.
+           03  QXSTN6           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' OPENS     '.
+           03  QXSTN7           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CLOSES    '.
+           03  QXSTN8           PIC Z(7)9.
+       01  OUTPUT-22.
+           03  FILLER           PIC X(12) VALUE 'CR TABLE   '.
+           03  QXSTN9           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CR INDEX  '.
+           03  QXSTN10          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CR TSPACE '.
+           03  QXSTN11          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CR SYN    '.
+           03  QXSTN12          PIC Z(7)9.
+       01  OUTPUT-23.
+           03  FILLER           PIC X(12) VALUE 'CR DBASE   '.
+           03  QXSTN13          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CR STOGRP '.
+           03  QXSTN14          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CR VIEW   '.
+           03  QXSTN15          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DR INDEX  '.
+           03  QXSTN16          PIC Z(7)9.
+       01  OUTPUT-24.
+           03  FILLER           PIC X(12) VALUE 'DR TABLE   '.
+           03  QXSTN17          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DR TSPACE '.
+           03  QXSTN18          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DR DBASE  '.
+           03  QXSTN19          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DR SYN    '.
+           03  QXSTN20          PIC Z(7)9.
+       01  OUTPUT-25.
+           03  FILLER           PIC X(12) VALUE 'DR STGRP   '.
+           03  QXSTN21          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DR VIEW   '.
+           03  QXSTN22          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ALT STGRP '.
+           03  QXSTN23          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' FETCHES   '.
+           03  QXSTN24          PIC Z(7)9.
+       01  OUTPUT-26.
+           03  FILLER           PIC X(12) VALUE 'ALT TSPACE '.
+           03  QXSTN25          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ALT TABLE '.
+           03  QXSTN26          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ALT INDEX '.
+           03  QXSTN27          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' COMMENT ON'.
+           03  QXSTN28          PIC Z(7)9.
+       01  OUTPUT-27.
+           03  FILLER           PIC X(12) VALUE 'LOCK TBL   '.
+           03  QXSTN29          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' GRANT     '.
+           03  QXSTN30          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' REVOKES   '.
+           03  QXSTN31          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' INC BINDS '.
+           03  QXSTN32          PIC Z(7)9.
+       01  OUTPUT-28.
+           03  FILLER           PIC X(12) VALUE 'LABEL ON   '.
+           03  QXSTN33          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SET SQLID '.
+           03  QXSTN34          PIC Z(7)9.
+       01  OUTPUT-29.
+           03  FILLER           PIC X(12) VALUE 'ATT ALLOC  '.
+           03  QTSTN1           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SUCC ALLOC'.
+           03  QTSTN2           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' AUTO BINDS'.
+           03  QTSTN3           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SUCC AUBND'.
+           03  QTSTN4           PIC Z(7)9.
+       01  OUTPUT-30.
+           03  FILLER           PIC X(12) VALUE 'INVALID RES'.
+           03  QTSTN5           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' BIND ADDSB'.
+           03  QTSTN6           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' BIND RESUB'.
+           03  QTSTN7           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' TEST BINDS'.
+           03  QTSTN8           PIC Z(7)9.
+       01  OUTPUT-31.
+           03  FILLER           PIC X(12) VALUE 'PLANS BOUND'.
+           03  QTSTN9           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' REBIND SUB'.
+           03  QTSTN10          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ATT REBIND'.
+           03  QTSTN11          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PLNS REBND'.
+           03  QTSTN12          PIC Z(7)9.
+       01  OUTPUT-32.
+           03  FILLER           PIC X(12) VALUE 'FREE SUB   '.
+           03  QTSTN13          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ATT FREES '.
+           03  QTSTN14          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PLNS FREED'.
+           03  QTSTN15          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' AUTH CHEKS'.
+           03  QTSTN16          PIC Z(7)9.
+       01  OUTPUT-33.
+           03  FILLER           PIC X(12) VALUE 'SUCC AUTHS '.
+           03  QTSTN17          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CURR OPNDS'.
+           03  QTSTN18          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' MAX OPNDS '.
+           03  QTSTN19          PIC Z(7)9.
+       01  OUTPUT-34.
+           03  FILLER           PIC X(12) VALUE 'BUFFPOOL ID'.
+           03  QBST1N1          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' GET PAGES '.
+           03  QBST1N2          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SYNC READS'.
+           03  QBST1N3          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' BPOOL EXPS'.
+           03  QBST1N4          PIC Z(7)9.
+       01  OUTPUT-35.
+           03  FILLER           PIC X(12) VALUE 'EXP FAIL MX'.
+           03  QBST1N5          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' EXPFAIL GM'.
+           03  QBST1N6          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' BUFF UPDS '.
+           03  QBST1N7          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SETW UW   '.
+           03  QBST1N8          PIC Z(7)9.
+       01  OUTPUT-36.
+           03  FILLER           PIC X(12) VALUE 'PAGES WRITN'.
+           03  QBST1N9          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PW UW     '.
+           03  QBST1N10         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ASYNC WRIT'.
+           03  QBST1N11         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CURR ACBUF'.
+           03  QBST1N12         PIC Z(7)9.
+       01  OUTPUT-37.
+           03  FILLER           PIC X(12) VALUE 'PAGEIN RIO '.
+           03  QBST1N13         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PAGEIN WIO'.
+           03  QBST1N14         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SUCC OPENS'.
+           03  QBST1N15         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SYNC WRITE'.
+           03  QBST1N16         PIC Z(7)9.
+       01  OUTPUT-38.
+           03  FILLER           PIC X(12) VALUE 'SEQ PRE REQ'.
+           03  QBST1N17         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SP PAGREAD'.
+           03  QBST1N18         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PDIS NOBUF'.
+           03  QBST1N19         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PDIS NOENG'.
+           03  QBST1N20         PIC Z(7)9.
+       01  OUTPUT-39.
+           03  FILLER           PIC X(12) VALUE 'DEF WRITE  '.
+           03  QBST1N21         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DM CRITICL'.
+           03  QBST1N22         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' MIG DS    '.
+           03  QBST1N23         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' RCL TIMOUT'.
+           03  QBST1N24         PIC Z(7)9.
+       01  OUTPUT-40.
+           03  FILLER           PIC X(12) VALUE 'PF ASY-READ'.
+           03  QBST1N25         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PF ABRT ZZ'.
+           03  QBST1N26         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' WKFIL FAIL'.
+           03  QBST1N27         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PF DIS DUP'.
+           03  QBST1N28         PIC Z(7)9.
+       01  OUTPUT-41.
+           03  FILLER           PIC X(12) VALUE 'BUFFPOOL ID'.
+           03  QBST2N1          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' GET PAGES '.
+           03  QBST2N2          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SYNC READS'.
+           03  QBST2N3          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' BPOOL EXPS'.
+           03  QBST2N4          PIC Z(7)9.
+       01  OUTPUT-42.
+           03  FILLER           PIC X(12) VALUE 'EXP FAIL MX'.
+           03  QBST2N5          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' EXPFAIL GM'.
+           03  QBST2N6          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' BUFF UPDS '.
+           03  QBST2N7          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SETW UW   '.
+           03  QBST2N8          PIC Z(7)9.
+       01  OUTPUT-43.
+           03  FILLER           PIC X(12) VALUE 'PAGES WRITN'.
+           03  QBST2N9          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PW UW     '.
+           03  QBST2N10         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ASYNC WRIT'.
+           03  QBST2N11         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CURR ACBUF'.
+           03  QBST2N12         PIC Z(7)9.
+       01  OUTPUT-44.
+           03  FILLER           PIC X(12) VALUE 'PAGEIN RIO '.
+           03  QBST2N13         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PAGEIN WIO'.
+           03  QBST2N14         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SUCC OPENS'.
+           03  QBST2N15         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SYNC WRITE'.
+           03  QBST2N16         PIC Z(7)9.
+       01  OUTPUT-45.
+           03  FILLER           PIC X(12) VALUE 'SEQ PRE REQ'.
+           03  QBST2N17         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SP PAGREAD'.
+           03  QBST2N18         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PDIS NOBUF'.
+           03  QBST2N19         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PDIS NOENG'.
+           03  QBST2N20         PIC Z(7)9.
+       01  OUTPUT-46.
+           03  FILLER           PIC X(12) VALUE 'DEF WRITE  '.
+           03  QBST2N21         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DM CRITICL'.
+           03  QBST2N22         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' MIG DS    '.
+           03  QBST2N23         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' RCL TIMOUT'.
+           03  QBST2N24         PIC Z(7)9.
+       01  OUTPUT-47.
+           03  FILLER           PIC X(12) VALUE 'PF ASY-READ'.
+           03  QBST2N25         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PF ABRT ZZ'.
+           03  QBST2N26         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' WKFIL FAIL'.
+           03  QBST2N27         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PF DIS DUP'.
+           03  QBST2N28         PIC Z(7)9.
+       01  OUTPUT-48.
+           03  FILLER           PIC X(12) VALUE 'BUFFPOOL ID'.
+           03  QBST3N1          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' GET PAGES '.
+           03  QBST3N2          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SYNC READS'.
+           03  QBST3N3          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' BPOOL EXPS'.
+           03  QBST3N4          PIC Z(7)9.
+       01  OUTPUT-49.
+           03  FILLER           PIC X(12) VALUE 'EXP FAIL MX'.
+           03  QBST3N5          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' EXPFAIL GM'.
+           03  QBST3N6          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' BUFF UPDS '.
+           03  QBST3N7          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SETW UW   '.
+           03  QBST3N8          PIC Z(7)9.
+       01  OUTPUT-50.
+           03  FILLER           PIC X(12) VALUE 'PAGES WRITN'.
+           03  QBST3N9          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PW UW     '.
+           03  QBST3N10         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ASYNC WRIT'.
+           03  QBST3N11         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CURR ACBUF'.
+           03  QBST3N12         PIC Z(7)9.
+       01  OUTPUT-51.
+           03  FILLER           PIC X(12) VALUE 'PAGEIN RIO '.
+           03  QBST3N13         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PAGEIN WIO'.
+           03  QBST3N14         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SUCC OPENS'.
+           03  QBST3N15         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SYNC WRITE'.
+           03  QBST3N16         PIC Z(7)9.
+       01  OUTPUT-52.
+           03  FILLER           PIC X(12) VALUE 'SEQ PRE REQ'.
+           03  QBST3N17         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SP PAGREAD'.
+           03  QBST3N18         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PDIS NOBUF'.
+           03  QBST3N19         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PDIS NOENG'.
+           03  QBST3N20         PIC Z(7)9.
+       01  OUTPUT-53.
+           03  FILLER           PIC X(12) VALUE 'DEF WRITE  '.
+           03  QBST3N21         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DM CRITICL'.
+           03  QBST3N22         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' MIG DS    '.
+           03  QBST3N23         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' RCL TIMOUT'.
+           03  QBST3N24         PIC Z(7)9.
+       01  OUTPUT-54.
+           03  FILLER           PIC X(12) VALUE 'PF ASY-READ'.
+           03  QBST3N25         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PF ABRT ZZ'.
+           03  QBST3N26         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' WKFIL FAIL'.
+           03  QBST3N27         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PF DIS DUP'.
+           03  QBST3N28         PIC Z(7)9.
+       01  OUTPUT-55.
+           03  FILLER           PIC X(12) VALUE 'BUFFPOOL ID'.
+           03  QBST4N1          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' GET PAGES '.
+           03  QBST4N2          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SYNC READS'.
+           03  QBST4N3          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' BPOOL EXPS'.
+           03  QBST4N4          PIC Z(7)9.
+       01  OUTPUT-56.
+           03  FILLER           PIC X(12) VALUE 'EXP FAIL MX'.
+           03  QBST4N5          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' EXPFAIL GM'.
+           03  QBST4N6          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' BUFF UPDS '.
+           03  QBST4N7          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SETW UW   '.
+           03  QBST4N8          PIC Z(7)9.
+       01  OUTPUT-57.
+           03  FILLER           PIC X(12) VALUE 'PAGES WRITN'.
+           03  QBST4N9          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PW UW     '.
+           03  QBST4N10         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' ASYNC WRIT'.
+           03  QBST4N11         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CURR ACBUF'.
+           03  QBST4N12         PIC Z(7)9.
+       01  OUTPUT-58.
+           03  FILLER           PIC X(12) VALUE 'PAGEIN RIO '.
+           03  QBST4N13         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PAGEIN WIO'.
+           03  QBST4N14         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SUCC OPENS'.
+           03  QBST4N15         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SYNC WRITE'.
+           03  QBST4N16         PIC Z(7)9.
+       01  OUTPUT-59.
+           03  FILLER           PIC X(12) VALUE 'SEQ PRE REQ'.
+           03  QBST4N17         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SP PAGREAD'.
+           03  QBST4N18         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PDIS NOBUF'.
+           03  QBST4N19         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PDIS NOENG'.
+           03  QBST4N20         PIC Z(7)9.
+       01  OUTPUT-60.
+           03  FILLER           PIC X(12) VALUE 'DEF WRITE  '.
+           03  QBST4N21         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DM CRITICL'.
+           03  QBST4N22         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' MIG DS    '.
+           03  QBST4N23         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' RCL TIMOUT'.
+           03  QBST4N24         PIC Z(7)9.
+       01  OUTPUT-61.
+           03  FILLER           PIC X(12) VALUE 'PF ASY-READ'.
+           03  QBST4N25         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PF ABRT ZZ'.
+           03  QBST4N26         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' WKFIL FAIL'.
+           03  QBST4N27         PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PF DIS DUP'.
+           03  QBST4N28         PIC Z(7)9.
+       01  OUTPUT-62.
+           03  FILLER           PIC X(12) VALUE 'DEADLOCKS  '.
+           03  QTXAN1           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SUS LKCON '.
+           03  QTXAN2           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' TIMEOUTS  '.
+           03  QTXAN3           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LK ESC SHR'.
+           03  QTXAN4           PIC Z(7)9.
+       01  OUTPUT-63.
+           03  FILLER           PIC X(12) VALUE 'LK ESC EXC '.
+           03  QTXAN5           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' MAX PGLKS '.
+           03  QTXAN6           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' FLAG BYTE '.
+           03  QTXAN7           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' RLIM ID   '.
+           03  QTXAN8           PIC Z(7)9.
+       01  OUTPUT-64.
+           03  FILLER           PIC X(12) VALUE 'LIMIT DET  '.
+           03  QTXAN9           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LIM SU    '.
+           03  QTXAN10          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LIM CPU16 '.
+           03  QTXAN11          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' HIGH CPU16'.
+           03  QTXAN12          PIC Z(7)9.
+       01  OUTPUT-65.
+           03  FILLER           PIC X(12) VALUE 'LATCH CON  '.
+           03  QTXAN13          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' OTHER CON '.
+           03  QTXAN14          PIC Z(7)9.
+           03  FILLER           PIC X(07) VALUE ' LK RQ '.
+           03  QTXAN15          PIC Z(12)9.
+           03  FILLER           PIC X(07) VALUE ' UL RQ '.
+           03  QTXAN16          PIC Z(12)9.
+       01  OUTPUT-66.
+           03  FILLER           PIC X(12) VALUE 'QUERIES    '.
+           03  QTXAN17          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CHANGES   '.
+           03  QTXAN18          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' OTHER     '.
+           03  QTXAN19          PIC Z(7)9.
+       01  OUTPUT-67.
+           03  FILLER           PIC X(12) VALUE 'FULL FAILS '.
+           03  QISEN1           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PAGES     '.
+           03  QISEN2           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' CT REQ    '.
+           03  QISEN3           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LOAD CT   '.
+           03  QISEN4           PIC Z(7)9.
+       01  OUTPUT-68.
+           03  FILLER           PIC X(12) VALUE 'CT PAGES   '.
+           03  QISEN5           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' FREE PAGES'.
+           03  QISEN6           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' DBD PAGES '.
+           03  QISEN7           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' SKCT PAGES'.
+           03  QISEN8           PIC Z(7)9.
+       01  OUTPUT-69.
+           03  FILLER           PIC X(12) VALUE 'DBD REQUEST'.
+           03  QISEN9           PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' LOAD DBD  '.
+           03  QISEN10          PIC Z(7)9.
+      ******************************************************************
+      * PRINT LINES FOR ACTIVE THREAD DETAIL
+      ******************************************************************
+       01  OUTPUT-700.
+           03  FILLER           PIC X VALUE '*'.
+           03  FILLER           PIC X(25) VALUE ALL '*'.
+           03  FILLER           PIC X(3) VALUE '==>'.
+           03  FILLER     PIC X(22) VALUE 'APPLICATION STATISTICS'.
+           03  FILLER           PIC X(3) VALUE '<=='.
+           03  FILLER           PIC X(26) VALUE ALL '*'.
+       01  OUTPUT-701.
+           03  FILLER           PIC X(9) VALUE ALL '*'.
+           03  FILLER           PIC X(3) VALUE '==>'.
+           03  FILLER           PIC X(20) VALUE ' NUMBER OF TRANS'.
+           03  FILLER           PIC X(13) VALUE 'CORR-ID'.
+           03  FILLER           PIC X(9) VALUE 'AUTHID'.
+           03  FILLER           PIC X(9) VALUE 'PLAN'.
+           03  FILLER           PIC X(4) VALUE '    '.
+           03  FILLER           PIC X(3) VALUE '<=='.
+           03  FILLER           PIC X(10) VALUE ALL '*'.
+       01  OUTPUT-71.
+           03  FILLER           PIC X(9) VALUE ALL '*'.
+           03  FILLER           PIC X(4) VALUE '==>'.
+           03  NUMT-OUT         PIC Z(9)9.
+           03  FILLER           PIC X(9) VALUE SPACES.
+           03  ACORRN2          PIC X(13) VALUE SPACES.
+           03  ACORRN1          PIC X(5) VALUE SPACES.
+           03  ACORRN4          PIC X(12).
+           03  FILLER           PIC X(4) VALUE SPACES.
+           03  FILLER           PIC X(3) VALUE '<=='.
+           03  FILLER           PIC X(9) VALUE ALL '*'.
+       01  OUTPUT-TERMINATE.
+           03  FILLER           PIC X(31) VALUE ALL '*'.
+           03  FILLER           PIC X(18) VALUE 'THREAD TERMINATED'.
+           03  FILLER           PIC X(31) VALUE ALL '*'.
+       01  OUTPUT-72.
+           03  FILLER           PIC X(15) VALUE ALL '*'.
+           03  FILLER           PIC X(3) VALUE '==>'.
+           03  FILLER           PIC X(10) VALUE 'G.M.T. =='.
+           03  APPL-STAT-TIME-OUT PIC X(12).
+           03  FILLER           PIC X(15) VALUE 'JULIAN DATE =='.
+           03  APPL-STAT-DATE-OUT PIC 9(7).
+           03  FILLER           PIC X(3) VALUE '<=='.
+           03  FILLER           PIC X(15) VALUE ALL '*'.
+       01  OUTPUT-73.
+           03  FILLER           PIC X(20) VALUE 'CLASS2 TIMES'.
+           03  FILLER           PIC X(10) VALUE 'ELAPSED'.
+           03  APPL-ELAPSED     PIC Z(5).9999.
+           03  FILLER           PIC X(10) VALUE ' TCB'.
+           03  APPL-TCB         PIC Z(5).9999.
+           03  FILLER           PIC X(10) VALUE ' SRB'.
+           03  APPL-SRB         PIC Z(5).9999.
+       01  OUTPUT-732.
+           03  FILLER           PIC X(20) VALUE 'CLASS1 TIMES'.
+           03  FILLER           PIC X(10) VALUE 'ELAPSED'.
+           03  ORANGE-ELAPSED   PIC Z(5).9999.
+           03  FILLER           PIC X(10) VALUE ' TCB'.
+           03  ORANGE-TCB       PIC Z(5).9999.
+           03  FILLER           PIC X(10) VALUE ' SRB'.
+           03  ORANGE-SRB       PIC Z(5).9999.
+       01  OUTPUT-74.
+           03  FILLER           PIC X(10) VALUE 'I/O WAIT'.
+           03  APPL-IOWAIT      PIC Z(5).9999.
+           03  FILLER           PIC X(10) VALUE ' LOCK WAIT'.
+           03  APPL-LOCKWAIT    PIC Z(5).9999.
+           03  FILLER           PIC X(12) VALUE ' ENTRY/EXIT'.
+           03  AWACN6           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' WAIT TRACE'.
+           03  AWACN7           PIC Z(5)9.9.
+       01  OUTPUT-742.
+           03  FILLER           PIC X(10) VALUE 'READ WAIT'.
+           03  APPL-READWT      PIC Z(5).9999.
+           03  FILLER           PIC X(10) VALUE ' WRITE WT '.
+           03  APPL-WRITEWT     PIC Z(5).9999.
+           03  FILLER           PIC X(10) VALUE ' SWTCH WT'.
+           03  APPL-SWITCHWT    PIC Z(5).9999.
+           03  FILLER           PIC X(10) VALUE ' ARCH WT '.
+           03  APPL-ARCHWT      PIC Z(5).9999.
+       01  OUTPUT-744.
+           03  FILLER           PIC X(12) VALUE 'LOCK WTS'.
+           03  AWACN12          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' READ WTS'.
+           03  AWACN13          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' WRITE WTS'.
+           03  AWACN14          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SWITCH WT'.
+           03  AWACN15          PIC Z(5)9.9.
+       01  OUTPUT-75.
+           03  FILLER           PIC X(12) VALUE 'SELECTS '.
+           03  AXSTN1           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' INSERTS'.
+           03  AXSTN2           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' UPDATES  '.
+           03  AXSTN3           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' DELETES  '.
+           03  AXSTN4           PIC Z(5)9.9.
+       01  OUTPUT-76.
+           03  FILLER           PIC X(12) VALUE 'DESCRIBES  '.
+           03  AXSTN5           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' PREPARES  '.
+           03  AXSTN6           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' OPENS     '.
+           03  AXSTN7           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' CLOSES    '.
+           03  AXSTN8           PIC Z(5)9.9.
+       01  OUTPUT-77.
+           03  FILLER           PIC X(12) VALUE 'CR TABLE   '.
+           03  AXSTN9           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' CR INDEX  '.
+           03  AXSTN10          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' CR TSPACE '.
+           03  AXSTN11          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' CR SYN    '.
+           03  AXSTN12          PIC Z(5)9.9.
+       01  OUTPUT-78.
+           03  FILLER           PIC X(12) VALUE 'CR DBASE   '.
+           03  AXSTN13          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' CR STOGRP '.
+           03  AXSTN14          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' CR VIEW   '.
+           03  AXSTN15          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' DR INDEX  '.
+           03  AXSTN16          PIC Z(5)9.9.
+       01  OUTPUT-79.
+           03  FILLER           PIC X(12) VALUE 'DR TABLE   '.
+           03  AXSTN17          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' DR TSPACE '.
+           03  AXSTN18          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' DR DBASE  '.
+           03  AXSTN19          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' DR SYN    '.
+           03  AXSTN20          PIC Z(5)9.9.
+       01  OUTPUT-80.
+           03  FILLER           PIC X(12) VALUE 'DR STGRP   '.
+           03  AXSTN21          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' DR VIEW   '.
+           03  AXSTN22          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' ALT STGRP '.
+           03  AXSTN23          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' FETCHES   '.
+           03  AXSTN24          PIC Z(5)9.9.
+       01  OUTPUT-81.
+           03  FILLER           PIC X(12) VALUE 'ALT TSPACE '.
+           03  AXSTN25          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' ALT TABLE '.
+           03  AXSTN26          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' ALT INDEX '.
+           03  AXSTN27          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' COMMENT ON'.
+           03  AXSTN28          PIC Z(5)9.9.
+       01  OUTPUT-82.
+           03  FILLER           PIC X(12) VALUE 'LOCK TBL   '.
+           03  AXSTN29          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' GRANT     '.
+           03  AXSTN30          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' REVOKES   '.
+           03  AXSTN31          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' INC BINDS '.
+           03  AXSTN32          PIC Z(5)9.9.
+       01  OUTPUT-83.
+           03  FILLER           PIC X(12) VALUE 'LABEL ON   '.
+           03  AXSTN33          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SET SQLID '.
+           03  AXSTN34          PIC Z(5)9.9.
+       01  OUTPUT-84.
+           03  FILLER           PIC X(12) VALUE 'BPOOL ID   '.
+           03  ABAC1N1          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' GET PAGES '.
+           03  ABAC1N2          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' BP EXPANTS'.
+           03  ABAC1N3          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SETW SYS  '.
+           03  ABAC1N4          PIC Z(5)9.9.
+       01  OUTPUT-85.
+           03  FILLER           PIC X(12) VALUE 'SETW UW    '.
+           03  ABAC1N5          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SYNC READS'.
+           03  ABAC1N6          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SEQ PREF  '.
+           03  ABAC1N7          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SYNC WRITE'.
+           03  ABAC1N8          PIC Z(5)9.9.
+       01  OUTPUT-86.
+           03  FILLER           PIC X(12) VALUE 'BPOOL ID   '.
+           03  ABAC2N1          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' GET PAGES '.
+           03  ABAC2N2          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' BP EXPANTS'.
+           03  ABAC2N3          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SETW SYS  '.
+           03  ABAC2N4          PIC Z(5)9.9.
+       01  OUTPUT-87.
+           03  FILLER           PIC X(12) VALUE 'SETW UW    '.
+           03  ABAC2N5          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SYNC READS'.
+           03  ABAC2N6          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SEQ PREF  '.
+           03  ABAC2N7          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SYNC WRITE'.
+           03  ABAC2N8          PIC Z(5)9.9.
+       01  OUTPUT-88.
+           03  FILLER           PIC X(12) VALUE 'BPOOL ID   '.
+           03  ABAC3N1          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' GET PAGES '.
+           03  ABAC3N2          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' BP EXPANTS'.
+           03  ABAC3N3          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SETW SYS  '.
+           03  ABAC3N4          PIC Z(5)9.9.
+       01  OUTPUT-89.
+           03  FILLER           PIC X(12) VALUE 'SETW UW    '.
+           03  ABAC3N5          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SYNC READS'.
+           03  ABAC3N6          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SEQ PREF  '.
+           03  ABAC3N7          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SYNC WRITE'.
+           03  ABAC3N8          PIC Z(5)9.9.
+       01  OUTPUT-90.
+           03  FILLER           PIC X(12) VALUE 'BPOOL ID   '.
+           03  ABAC4N1          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' GET PAGES '.
+           03  ABAC4N2          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' BP EXPANTS'.
+           03  ABAC4N3          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SETW SYS  '.
+           03  ABAC4N4          PIC Z(5)9.9.
+       01  OUTPUT-91.
+           03  FILLER           PIC X(12) VALUE 'SETW UW    '.
+           03  ABAC4N5          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SYNC READS'.
+           03  ABAC4N6          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SEQ PREF  '.
+           03  ABAC4N7          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SYNC WRITE'.
+           03  ABAC4N8          PIC Z(5)9.9.
+       01  OUTPUT-92.
+           03  FILLER           PIC X(12) VALUE 'DEADLOCKS  '.
+           03  ATXAN1           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' SUS LKCON '.
+           03  ATXAN2           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' TIMEOUTS  '.
+           03  ATXAN3           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' LK ESC SHR'.
+           03  ATXAN4           PIC Z(5)9.9.
+       01  OUTPUT-93.
+           03  FILLER           PIC X(12) VALUE 'LK ESC EXC '.
+           03  ATXAN5           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' MAX PGLKS '.
+           03  ATXAN6           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' FLAG BYTE '.
+           03  ATXAN7           PIC X(8).
+           03  FILLER           PIC X(12) VALUE ' RLIM ID   '.
+           03  ATXAN9           PIC Z(8).
+       01  OUTPUT-94.
+           03  FILLER           PIC X(12) VALUE 'LIMIT DET  '.
+           03  ATXAN10          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' LIM SU    '.
+           03  ATXAN11          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' LIM CPU16 '.
+           03  ATXAN12          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' HIGH CPU16'.
+           03  ATXAN13          PIC Z(5)9.9.
+       01  OUTPUT-95.
+           03  FILLER           PIC X(12) VALUE 'LATCH CON  '.
+           03  ATXAN14          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' OTHER CON '.
+           03  ATXAN15          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' LOCK REQ  '.
+           03  ATXAN16          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' UNLOCK REQ'.
+           03  ATXAN17          PIC Z(5)9.9.
+       01  OUTPUT-96.
+           03  FILLER           PIC X(12) VALUE 'QUERIES    '.
+           03  ATXAN18          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' CHANGES   '.
+           03  ATXAN19          PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' OTHER     '.
+           03  ATXAN20          PIC Z(5)9.9.
+       01  OUTPUT-97.
+           03  FILLER           PIC X(12) VALUE 'CONN TYPE  '.
+           03  A148N1           PIC X(8).
+           03  FILLER           PIC X(12) VALUE ' REQ COUNT '.
+           03  A148N3           PIC Z(5)9.9.
+           03  FILLER           PIC X(12) VALUE ' ASID      '.
+           03  A148N4           PIC Z(5)9.9.
+           03  FILLER           PIC X(19) VALUE ' APPL OR DB2?'.
+           03  A148N5           PIC X.
+       01  OUTPUT-98.
+           03  FILLER           PIC X(18) VALUE 'CONN STATUS'.
+           03  A148N6           PIC X(2).
+           03  FILLER           PIC X(12) VALUE ' LAST IFCID'.
+           03  A148N10          PIC Z(7)9.
+           03  FILLER           PIC X(12) VALUE ' PRIORIFCID'.
+           03  A148N11          PIC Z(7)9.
+       01  OUTPUT-99.
+           03  FILLER           PIC X(12) VALUE 'LOCK HASH  '.
+           03  A148N12          PIC X(8).
+           03  FILLER           PIC X(12) VALUE ' LOCK NAME '.
+           03  A148N13          PIC X(24).
+      ****************************************************************
+      * CICS STATISTICS STUFF
+      ****************************************************************
+       01  OUTPUT-100.
+           03  FILLER           PIC X(28) VALUE ALL '*'.
+           03  FILLER           PIC X(3) VALUE '==>'.
+           03  FILLER           PIC X(18) VALUE 'CICS   STATISTICS'.
+           03  FILLER           PIC X(3) VALUE '<=='.
+           03  FILLER           PIC X(28) VALUE ALL '*'.
+       01  OUTPUT-101.
+           03  FILLER           PIC X(9) VALUE 'TRANCODE'.
+           03  FILLER           PIC X(9) VALUE 'PROGNAME'.
+           03  FILLER           PIC X(9) VALUE 'TOTAL   '.
+           03  FILLER           PIC X(9) VALUE 'RESTART '.
+           03  FILLER           PIC X(9) VALUE 'LOCAL   '.
+           03  FILLER           PIC X(9) VALUE 'REMOTE  '.
+           03  FILLER           PIC X(9) VALUE 'STGVIOLS'.
+       01  OUTPUT-102.
+           03  T-CODE           PIC X(8).
+           03  FILLER           PIC X VALUE SPACE.
+           03  T-P-NAME         PIC X(8).
+           03  FILLER           PIC X VALUE SPACE.
+           03  T-TOTAL          PIC 9(8).
+           03  FILLER           PIC X VALUE SPACE.
+           03  T-RESTART        PIC 9(8).
+           03  FILLER           PIC X VALUE SPACE.
+           03  T-DYNLOC         PIC 9(8).
+           03  FILLER           PIC X VALUE SPACE.
+           03  T-DYNRMT         PIC 9(8).
+           03  FILLER           PIC X VALUE SPACE.
+           03  T-STGVIOL        PIC 9(8).
+           03  FILLER           PIC X VALUE SPACE.
+      ****************************************************************
+      * CONSTANTS FOR CONVERTING STCK TO TIME AND DAY
+      ****************************************************************
+       01  TIMESTAMP.
+           03  DATE-STAMP.
+               05  YEAR          PIC 9(4).
+               05  DAYS          PIC 9(3).
+           03  TIME-STAMP.
+               05  HOURS         PIC 99.
+               05  MINUTES       PIC 99.
+               05  SECONDS       PIC 99.9999.
+       01  TIME-OF-DAY-CONSTANTS.
+           03  FILLER            PIC X(8) VALUE 'TIMEOFDA'.
+           03  1-SECOND          PIC S9(18) COMP.
+           03  1-MINUTE          PIC S9(18) COMP.
+           03  1-DAY             PIC S9(18) COMP.
+           03  365-DAYS          PIC S9(18) COMP.
+           03  366-DAYS          PIC S9(18) COMP.
+           03  1461-DAYS         PIC S9(18) COMP.
+           03  1988-YEAR         PIC S9(18) COMP.
+           03  SAMPLE-TSTAMP     PIC S9(18) COMP.
+       01  TIME-WORK             PIC S9(18) COMP.
+       01  TIME-WORK-1           PIC S9(18) COMP.
+       01  TIME-WORK-2           PIC S9(18) COMP.
+       01  TIME-WORK-3           PIC S9(18) COMP.
+       01  TIME-WORK-4           PIC S9(18) COMP.
+       01  TIME-WORK-5           PIC S9(18) COMP.
+       01  TIME-WORK-6           PIC S9(18) COMP.
+       01  TIME-WORK-7           PIC S9(18) COMP.
+       01  TIME-WORK-8           PIC S9(18) COMP.
+       01  TIME-WORK-9           PIC S9(18) COMP.
+       01  DATE-TIME.
+           03  TIME-OUT          PIC 9(8).
+           03  DATE-OUT          PIC 9(6).
+       01  INPUT-PARM-FLAGS.
+           03  SYS-STAT-FLAG     PIC X.
+           03  DB-STAT-FLAG      PIC X.
+           03  APP-STAT-FLAG     PIC X.
+           03  APP-STAT-NAME     PIC X(8).
+       01  CICS-TRAN-TABLE.
+           03  FILLER            PIC X(8) VALUE 'CICSTRAN'.
+           03  NUM-CICS-TRANS    PIC S9(8) COMP VALUE 0.
+           03  CICS-TRANS OCCURS  300 TIMES.
+               05  T-CODE        PIC X(4).
+               05  T-P-NAME      PIC X(8).
+               05  FILLER        PIC S9(2) COMP.
+               05  T-RESTART     PIC S9(2) COMP.
+               05  T-TOTAL       PIC S9(8) COMP.
+               05  T-DYNLOC      PIC S9(8) COMP.
+               05  T-DYNRMT      PIC S9(8) COMP.
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+               05  FILLER        PIC X(256).
+      * FROM DB2SMF6C END
+
+       LINKAGE SECTION.
+       01  IO-PCB.
+           03  FILLER            PIC X(10).
+           03  IO-STATUS         PIC X(2).
+           03  FILLER            PIC X(20).
+       PROCEDURE DIVISION.
+           ENTRY 'DLITCBL' USING IO-PCB.
+       MAIN-ROUTINE.
+           MOVE 0 TO UPDATE-COUNTER.
+      *(1A)
+           EXEC SQL
+           SET :UPDATE-VALUE = CURRENT TIMESTAMP
+           END-EXEC.
+      * GET INPUT MESSAGE
+           CALL 'CBLTDLI' USING GET-UNIQUE
+                                IO-PCB
+                                INPUT-MESSAGE.
+      * SEE IF WE GOT ANYTHING
+           IF  IO-STATUS NOT = SPACES
+               IF  IO-STATUS = 'QC'
+                   GOBACK
+               ELSE
+                   DISPLAY 'ERROR GETTING INPUT MESSAGE', IO-PCB,
+                            SQLCAID, SQLCABC, SQLCODE, SQLERRM,
+                   SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),
+                   SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6)
+                   CALL 'CBLTDLI' USING ROLL.
+      * MOVE INPUT MESSAGE DATA TO SQL AND APPLICATION VARIABLES
+           MOVE WH-IN TO WH.
+           MOVE DI-IN TO DI.
+           MOVE CUSTID-IN TO CUSTID.
+           MOVE ARRAY-DEPTH-IN TO ARRAY-DEPTH.
+      * DO SQL/DB2 PART
+           PERFORM ORDER-STATUS.
+      * DO CPU/MEMORY BURNER PART
+           MOVE 0 TO NUM-PLANS.
+           MOVE 0 TO NUM-TRANS.
+           PERFORM PLAN-INIT UNTIL NUM-PLANS > ARRAY-DEPTH.
+      * MOVE APPLICATION VARIABLES TO OUTPUT-MESSAGE.
+           MOVE TRAN-CODE TO TRANS-CODE.
+           MOVE UPDATE-COUNTER TO NUMBER-1.
+           MOVE SQLCODE TO NUMBER-2.
+      * SEND OUT MESSAGE RESPONSE.
+           CALL 'CBLTDLI' USING INSRT
+                                IO-PCB
+                                OUTPUT-MESSAGE.
+      * DID IT WORK
+           IF  IO-STATUS NOT = SPACES
+                   DISPLAY 'ERROR PUTTING OUTPUT MESSAGE', IO-PCB,
+                            SQLCAID, SQLCABC, SQLCODE, SQLERRM,
+                   SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),
+                   SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6)
+                   CALL 'CBLTDLI' USING ROLL.
+      *
+           GO TO MAIN-ROUTINE.
+       ORDER-STATUS.
+      *(1)
+           EXEC SQL
+           SELECT MAX(O_ID) INTO :OID FROM DJY00.ORDER10
+                  WHERE O_C_ID  = :CUSTID AND
+                        O_D_ID  = :DI     AND
+                        O_W_ID  = :WH
+           END-EXEC.
+           IF SQLCODE  = 0
+              PERFORM THE-REST-OF-IT
+           ELSE
+              IF SQLCODE NOT = -305
+                   DISPLAY 'ERROR INITIAL QUERY', IO-PCB,
+                            SQLCAID, SQLCABC, SQLCODE, SQLERRM,
+                   SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),
+                   SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6)
+                   CALL 'CBLTDLI' USING ROLL.
+
+      *(2)
+       THE-REST-OF-IT.
+           EXEC SQL
+           DECLARE SESAME CURSOR FOR
+                 SELECT OL_O_ID,
+                        OL_D_ID,
+                        OL_W_ID,
+                        OL_NUMBER,
+                        OL_I_ID,
+                        OL_SUPPLY_W_ID,
+                        OL_DELIVERY_D,
+                        OL_QUANTITY,
+                        OL_AMOUNT,
+                        OL_DIST_INFO
+                 FROM DJY00.ORDERLINE10
+                  WHERE OL_O_ID  = :OID  AND
+                        OL_D_ID  = :DI AND
+                        OL_W_ID  = :WH
+                        FOR UPDATE OF OL_DIST_INFO
+           END-EXEC.
+           IF SQLCODE NOT = 0
+                   DISPLAY 'ERROR DECLARE CURSR', IO-PCB,
+                            SQLCAID, SQLCABC, SQLCODE, SQLERRM,
+                   SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),
+                   SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6)
+                   CALL 'CBLTDLI' USING ROLL.
+      *(3)
+           EXEC SQL
+           SET :UPDATE-VALUE = CURRENT TIMESTAMP
+           END-EXEC.
+           EXEC SQL
+           OPEN SESAME
+           END-EXEC.
+           IF SQLCODE NOT = 0
+                   DISPLAY 'ERROR CLOSE CURSOR', IO-PCB,
+                            SQLCAID, SQLCABC, SQLCODE, SQLERRM,
+                   SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),
+                   SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6)
+                   CALL 'CBLTDLI' USING ROLL.
+      *(4)
+           PERFORM STEP-N-FETCHIT UNTIL SQLCODE NOT = 0.
+
+      *(5)
+           EXEC SQL
+               CLOSE SESAME
+           END-EXEC.
+           IF SQLCODE NOT = 0
+                   DISPLAY 'ERROR CLOSE CURSOR', IO-PCB,
+                            SQLCAID, SQLCABC, SQLCODE, SQLERRM,
+                   SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),
+                   SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6)
+                   CALL 'CBLTDLI' USING ROLL.
+
+       STEP-N-FETCHIT.
+           EXEC SQL
+           FETCH SESAME INTO
+              :RET1, :RET2, :RET3, :RET4, :RET5,
+              :RET6, :RET7, :RET8, :RET9, :RET10
+           END-EXEC.
+           IF SQLCODE NOT = 0
+              IF SQLCODE NOT = 100
+                   DISPLAY 'ERROR FETCH', IO-PCB,
+                            SQLCAID, SQLCABC, SQLCODE, SQLERRM,
+                   SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),
+                   SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6)
+                   CALL 'CBLTDLI' USING ROLL.
+           IF SQLCODE = 0
+              EXEC SQL
+              UPDATE DJY00.ORDERLINE10
+              SET OL_DIST_INFO = :UPDATE-VALUE
+              WHERE CURRENT OF SESAME
+              END-EXEC
+              IF SQLCODE  = 0
+                 ADD 1 TO UPDATE-COUNTER
+              ELSE
+                   DISPLAY 'ERROR UPDATING', IO-PCB,
+                            SQLCAID, SQLCABC, SQLCODE, SQLERRM,
+                   SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),
+                   SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6)
+                   CALL 'CBLTDLI' USING ROLL.
+       SQL-ERROR.
+           IF  SQLCODE NOT = 100
+           DISPLAY  SQLCAID, SQLCABC, SQLCODE, SQLERRM,
+           SQLERRP, SQLWARN, SQLEXT, SQLERRD(1), SQLERRD(2),
+           SQLERRD(3), SQLERRD(4), SQLERRD(5), SQLERRD(6).
+      * FROM DB2SMF6C START
+      ******************************************************************
+      *  PLAN-INIT
+      ******************************************************************
+       PLAN-INIT.
+           ADD 1 TO NUM-PLANS.
+           ADD 1 TO NUM-TRANS.
+           MOVE NUM-PLANS TO PLAN-NUM(NUM-PLANS).
+           MOVE 0 TO NUMT(NUM-PLANS).
+           MOVE 0 TO  NUMT(NUM-PLANS).
+           MOVE 0 TO  ELAPSED-C1(NUM-PLANS).
+           MOVE 0 TO  TCB-C1(NUM-PLANS).
+           MOVE 0 TO  SRB-C1(NUM-PLANS).
+           MOVE 0 TO  ELAPSED-C2(NUM-PLANS).
+           MOVE 0 TO  TCB-C2(NUM-PLANS).
+           MOVE 0 TO  SRB-C2(NUM-PLANS).
+           MOVE 0 TO  LOCKWAIT(NUM-PLANS).
+           MOVE 0 TO  IOWAIT(NUM-PLANS).
+           MOVE 0 TO  WACN1(NUM-PLANS).
+           MOVE 0 TO  WACN2(NUM-PLANS).
+           MOVE 0 TO  WACN3(NUM-PLANS).
+           MOVE 0 TO  WACN4(NUM-PLANS).
+           MOVE 0 TO  WACN5(NUM-PLANS).
+           MOVE 0 TO  WACN6(NUM-PLANS).
+           MOVE 0 TO  WACN7(NUM-PLANS).
+           MOVE 0 TO  XSTN1(NUM-PLANS).
+           MOVE 0 TO  XSTN2(NUM-PLANS).
+           MOVE 0 TO  XSTN3(NUM-PLANS).
+           MOVE 0 TO  XSTN4(NUM-PLANS).
+           MOVE 0 TO  XSTN5(NUM-PLANS).
+           MOVE 0 TO  XSTN6(NUM-PLANS).
+           MOVE 0 TO  XSTN7(NUM-PLANS).
+           MOVE 0 TO  XSTN8(NUM-PLANS).
+           MOVE 0 TO  XSTN9(NUM-PLANS).
+           MOVE 0 TO  XSTN10(NUM-PLANS).
+           MOVE 0 TO  XSTN11(NUM-PLANS).
+           MOVE 0 TO  XSTN12(NUM-PLANS).
+           MOVE 0 TO  XSTN13(NUM-PLANS).
+           MOVE 0 TO  XSTN14(NUM-PLANS).
+           MOVE 0 TO  XSTN15(NUM-PLANS).
+           MOVE 0 TO  XSTN16(NUM-PLANS).
+           MOVE 0 TO  XSTN17(NUM-PLANS).
+           MOVE 0 TO  XSTN18(NUM-PLANS).
+           MOVE 0 TO  XSTN19(NUM-PLANS).
+           MOVE 0 TO  XSTN20(NUM-PLANS).
+           MOVE 0 TO  XSTN21(NUM-PLANS).
+           MOVE 0 TO  XSTN22(NUM-PLANS).
+           MOVE 0 TO  XSTN23(NUM-PLANS).
+           MOVE 0 TO  XSTN24(NUM-PLANS).
+           MOVE 0 TO  XSTN25(NUM-PLANS).
+           MOVE 0 TO  XSTN26(NUM-PLANS).
+           MOVE 0 TO  XSTN27(NUM-PLANS).
+           MOVE 0 TO  XSTN28(NUM-PLANS).
+           MOVE 0 TO  XSTN29(NUM-PLANS).
+           MOVE 0 TO  XSTN30(NUM-PLANS).
+           MOVE 0 TO  XSTN31(NUM-PLANS).
+           MOVE 0 TO  XSTN32(NUM-PLANS).
+           MOVE 0 TO  XSTN33(NUM-PLANS).
+           MOVE 0 TO  XSTN34(NUM-PLANS).
+           MOVE 0 TO  BAC1N1(NUM-PLANS).
+           MOVE 0 TO  BAC1N2(NUM-PLANS).
+           MOVE 0 TO  BAC1N3(NUM-PLANS).
+           MOVE 0 TO  BAC1N4(NUM-PLANS).
+           MOVE 0 TO  BAC1N5(NUM-PLANS).
+           MOVE 0 TO  BAC1N6(NUM-PLANS).
+           MOVE 0 TO  BAC1N7(NUM-PLANS).
+           MOVE 0 TO  BAC1N8(NUM-PLANS).
+           MOVE 0 TO  BAC2N1(NUM-PLANS).
+           MOVE 0 TO  BAC2N2(NUM-PLANS).
+           MOVE 0 TO  BAC2N3(NUM-PLANS).
+           MOVE 0 TO  BAC2N4(NUM-PLANS).
+           MOVE 0 TO  BAC2N5(NUM-PLANS).
+           MOVE 0 TO  BAC2N6(NUM-PLANS).
+           MOVE 0 TO  BAC2N7(NUM-PLANS).
+           MOVE 0 TO  BAC2N8(NUM-PLANS).
+           MOVE 0 TO  BAC3N1(NUM-PLANS).
+           MOVE 0 TO  BAC3N2(NUM-PLANS).
+           MOVE 0 TO  BAC3N3(NUM-PLANS).
+           MOVE 0 TO  BAC3N4(NUM-PLANS).
+           MOVE 0 TO  BAC3N5(NUM-PLANS).
+           MOVE 0 TO  BAC3N6(NUM-PLANS).
+           MOVE 0 TO  BAC3N7(NUM-PLANS).
+           MOVE 0 TO  BAC3N8(NUM-PLANS).
+           MOVE 0 TO  BAC4N1(NUM-PLANS).
+           MOVE 0 TO  BAC4N2(NUM-PLANS).
+           MOVE 0 TO  BAC4N3(NUM-PLANS).
+           MOVE 0 TO  BAC4N4(NUM-PLANS).
+           MOVE 0 TO  BAC4N5(NUM-PLANS).
+           MOVE 0 TO  BAC4N6(NUM-PLANS).
+           MOVE 0 TO  BAC4N7(NUM-PLANS).
+           MOVE 0 TO  BAC4N8(NUM-PLANS).
+           MOVE 0 TO  TXAN1(NUM-PLANS).
+           MOVE 0 TO  TXAN2(NUM-PLANS).
+           MOVE 0 TO  TXAN3(NUM-PLANS).
+           MOVE 0 TO  TXAN4(NUM-PLANS).
+           MOVE 0 TO  TXAN5(NUM-PLANS).
+           MOVE 0 TO  TXAN6(NUM-PLANS).
+           MOVE 0 TO  TXAN7(NUM-PLANS).
+           MOVE 0 TO  TXAN9(NUM-PLANS).
+           MOVE 0 TO  TXAN10(NUM-PLANS).
+           MOVE 0 TO  TXAN11(NUM-PLANS).
+           MOVE 0 TO  TXAN12(NUM-PLANS).
+           MOVE 0 TO  TXAN13(NUM-PLANS).
+           MOVE 0 TO  TXAN14(NUM-PLANS).
+           MOVE 0 TO  TXAN15(NUM-PLANS).
+           MOVE 0 TO  TXAN16(NUM-PLANS).
+           MOVE 0 TO  TXAN17(NUM-PLANS).
+           MOVE 0 TO  TXAN18(NUM-PLANS).
+           MOVE 0 TO  TXAN19(NUM-PLANS).
+           MOVE 0 TO  TXAN20(NUM-PLANS).
